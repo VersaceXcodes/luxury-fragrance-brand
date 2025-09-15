@@ -23,25 +23,7 @@ interface SupportTicketForm {
   order_id: string;
 }
 
-interface ChatSession {
-  session_id: string;
-  is_active: boolean;
-  messages: Array<{
-    sender: string;
-    message: string;
-    timestamp: string;
-  }>;
-  agent_info: {
-    name: string;
-    specialization: string;
-  };
-}
 
-interface LoadingStates {
-  faqs: boolean;
-  ticket_submission: boolean;
-  chat_connection: boolean;
-}
 
 // Support categories
 const SUPPORT_CATEGORIES = [
@@ -87,18 +69,7 @@ const UV_CustomerService: React.FC = () => {
     order_id: contextOrderId || '',
   });
 
-  const [chatSession, setChatSession] = useState<ChatSession>({
-    session_id: '',
-    is_active: false,
-    messages: [],
-    agent_info: { name: '', specialization: '' },
-  });
 
-  const [loadingStates, setLoadingStates] = useState<LoadingStates>({
-    faqs: false,
-    ticket_submission: false,
-    chat_connection: false,
-  });
 
   // Update form when user changes or URL params change
   useEffect(() => {

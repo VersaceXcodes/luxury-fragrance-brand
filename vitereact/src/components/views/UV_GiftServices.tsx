@@ -237,7 +237,7 @@ const UV_GiftServices: React.FC = () => {
   };
 
   // Handle add to cart
-  const handleAddToCart = async (product: Product, isFromSet: boolean = false) => {
+  const handleAddToCart = async (product: Product, ) => {
     try {
       await addToCart({
         product_id: product.product_id,

@@ -65,14 +65,10 @@ interface SearchSuggestionsResponse {
 
 const UV_SearchResults: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   // Individual Zustand selectors to avoid infinite loops
-  const currentUser = useAppStore(state => state.authentication_state.current_user);
   const globalSearchQuery = useAppStore(state => state.search_state.current_query);
-  const globalActiveFilters = useAppStore(state => state.search_state.active_filters);
   const addToCart = useAppStore(state => state.add_to_cart);
-  const showNotification = useAppStore(state => state.show_notification);
   const updateSearchQuery = useAppStore(state => state.update_search_query);
   const updateSearchFilters = useAppStore(state => state.update_search_filters);
 

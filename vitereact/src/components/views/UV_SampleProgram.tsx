@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
@@ -17,22 +17,6 @@ interface SampleProduct {
   notes_preview: string;
 }
 
-interface DiscoverySet {
-  set_id: string;
-  set_name: string;
-  description: string;
-  set_type: 'discovery' | 'brand' | 'seasonal' | 'custom';
-  sample_count: number;
-  price: number;
-  savings_amount: number;
-  products: Array<{
-    product_id: string;
-    product_name: string;
-    brand_name: string;
-    sample_size_ml: number;
-  }>;
-  image_url: string;
-}
 
 interface SampleCartItem {
   type: 'individual' | 'set';
@@ -53,15 +37,6 @@ interface SampleCart {
   total: number;
 }
 
-interface SampleOrder {
-  sample_order_id: string;
-  sample_order_number: string;
-  order_status: string;
-  total_amount: number;
-  created_at: string;
-  items_count: number;
-  tracking_number: string | null;
-}
 
 interface CustomSampleSet {
   selected_samples: Array<{
@@ -78,14 +53,6 @@ interface CustomSampleSet {
   set_name: string;
 }
 
-interface RecommendedSample {
-  product_id: string;
-  product_name: string;
-  brand_name: string;
-  match_reason: string;
-  sample_price: number;
-  match_score: number;
-}
 
 const UV_SampleProgram: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -263,7 +230,7 @@ const UV_SampleProgram: React.FC = () => {
       const response = await axios.post(`${getApiUrl()}/api/sample-orders`, orderData, { headers });
       return response.data;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       setSampleCart({ items: [], subtotal: 0, shipping_cost: 0, total: 0 });
       setCustomSampleSet({
         selected_samples: [],

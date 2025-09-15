@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
@@ -62,16 +62,9 @@ const UV_AccountDashboard: React.FC = () => {
   // Zustand store selectors - individual selectors to prevent infinite loops
   const currentUser = useAppStore(state => state.authentication_state.current_user);
   const authToken = useAppStore(state => state.authentication_state.auth_token);
-  const addToCart = useAppStore(state => state.add_to_cart);
   const showNotification = useAppStore(state => state.show_notification);
   
   const queryClient = useQueryClient();
-  const [dashboardLoadingState, setDashboardLoadingState] = useState({
-    profile: false,
-    orders: false,
-    recommendations: false,
-    wishlist: false
-  });
 
   // Helper function to get API base URL
   const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
@@ -83,7 +76,7 @@ const UV_AccountDashboard: React.FC = () => {
   });
 
   // User Profile Query
-  const { data: userProfile, isLoading: profileLoading } = useQuery({
+  const { data: userProfile } = useQuery({
     queryKey: ['userProfile'],
     queryFn: async (): Promise<DashboardUser> => {
       const response = await axios.get(`${getApiUrl()}/api/users/profile`, {
@@ -239,7 +232,7 @@ const UV_AccountDashboard: React.FC = () => {
 
   // Helper function to calculate loyalty status
   const calculateLoyaltyStatus = (): LoyaltyStatus => {
-    const tier = userProfile?.loyalty_tier || currentUser?.loyalty_tier;
+    const tier = userProfile?.loyalty_tier || currentUser?.loyalty_tier || null;
     return {
       tier,
       points: 0, // Would come from API if available

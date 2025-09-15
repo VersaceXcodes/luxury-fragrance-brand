@@ -70,14 +70,6 @@ interface CreateOrderRequest {
   customer_phone?: string;
 }
 
-interface PaymentMethod {
-  id: string;
-  type: 'card' | 'paypal' | 'apple_pay' | 'google_pay';
-  last_four?: string;
-  brand?: string;
-  exp_month?: number;
-  exp_year?: number;
-}
 
 const UV_Checkout: React.FC = () => {
   const navigate = useNavigate();
@@ -95,7 +87,6 @@ const UV_Checkout: React.FC = () => {
 
   // Local state for checkout process
   const [currentStep, setCurrentStep] = useState<'shipping' | 'payment' | 'review'>('shipping');
-  const [isGuestCheckout, setIsGuestCheckout] = useState(!isAuthenticated);
   const [isProcessingOrder, setIsProcessingOrder] = useState(false);
 
   // Shipping form state
@@ -129,7 +120,6 @@ const UV_Checkout: React.FC = () => {
   const [selectedShippingAddress, setSelectedShippingAddress] = useState<string>('');
   const [selectedBillingAddress, setSelectedBillingAddress] = useState<string>('');
   const [selectedShippingMethod, setSelectedShippingMethod] = useState<string>('');
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
 
   // Gift options
   const [giftOptions, setGiftOptions] = useState({
@@ -206,7 +196,7 @@ const UV_Checkout: React.FC = () => {
       });
       return response.data;
     },
-    onSuccess: (newAddress) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-addresses'] });
       showNotification({
         type: 'success',
@@ -385,7 +375,7 @@ const UV_Checkout: React.FC = () => {
       shipping_address_id: selectedShippingAddress,
       billing_address_id: selectedBillingAddress,
       shipping_method_id: selectedShippingMethod,
-      payment_method_id: selectedPaymentMethod || undefined,
+      payment_method_id: paymentForm.payment_type,
       gift_message: giftOptions.gift_message || undefined,
       special_instructions: giftOptions.special_delivery_date || undefined,
       customer_email: shippingForm.email,

@@ -44,7 +44,6 @@ const UV_ProfileSettings: React.FC = () => {
   const queryClient = useQueryClient();
   
   // Global state access with individual selectors
-  const currentUser = useAppStore(state => state.authentication_state.current_user);
   const authToken = useAppStore(state => state.authentication_state.auth_token);
   const updateUserProfile = useAppStore(state => state.update_user_profile);
   const showNotification = useAppStore(state => state.show_notification);
@@ -103,7 +102,7 @@ const UV_ProfileSettings: React.FC = () => {
   const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
   // Load user profile
-  const { data: userProfile, isLoading: profileLoading, error: profileError } = useQuery({
+  const { data: userProfile, isLoading: profileLoading } = useQuery({
     queryKey: ['userProfile'],
     queryFn: async () => {
       const response = await axios.get(`${getApiUrl()}/api/users/profile`, {

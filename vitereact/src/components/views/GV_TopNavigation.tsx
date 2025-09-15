@@ -4,19 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAppStore } from '@/store/main';
 
 // Types for API responses
-interface Category {
-  category_id: string;
-  category_name: string;
-  parent_category_id: string | null;
-  display_order: number;
-}
 
-interface Brand {
-  brand_id: string;
-  brand_name: string;
-  logo_url: string | null;
-  is_niche_brand: boolean;
-}
 
 
 
@@ -42,34 +30,9 @@ const GV_TopNavigation: React.FC = () => {
   const toggleAccountDropdown = useAppStore(state => state.toggle_account_dropdown);
   const toggleMobileMenu = useAppStore(state => state.toggle_mobile_menu);
   const updateSearchQuery = useAppStore(state => state.update_search_query);
-  const logoutUser = useAppStore(state => state.logout_user);
 
   // API base URL
   const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
-
-  // Categories query
-  const { data: categories = [] } = useQuery<Category[]>({
-    queryKey: ['categories'],
-    queryFn: async () => {
-      const response = await fetch(`${getApiUrl()}/api/categories?is_active=true&sort_by=display_order&sort_order=asc`);
-      if (!response.ok) throw new Error('Failed to fetch categories');
-      return response.json();
-    },
-    staleTime: 5 * 60 * 1000,
-    retry: 1,
-  });
-
-  // Brands query
-  const { data: brands = [] } = useQuery<Brand[]>({
-    queryKey: ['brands'],
-    queryFn: async () => {
-      const response = await fetch(`${getApiUrl()}/api/brands?is_active=true&limit=20&sort_by=display_order`);
-      if (!response.ok) throw new Error('Failed to fetch brands');
-      return response.json();
-    },
-    staleTime: 5 * 60 * 1000,
-    retry: 1,
-  });
 
   // Wishlist count query (only for authenticated users)
   const { data: wishlistCount = 0 } = useQuery<number>({

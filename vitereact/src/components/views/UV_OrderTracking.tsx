@@ -55,11 +55,9 @@ const UV_OrderTracking: React.FC = () => {
     order_number: searchParams.get('order_number') || '',
     email: searchParams.get('email') || ''
   });
-  const [showGuestForm, setShowGuestForm] = useState(!order_id);
   const [formError, setFormError] = useState<string | null>(null);
 
   // Zustand store selectors - individual selectors to avoid infinite loops
-  const currentUser = useAppStore(state => state.authentication_state.current_user);
   const authToken = useAppStore(state => state.authentication_state.auth_token);
   const isAuthenticated = useAppStore(state => state.authentication_state.authentication_status.is_authenticated);
 

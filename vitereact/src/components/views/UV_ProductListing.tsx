@@ -51,20 +51,14 @@ interface ProductsResponse {
 }
 
 const UV_ProductListing: React.FC = () => {
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loadMoreMode, setLoadMoreMode] = useState(false);
 
   // Zustand store selectors - individual to prevent infinite loops
   const currentQuery = useAppStore(state => state.search_state.current_query);
   const activeFilters = useAppStore(state => state.search_state.active_filters);
   const sortBy = useAppStore(state => state.search_state.sort_by);
-  const resultsCount = useAppStore(state => state.search_state.results_count);
-  const isSearchLoading = useAppStore(state => state.search_state.is_loading);
-  const currentBreakpoint = useAppStore(state => state.ui_state.current_breakpoint);
-  const isAuthenticated = useAppStore(state => state.authentication_state.authentication_status.is_authenticated);
 
   // Store actions
   const updateSearchQuery = useAppStore(state => state.update_search_query);

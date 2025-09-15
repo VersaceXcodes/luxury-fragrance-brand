@@ -4,22 +4,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAppStore } from '@/store/main';
 
 // Types based on Zod schemas
-interface CartItemResponse {
-  cart_item_id: string;
-  cart_id: string;
-  product_id: string;
-  size_ml: number;
-  quantity: number;
-  unit_price: number;
-  gift_wrap: boolean;
-  sample_included: boolean;
-  added_at: string;
-  // Additional fields from join with products/brands
-  product_name?: string;
-  brand_name?: string;
-}
-
-
 
 const GV_CartDropdown: React.FC = () => {
   const [promotionalCode, setPromotionalCode] = useState('');

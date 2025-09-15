@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useAppStore } from '@/store/main';
@@ -65,7 +65,6 @@ interface QuizSubmissionResponse {
 
 const UV_FragranceFinder: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
   
   // Local state
   const [quizState, setQuizState] = useState<{
@@ -99,7 +98,6 @@ const UV_FragranceFinder: React.FC = () => {
   const currentUser = useAppStore(state => state.authentication_state.current_user);
   const authToken = useAppStore(state => state.authentication_state.auth_token);
   const updateQuizResults = useAppStore(state => state.update_quiz_results);
-  const updateFragranceProfile = useAppStore(state => state.update_fragrance_profile);
   const showNotification = useAppStore(state => state.show_notification);
 
   // API Functions

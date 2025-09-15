@@ -68,7 +68,6 @@ const UV_OrderConfirmation: React.FC = () => {
   const orderId = searchParams.get('order_id');
 
   // Individual Zustand selectors to prevent infinite loops
-  const currentUser = useAppStore(state => state.authentication_state.current_user);
   const isAuthenticated = useAppStore(state => state.authentication_state.authentication_status.is_authenticated);
   const registerUser = useAppStore(state => state.register_user);
   const clearCart = useAppStore(state => state.clear_cart);
