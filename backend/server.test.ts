@@ -1379,7 +1379,8 @@ describe('Wishlist Endpoints', () => {
         email: 'another@example.com',
         password: 'password123',
         first_name: 'Another',
-        last_name: 'User'
+        last_name: 'User',
+        phone_number: '+1234567891'
       });
 
       const anotherWishlistResponse = await request(app)
@@ -1477,7 +1478,7 @@ describe('Error Handling', () => {
 
     it('should handle database connection errors gracefully', async () => {
       // Mock database error
-      jest.spyOn(pool, 'query').mockRejectedValueOnce(new Error('Database connection failed'));
+      (jest.spyOn(pool, 'query') as any).mockRejectedValueOnce(new Error('Database connection failed'));
 
       const response = await request(app)
         .get('/api/products')

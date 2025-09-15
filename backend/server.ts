@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
 import path from 'path';
@@ -7,6 +7,27 @@ import { Pool } from 'pg';
 import jwt from 'jsonwebtoken';
 import morgan from 'morgan';
 import { v4 as uuidv4 } from 'uuid';
+
+// Type definitions
+interface JwtPayload {
+  user_id: string;
+  email: string;
+  iat?: number;
+  exp?: number;
+}
+
+interface AuthenticatedRequest extends Request {
+  user?: {
+    user_id: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+    loyalty_tier: string;
+    email_verified: boolean;
+    created_at: string;
+  };
+  sessionId?: string;
+}
 
 // Import Zod schemas
 import {
@@ -34,7 +55,7 @@ const pool = new Pool(
   DATABASE_URL
     ? { 
         connectionString: DATABASE_URL, 
-        ssl: { require: true } 
+        ssl: { rejectUnauthorized: false } 
       }
     : {
         host: PGHOST,
@@ -42,7 +63,7 @@ const pool = new Pool(
         user: PGUSER,
         password: PGPASSWORD,
         port: Number(PGPORT),
-        ssl: { require: true },
+        ssl: { rejectUnauthorized: false },
       }
 );
 
