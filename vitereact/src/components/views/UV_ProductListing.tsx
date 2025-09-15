@@ -99,8 +99,17 @@ const UV_ProductListing: React.FC = () => {
       availability_status: params.availability_status ? params.availability_status.split(',') : [],
     };
 
-    // Only update if filters have changed
-    const filtersChanged = JSON.stringify(urlFilters) !== JSON.stringify(activeFilters);
+    // Only update if filters have changed (deep comparison)
+    const filtersChanged = (
+      urlFilters.price_min !== activeFilters.price_min ||
+      urlFilters.price_max !== activeFilters.price_max ||
+      JSON.stringify(urlFilters.brand_ids.sort()) !== JSON.stringify(activeFilters.brand_ids.sort()) ||
+      JSON.stringify(urlFilters.fragrance_families.sort()) !== JSON.stringify(activeFilters.fragrance_families.sort()) ||
+      JSON.stringify(urlFilters.size_options.sort()) !== JSON.stringify(activeFilters.size_options.sort()) ||
+      JSON.stringify(urlFilters.occasion_tags.sort()) !== JSON.stringify(activeFilters.occasion_tags.sort()) ||
+      JSON.stringify(urlFilters.season_suitability.sort()) !== JSON.stringify(activeFilters.season_suitability.sort()) ||
+      JSON.stringify(urlFilters.availability_status.sort()) !== JSON.stringify(activeFilters.availability_status.sort())
+    );
     if (filtersChanged) {
       updateSearchFilters(urlFilters);
     }
