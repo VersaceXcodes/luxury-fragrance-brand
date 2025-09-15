@@ -1,0 +1,463 @@
+{
+  "generated_at": "2025-01-15T12:40:00Z",
+  "application_url": "http://localhost:5174",
+  "api_base_url": "http://localhost:3001",
+  "total_test_cases": 25,
+  "testCases": [
+    {
+      "id": "functional-app-test",
+      "name": "Functional Application Test",
+      "category": "functionality",
+      "priority": "high",
+      "description": "Verify the application has actual functionality beyond basic placeholder",
+      "steps": [
+        "Navigate to http://localhost:5174",
+        "Verify the page loads without errors",
+        "Check that it's a luxury fragrance e-commerce site, not just 'Vite + React'",
+        "Verify multiple interactive elements exist (navigation, product cards, buttons)",
+        "Check for proper branding and professional design",
+        "Verify the site has real fragrance products and content"
+      ],
+      "expectedOutcome": "Application shows a fully functional luxury fragrance e-commerce platform with professional design, product catalog, and interactive features",
+      "failureCondition": "If page only shows 'Vite + React' placeholder or basic template content, this test should FAIL"
+    },
+    {
+      "id": "homepage-content-test",
+      "name": "Homepage Content and Layout Test",
+      "category": "interface",
+      "priority": "high", 
+      "description": "Test that the homepage displays proper luxury fragrance content",
+      "steps": [
+        "Navigate to the homepage",
+        "Verify top navigation with brand logo and menu items",
+        "Check for featured products section",
+        "Look for new arrivals or best sellers sections",
+        "Verify footer with company information and links",
+        "Check for search functionality",
+        "Verify responsive design elements"
+      ],
+      "expectedOutcome": "Homepage displays professional luxury fragrance e-commerce layout with product showcases, navigation, and branding"
+    },
+    {
+      "id": "user-authentication-test",
+      "name": "User Authentication Flow Test",
+      "category": "authentication",
+      "priority": "high",
+      "description": "Test user login, registration, and authentication features",
+      "steps": [
+        "Navigate to login/registration page",
+        "Test login with valid credentials: alice.smith@email.com / password123",
+        "Verify successful login redirects to account dashboard or homepage",
+        "Check that user name appears in navigation/account area",
+        "Test logout functionality",
+        "Verify logout clears user session"
+      ],
+      "expectedOutcome": "Authentication system works correctly with proper login/logout flow and user session management"
+    },
+    {
+      "id": "product-catalog-test",
+      "name": "Product Catalog and Search Test", 
+      "category": "functionality",
+      "priority": "high",
+      "description": "Test product browsing, filtering, and search functionality",
+      "steps": [
+        "Navigate to products/catalog page",
+        "Verify products are displayed with images, names, and prices",
+        "Test search functionality with fragrance-related terms",
+        "Try filtering by brand, price, or fragrance family",
+        "Click on a product to view detailed product page",
+        "Verify product details include fragrance notes, description, sizes"
+      ],
+      "expectedOutcome": "Product catalog displays luxury fragrances with proper filtering, search, and detailed product information"
+    },
+    {
+      "id": "shopping-cart-test",
+      "name": "Shopping Cart Functionality Test",
+      "category": "ecommerce",
+      "priority": "high",
+      "description": "Test adding products to cart and cart management",
+      "steps": [
+        "Navigate to a product page",
+        "Select a fragrance size (if options available)",
+        "Click 'Add to Cart' button",
+        "Verify cart icon updates with item count",
+        "Open cart dropdown or navigate to cart page",
+        "Verify product appears in cart with correct details",
+        "Test quantity adjustment and item removal",
+        "Check cart total calculation"
+      ],
+      "expectedOutcome": "Shopping cart functionality works correctly with proper item management and total calculations"
+    },
+    {
+      "id": "responsive-design-test",
+      "name": "Responsive Design Test",
+      "category": "interface",
+      "priority": "medium",
+      "description": "Test application responsiveness across different screen sizes",
+      "steps": [
+        "Test on desktop viewport (1200px+)",
+        "Test on tablet viewport (768px-1199px)", 
+        "Test on mobile viewport (320px-767px)",
+        "Verify navigation adapts (hamburger menu on mobile)",
+        "Check that product grids adjust appropriately",
+        "Verify text remains readable at all sizes",
+        "Test touch interactions on mobile"
+      ],
+      "expectedOutcome": "Application displays properly and remains functional across all device sizes"
+    },
+    {
+      "id": "navigation-test",
+      "name": "Site Navigation Test",
+      "category": "interface",
+      "priority": "medium",
+      "description": "Test all navigation links and menu functionality",
+      "steps": [
+        "Test main navigation menu items",
+        "Verify all links lead to appropriate pages",
+        "Test breadcrumb navigation (if present)",
+        "Check footer links functionality",
+        "Test search functionality from header",
+        "Verify account/login links work properly",
+        "Test mobile navigation menu"
+      ],
+      "expectedOutcome": "All navigation elements work correctly and lead to appropriate pages"
+    },
+    {
+      "id": "product-detail-test",
+      "name": "Product Detail Page Test",
+      "category": "functionality", 
+      "priority": "high",
+      "description": "Test individual product page functionality and information display",
+      "steps": [
+        "Navigate to a specific product page",
+        "Verify product images display correctly",
+        "Check product name, brand, and price information",
+        "Verify fragrance notes (top, middle, base) are shown",
+        "Check for product description and details",
+        "Test size selection options",
+        "Verify 'Add to Cart' functionality",
+        "Check for related/recommended products"
+      ],
+      "expectedOutcome": "Product detail pages display comprehensive fragrance information with functional add-to-cart capability"
+    },
+    {
+      "id": "user-account-test",
+      "name": "User Account Management Test",
+      "category": "user_management",
+      "priority": "medium",
+      "description": "Test user account features and profile management",
+      "steps": [
+        "Login with test user credentials",
+        "Navigate to account/profile page",
+        "Verify user information is displayed correctly",
+        "Test profile editing functionality",
+        "Check order history (if any orders exist)",
+        "Test wishlist functionality",
+        "Verify address management features",
+        "Check loyalty tier information display"
+      ],
+      "expectedOutcome": "User account features work correctly with proper profile management and order tracking"
+    },
+    {
+      "id": "fragrance-finder-test",
+      "name": "Fragrance Finder Quiz Test",
+      "category": "functionality",
+      "priority": "medium", 
+      "description": "Test the fragrance discovery quiz and recommendation system",
+      "steps": [
+        "Navigate to fragrance finder/quiz page",
+        "Start the fragrance personality quiz",
+        "Answer quiz questions about preferences",
+        "Complete the quiz and view results",
+        "Verify personalized fragrance recommendations",
+        "Check that recommendations match quiz answers",
+        "Test ability to save or act on recommendations"
+      ],
+      "expectedOutcome": "Fragrance finder quiz provides personalized recommendations based on user preferences"
+    },
+    {
+      "id": "search-functionality-test",
+      "name": "Search Functionality Test",
+      "category": "functionality",
+      "priority": "high",
+      "description": "Test search capabilities and result accuracy",
+      "steps": [
+        "Use search bar to search for 'Chanel'",
+        "Verify search results show relevant products",
+        "Test search with fragrance family terms like 'floral'",
+        "Try searching for specific fragrance notes",
+        "Test empty search handling",
+        "Verify search suggestions (if available)",
+        "Test search result filtering and sorting"
+      ],
+      "expectedOutcome": "Search functionality returns relevant results and handles various query types appropriately"
+    },
+    {
+      "id": "wishlist-test",
+      "name": "Wishlist Functionality Test",
+      "category": "functionality",
+      "priority": "medium",
+      "description": "Test wishlist creation and management features",
+      "steps": [
+        "Login with test user account",
+        "Navigate to a product page",
+        "Add product to wishlist",
+        "Navigate to wishlist page",
+        "Verify product appears in wishlist",
+        "Test removing items from wishlist",
+        "Test moving items from wishlist to cart",
+        "Check wishlist sharing functionality (if available)"
+      ],
+      "expectedOutcome": "Wishlist functionality allows users to save and manage desired products"
+    },
+    {
+      "id": "checkout-process-test",
+      "name": "Checkout Process Test",
+      "category": "ecommerce",
+      "priority": "high",
+      "description": "Test the checkout flow and order placement process",
+      "steps": [
+        "Add products to cart",
+        "Navigate to checkout page",
+        "Verify cart contents are displayed correctly",
+        "Test shipping address entry/selection",
+        "Test shipping method selection",
+        "Verify order total calculations",
+        "Test payment method selection (without actual payment)",
+        "Check order review before submission"
+      ],
+      "expectedOutcome": "Checkout process guides users through order placement with proper validation and calculations"
+    },
+    {
+      "id": "sample-program-test",
+      "name": "Sample Program Test",
+      "category": "functionality",
+      "priority": "medium",
+      "description": "Test fragrance sample ordering functionality",
+      "steps": [
+        "Navigate to sample program page",
+        "Browse available fragrance samples",
+        "Add samples to cart or sample order",
+        "Verify sample pricing and options",
+        "Test sample set or individual sample selection",
+        "Check sample order process",
+        "Verify sample-specific checkout flow"
+      ],
+      "expectedOutcome": "Sample program allows users to order fragrance samples with appropriate pricing and options"
+    },
+    {
+      "id": "gift-services-test",
+      "name": "Gift Services Test",
+      "category": "functionality",
+      "priority": "medium",
+      "description": "Test gift wrapping, gift cards, and gift-related features",
+      "steps": [
+        "Navigate to gift services page",
+        "Test gift card purchase functionality",
+        "Check gift wrapping options during checkout",
+        "Verify gift message functionality",
+        "Test gift set or curated collection browsing",
+        "Check gift guide recommendations",
+        "Verify gift-specific pricing and options"
+      ],
+      "expectedOutcome": "Gift services provide comprehensive gifting options with proper functionality"
+    },
+    {
+      "id": "brand-pages-test",
+      "name": "Brand Pages Test",
+      "category": "content",
+      "priority": "medium",
+      "description": "Test brand-specific pages and information display",
+      "steps": [
+        "Navigate to brands section",
+        "Click on a specific brand (e.g., Chanel, Tom Ford)",
+        "Verify brand story and heritage information",
+        "Check brand-specific product listings",
+        "Test brand filtering functionality",
+        "Verify brand images and logos display",
+        "Check brand-specific navigation and layout"
+      ],
+      "expectedOutcome": "Brand pages display comprehensive brand information with proper product organization"
+    },
+    {
+      "id": "customer-service-test",
+      "name": "Customer Service Features Test",
+      "category": "functionality",
+      "priority": "medium",
+      "description": "Test customer support and help features",
+      "steps": [
+        "Navigate to customer service/support page",
+        "Check FAQ section functionality",
+        "Test contact form submission",
+        "Verify support ticket creation (if available)",
+        "Check live chat functionality (if present)",
+        "Test help search functionality",
+        "Verify contact information display"
+      ],
+      "expectedOutcome": "Customer service features provide adequate support options and information"
+    },
+    {
+      "id": "newsletter-signup-test",
+      "name": "Newsletter Signup Test",
+      "category": "functionality",
+      "priority": "low",
+      "description": "Test newsletter subscription functionality",
+      "steps": [
+        "Locate newsletter signup form (usually in footer)",
+        "Enter test email address",
+        "Submit newsletter signup",
+        "Verify confirmation message or redirect",
+        "Test email validation",
+        "Check unsubscribe functionality (if accessible)",
+        "Verify newsletter preferences (if available)"
+      ],
+      "expectedOutcome": "Newsletter signup works correctly with proper validation and confirmation"
+    },
+    {
+      "id": "order-tracking-test",
+      "name": "Order Tracking Test",
+      "category": "functionality",
+      "priority": "medium",
+      "description": "Test order status tracking and history features",
+      "steps": [
+        "Login with user account that has orders",
+        "Navigate to order history page",
+        "Verify past orders are displayed",
+        "Click on specific order for details",
+        "Check order status and tracking information",
+        "Test order tracking number lookup (if available)",
+        "Verify order details accuracy"
+      ],
+      "expectedOutcome": "Order tracking provides accurate status information and order history"
+    },
+    {
+      "id": "performance-test",
+      "name": "Basic Performance Test",
+      "category": "performance",
+      "priority": "medium",
+      "description": "Test basic application performance and loading times",
+      "steps": [
+        "Measure homepage loading time",
+        "Check product page loading speed",
+        "Test image loading performance",
+        "Verify smooth scrolling and interactions",
+        "Check for console errors or warnings",
+        "Test navigation speed between pages",
+        "Verify cart updates happen quickly"
+      ],
+      "expectedOutcome": "Application loads quickly and performs smoothly without significant delays or errors"
+    },
+    {
+      "id": "error-handling-test",
+      "name": "Error Handling Test",
+      "category": "reliability",
+      "priority": "medium",
+      "description": "Test application error handling and edge cases",
+      "steps": [
+        "Test invalid login credentials",
+        "Try accessing non-existent product pages",
+        "Test form submission with invalid data",
+        "Check network error handling (if possible)",
+        "Test empty cart checkout attempt",
+        "Verify 404 page handling",
+        "Check error message display and clarity"
+      ],
+      "expectedOutcome": "Application handles errors gracefully with appropriate user feedback"
+    },
+    {
+      "id": "accessibility-test",
+      "name": "Basic Accessibility Test",
+      "category": "accessibility",
+      "priority": "medium",
+      "description": "Test basic accessibility features and compliance",
+      "steps": [
+        "Test keyboard navigation through the site",
+        "Check for alt text on product images",
+        "Verify proper heading structure (H1, H2, etc.)",
+        "Test form label associations",
+        "Check color contrast for readability",
+        "Verify focus indicators on interactive elements",
+        "Test with screen reader (if available)"
+      ],
+      "expectedOutcome": "Application meets basic accessibility standards for inclusive user experience"
+    },
+    {
+      "id": "data-persistence-test",
+      "name": "Data Persistence Test",
+      "category": "functionality",
+      "priority": "medium",
+      "description": "Test that user data and cart contents persist correctly",
+      "steps": [
+        "Add items to cart",
+        "Refresh the page",
+        "Verify cart contents remain",
+        "Login to user account",
+        "Refresh page and verify login persists",
+        "Test browser back/forward navigation",
+        "Check that user preferences are saved"
+      ],
+      "expectedOutcome": "User data, cart contents, and session information persist correctly across page refreshes and navigation"
+    },
+    {
+      "id": "api-integration-test",
+      "name": "API Integration Test",
+      "category": "technical",
+      "priority": "high",
+      "description": "Test that frontend properly integrates with backend API",
+      "steps": [
+        "Verify product data loads from API",
+        "Test user authentication API calls",
+        "Check cart operations sync with backend",
+        "Verify search results come from API",
+        "Test that user profile data loads correctly",
+        "Check that orders are properly submitted to backend",
+        "Verify error responses are handled appropriately"
+      ],
+      "expectedOutcome": "Frontend successfully integrates with backend API for all major functionality"
+    },
+    {
+      "id": "luxury-branding-test",
+      "name": "Luxury Branding and UX Test",
+      "category": "branding",
+      "priority": "high",
+      "description": "Verify the application maintains luxury fragrance branding and user experience",
+      "steps": [
+        "Check overall visual design reflects luxury aesthetic",
+        "Verify fragrance-specific terminology and language",
+        "Check product presentation emphasizes quality and luxury",
+        "Verify brand storytelling and heritage content",
+        "Check that pricing reflects luxury positioning",
+        "Verify sophisticated color scheme and typography",
+        "Check for premium user experience elements"
+      ],
+      "expectedOutcome": "Application successfully conveys luxury fragrance brand positioning with appropriate design and content"
+    }
+  ],
+  "test_execution_notes": {
+    "setup_requirements": [
+      "Application must be running on http://localhost:5174",
+      "Backend API must be running on http://localhost:3001", 
+      "Database must be initialized with seed data",
+      "Test users from test_users.json should be available"
+    ],
+    "critical_tests": [
+      "functional-app-test",
+      "homepage-content-test", 
+      "user-authentication-test",
+      "product-catalog-test",
+      "shopping-cart-test",
+      "api-integration-test",
+      "luxury-branding-test"
+    ],
+    "test_data": {
+      "test_users": "Use credentials from test_users.json",
+      "test_products": "Chanel No. 5, Tom Ford Oud Wood, Miss Dior Blooming Bouquet, Creed Aventus, Maison Margiela REPLICA Beach Walk",
+      "test_searches": ["Chanel", "floral", "woody", "Tom Ford", "perfume"]
+    },
+    "expected_failures": {
+      "payment_processing": "Payment integration may not be fully functional in development",
+      "email_sending": "Email notifications may not work without proper SMTP configuration",
+      "external_apis": "Some features requiring external APIs may have limited functionality"
+    }
+  }
+}

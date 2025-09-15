@@ -1,0 +1,183 @@
+{
+  "generated_at": "2025-01-15T12:40:00Z",
+  "user_structure": {
+    "table_name": "users",
+    "role_field": "loyalty_tier",
+    "registration_endpoint": "/api/auth/register",
+    "login_endpoint": "/api/auth/login"
+  },
+  "total_users": 5,
+  "verified_users": 5,
+  "users": [
+    {
+      "user_id": "user_001",
+      "email": "alice.smith@email.com",
+      "password": "password123",
+      "first_name": "Alice",
+      "last_name": "Smith",
+      "phone_number": "+1234567890",
+      "loyalty_tier": "gold",
+      "email_verified": true,
+      "fragrance_profile": "{\"preferred_families\": [\"floral\", \"fresh\"], \"intensity\": \"moderate\"}",
+      "verified": true,
+      "role": "customer"
+    },
+    {
+      "user_id": "user_002", 
+      "email": "bob.jones@email.com",
+      "password": "admin123",
+      "first_name": "Bob",
+      "last_name": "Jones",
+      "phone_number": "+1234567891",
+      "loyalty_tier": "silver",
+      "email_verified": true,
+      "fragrance_profile": "{\"preferred_families\": [\"woody\", \"oriental\"], \"intensity\": \"strong\"}",
+      "verified": true,
+      "role": "admin"
+    },
+    {
+      "user_id": "user_003",
+      "email": "carol.white@email.com", 
+      "password": "user123",
+      "first_name": "Carol",
+      "last_name": "White",
+      "phone_number": "+1234567892",
+      "loyalty_tier": "bronze",
+      "email_verified": false,
+      "fragrance_profile": "{\"preferred_families\": [\"citrus\", \"aquatic\"], \"intensity\": \"light\"}",
+      "verified": true,
+      "role": "customer"
+    },
+    {
+      "user_id": "user_004",
+      "email": "david.brown@email.com",
+      "password": "secure456", 
+      "first_name": "David",
+      "last_name": "Brown",
+      "phone_number": "+1234567893",
+      "loyalty_tier": "platinum",
+      "email_verified": true,
+      "fragrance_profile": "{\"preferred_families\": [\"spicy\", \"leather\"], \"intensity\": \"very_strong\"}",
+      "verified": true,
+      "role": "vip_customer"
+    },
+    {
+      "user_id": "user_005",
+      "email": "emma.davis@email.com",
+      "password": "mypass789",
+      "first_name": "Emma", 
+      "last_name": "Davis",
+      "phone_number": "+1234567894",
+      "loyalty_tier": "gold",
+      "email_verified": true,
+      "fragrance_profile": "{\"preferred_families\": [\"gourmand\", \"vanilla\"], \"intensity\": \"moderate\"}",
+      "verified": true,
+      "role": "customer"
+    }
+  ],
+  "by_role": {
+    "admin": [
+      {
+        "email": "bob.jones@email.com",
+        "password": "admin123",
+        "first_name": "Bob",
+        "last_name": "Jones",
+        "loyalty_tier": "silver",
+        "verified": true
+      }
+    ],
+    "customer": [
+      {
+        "email": "alice.smith@email.com", 
+        "password": "password123",
+        "first_name": "Alice",
+        "last_name": "Smith",
+        "loyalty_tier": "gold",
+        "verified": true
+      },
+      {
+        "email": "carol.white@email.com",
+        "password": "user123", 
+        "first_name": "Carol",
+        "last_name": "White",
+        "loyalty_tier": "bronze",
+        "verified": true
+      },
+      {
+        "email": "emma.davis@email.com",
+        "password": "mypass789",
+        "first_name": "Emma",
+        "last_name": "Davis", 
+        "loyalty_tier": "gold",
+        "verified": true
+      }
+    ],
+    "vip_customer": [
+      {
+        "email": "david.brown@email.com",
+        "password": "secure456",
+        "first_name": "David",
+        "last_name": "Brown",
+        "loyalty_tier": "platinum", 
+        "verified": true
+      }
+    ]
+  },
+  "loyalty_tiers": {
+    "bronze": {
+      "description": "Entry level tier",
+      "users": ["carol.white@email.com"]
+    },
+    "silver": {
+      "description": "Mid-level tier with some benefits",
+      "users": ["bob.jones@email.com"]
+    },
+    "gold": {
+      "description": "Premium tier with enhanced benefits",
+      "users": ["alice.smith@email.com", "emma.davis@email.com"]
+    },
+    "platinum": {
+      "description": "VIP tier with maximum benefits",
+      "users": ["david.brown@email.com"]
+    }
+  },
+  "test_scenarios": {
+    "authentication": {
+      "valid_login": "Use any user credentials above",
+      "invalid_login": "Use wrong password or non-existent email",
+      "registration": "Create new user with unique email"
+    },
+    "user_types": {
+      "new_user": "carol.white@email.com (email not verified)",
+      "regular_user": "alice.smith@email.com (gold tier)",
+      "admin_user": "bob.jones@email.com (admin access)",
+      "vip_user": "david.brown@email.com (platinum tier)"
+    },
+    "fragrance_preferences": {
+      "floral_lover": "alice.smith@email.com",
+      "woody_oriental": "bob.jones@email.com", 
+      "fresh_citrus": "carol.white@email.com",
+      "spicy_leather": "david.brown@email.com",
+      "gourmand_vanilla": "emma.davis@email.com"
+    }
+  },
+  "api_test_examples": {
+    "login_request": {
+      "url": "POST /api/auth/login",
+      "body": {
+        "email": "alice.smith@email.com",
+        "password": "password123"
+      }
+    },
+    "register_request": {
+      "url": "POST /api/auth/register", 
+      "body": {
+        "email": "newuser@test.com",
+        "password": "newpass123",
+        "first_name": "New",
+        "last_name": "User",
+        "phone_number": "+1234567899"
+      }
+    }
+  }
+}
