@@ -74,7 +74,7 @@ const GV_AccountDropdown: React.FC = () => {
   });
 
   // React Query for recent orders
-  const { data: recentOrders = [], isLoading: ordersLoading } = useQuery({
+  const { data: recentOrders = [] } = useQuery({
     queryKey: ['recentOrders', authToken],
     queryFn: () => getRecentOrders(authToken!),
     enabled: isAuthenticated && !!authToken,
@@ -170,7 +170,7 @@ const GV_AccountDropdown: React.FC = () => {
                 {(userProfile?.loyalty_tier || currentUser?.loyalty_tier) && (
                   <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800 mt-1">
                     <span className="w-2 h-2 bg-purple-500 rounded-full mr-1"></span>
-                    {(userProfile?.loyalty_tier || currentUser?.loyalty_tier)?.charAt(0).toUpperCase() + (userProfile?.loyalty_tier || currentUser?.loyalty_tier)?.slice(1)} Member
+                    {((userProfile?.loyalty_tier || currentUser?.loyalty_tier) || '').charAt(0).toUpperCase() + ((userProfile?.loyalty_tier || currentUser?.loyalty_tier) || '').slice(1)} Member
                   </div>
                 )}
               </div>

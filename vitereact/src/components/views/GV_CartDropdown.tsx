@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAppStore } from '@/store/main';
 
 // Types based on Zod schemas
@@ -20,32 +19,7 @@ interface CartItemResponse {
   brand_name?: string;
 }
 
-interface CartResponse {
-  cart_id: string;
-  user_id: string | null;
-  session_id: string | null;
-  created_at: string;
-  updated_at: string;
-  items: CartItemResponse[];
-}
 
-interface PromotionValidationRequest {
-  promotion_code: string;
-  order_total: number;
-}
-
-interface PromotionValidationResponse {
-  is_valid: boolean;
-  discount_amount: number;
-  discount_type: string;
-  promotion?: {
-    promotion_id: string;
-    promotion_code: string;
-    promotion_name: string;
-    description: string;
-  };
-  error_message?: string;
-}
 
 const GV_CartDropdown: React.FC = () => {
   const [promotionalCode, setPromotionalCode] = useState('');
@@ -53,9 +27,7 @@ const GV_CartDropdown: React.FC = () => {
 
   // Individual Zustand selectors to prevent infinite loops
   const cartDropdownOpen = useAppStore(state => state.ui_state.cart_dropdown_open);
-  const authToken = useAppStore(state => state.authentication_state.auth_token);
   const cartItems = useAppStore(state => state.cart_state.items);
-  const cartSubtotal = useAppStore(state => state.cart_state.subtotal);
   const freeShippingThreshold = useAppStore(state => state.cart_state.free_shipping_threshold);
   const appliedPromotions = useAppStore(state => state.cart_state.applied_promotions);
   
@@ -68,9 +40,6 @@ const GV_CartDropdown: React.FC = () => {
   const showNotification = useAppStore(state => state.show_notification);
 
   const queryClient = useQueryClient();
-
-  // API base URL
-  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
   // Load cart contents when dropdown opens
   useEffect(() => {
@@ -87,7 +56,7 @@ const GV_CartDropdown: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
-    onError: (error: any) => {
+    onError: () => {
       showNotification({
         type: 'error',
         message: 'Failed to update quantity',
@@ -105,7 +74,7 @@ const GV_CartDropdown: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
-    onError: (error: any) => {
+    onError: () => {
       showNotification({
         type: 'error',
         message: 'Failed to remove item',

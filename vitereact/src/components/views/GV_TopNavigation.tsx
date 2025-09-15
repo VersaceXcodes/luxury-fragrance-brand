@@ -18,21 +18,7 @@ interface Brand {
   is_niche_brand: boolean;
 }
 
-interface User {
-  user_id: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-  loyalty_tier: string | null;
-}
 
-interface CartResponse {
-  cart_id: string;
-  items: Array<{
-    cart_item_id: string;
-    quantity: number;
-  }>;
-}
 
 interface WishlistResponse {
   wishlist_id: string;
@@ -45,7 +31,7 @@ const GV_TopNavigation: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
 
   // Individual Zustand selectors to prevent infinite loops
   const currentUser = useAppStore(state => state.authentication_state.current_user);
@@ -121,31 +107,7 @@ const GV_TopNavigation: React.FC = () => {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  // Handle logout
-  const handleLogout = () => {
-    logoutUser();
-    setActiveDropdown(null);
-  };
 
-  // Organize categories by gender and type
-  const menCategories = categories.filter(cat => 
-    cat.category_name.toLowerCase().includes('men') || 
-    cat.category_name.toLowerCase().includes('masculine')
-  );
-
-  const womenCategories = categories.filter(cat => 
-    cat.category_name.toLowerCase().includes('women') || 
-    cat.category_name.toLowerCase().includes('feminine')
-  );
-
-  const unisexCategories = categories.filter(cat => 
-    cat.category_name.toLowerCase().includes('unisex') || 
-    cat.category_name.toLowerCase().includes('neutral')
-  );
-
-  // Organize brands by type
-  const designerBrands = brands.filter(brand => !brand.is_niche_brand);
-  const nicheBrands = brands.filter(brand => brand.is_niche_brand);
 
   const freeShippingThreshold = 75;
 

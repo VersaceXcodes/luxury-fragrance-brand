@@ -46,7 +46,7 @@ const GV_Footer: React.FC = () => {
     onMutate: () => {
       setNewsletterStatus('submitting');
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       setNewsletterStatus('success');
       setNewsletterEmail('');
       setNewsletterConsent(false);

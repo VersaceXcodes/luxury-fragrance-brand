@@ -16,12 +16,7 @@ interface TrendingSearch {
   search_count: number;
 }
 
-interface QuickSearchProduct {
-  product_id: string;
-  product_name: string;
-  brand_name: string;
-  base_price: number;
-}
+
 
 interface SearchSuggestionsResponse {
   products: SearchSuggestion[];
