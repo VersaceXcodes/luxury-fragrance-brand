@@ -149,7 +149,7 @@ const UV_SearchResults: React.FC = () => {
     if (searchQuery !== globalSearchQuery) {
       updateSearchQuery(searchQuery);
     }
-  }, [searchQuery, globalSearchQuery, updateSearchQuery]);
+  }, [searchQuery, globalSearchQuery]);
 
   useEffect(() => {
     const filters = {
@@ -163,7 +163,7 @@ const UV_SearchResults: React.FC = () => {
       availability_status: [],
     };
     updateSearchFilters(filters);
-  }, [priceMin, priceMax, brandIds, fragranceFamilies, updateSearchFilters]);
+  }, [priceMin, priceMax, brandIds, fragranceFamilies]);
 
   // Update URL parameters
   const updateUrlParams = useCallback((newParams: Record<string, string | null>) => {
