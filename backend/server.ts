@@ -69,7 +69,7 @@ const pool = new Pool(
 
 // Initialize Express app
 const app = express();
-const port = process.env.PORT || 3000;
+const port = parseInt(process.env.PORT || '3000', 10);
 
 // Middleware
 app.use(cors({
@@ -83,8 +83,8 @@ app.use(morgan('combined'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Error response utility
-function createErrorResponse(message, error = null, errorCode = null) {
-  const response = {
+function createErrorResponse(message: string, error: Error | null = null, errorCode: string | null = null) {
+  const response: any = {
     success: false,
     message,
     timestamp: new Date().toISOString()
@@ -106,7 +106,7 @@ function createErrorResponse(message, error = null, errorCode = null) {
 }
 
 // Authentication middleware
-const authenticateToken = async (req, res, next) => {
+const authenticateToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
@@ -116,8 +116,12 @@ const authenticateToken = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
+    if (typeof decoded === 'string') {
+      return res.status(401).json(createErrorResponse('Invalid token format', null, 'AUTH_TOKEN_INVALID'));
+    }
+    const payload = decoded as JwtPayload;
     const client = await pool.connect();
-    const result = await client.query('SELECT user_id, email, first_name, last_name, loyalty_tier, email_verified, created_at FROM users WHERE user_id = $1', [decoded.user_id]);
+    const result = await client.query('SELECT user_id, email, first_name, last_name, loyalty_tier, email_verified, created_at FROM users WHERE user_id = $1', [payload.user_id]);
     client.release();
     
     if (result.rows.length === 0) {
@@ -127,29 +131,34 @@ const authenticateToken = async (req, res, next) => {
     req.user = result.rows[0];
     next();
   } catch (error) {
-    return res.status(403).json(createErrorResponse('Invalid or expired token', error, 'AUTH_TOKEN_INVALID'));
+    return res.status(403).json(createErrorResponse('Invalid or expired token', error as Error, 'AUTH_TOKEN_INVALID'));
   }
 };
 
 // Optional authentication middleware
-const optionalAuth = async (req, res, next) => {
+const optionalAuth = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
   if (token) {
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
+      if (typeof decoded === 'string') {
+        return next();
+      }
+      const payload = decoded as JwtPayload;
       const client = await pool.connect();
-      const result = await client.query('SELECT user_id, email, first_name, last_name, loyalty_tier, email_verified, created_at FROM users WHERE user_id = $1', [decoded.user_id]);
+      const result = await client.query('SELECT user_id, email, first_name, last_name, loyalty_tier, email_verified, created_at FROM users WHERE user_id = $1', [payload.user_id]);
       client.release();
       
       if (result.rows.length > 0) {
         req.user = result.rows[0];
       }
     } catch (error) {
-      // Ignore token errors for optional auth
+      // Ignore errors for optional auth
     }
   }
+  
   next();
 };
 
@@ -280,7 +289,7 @@ app.post('/api/auth/login', async (req, res) => {
 /*
 Logout endpoint - invalidates JWT token (client-side token removal)
 */
-app.post('/api/auth/logout', authenticateToken, (req, res) => {
+app.post('/api/auth/logout', authenticateToken, (req: AuthenticatedRequest, res: Response) => {
   // In a real implementation, you might blacklist the token
   res.json({ message: 'Logout successful' });
 });
@@ -288,7 +297,7 @@ app.post('/api/auth/logout', authenticateToken, (req, res) => {
 /*
 Token refresh endpoint - generates new JWT token with extended expiration
 */
-app.post('/api/auth/refresh', authenticateToken, (req, res) => {
+app.post('/api/auth/refresh', authenticateToken, (req: AuthenticatedRequest, res: Response) => {
   try {
     const token = jwt.sign(
       { user_id: req.user.user_id, email: req.user.email }, 
@@ -314,7 +323,7 @@ app.post('/api/auth/refresh', authenticateToken, (req, res) => {
 Get user profile - retrieves complete authenticated user profile including preferences,
 loyalty status, and fragrance profile data for personalization features
 */
-app.get('/api/users/profile', authenticateToken, async (req, res) => {
+app.get('/api/users/profile', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const client = await pool.connect();
     const result = await client.query('SELECT user_id, email, first_name, last_name, phone_number, date_of_birth, loyalty_tier, email_verified, notification_preferences, fragrance_profile, created_at, updated_at FROM users WHERE user_id = $1', [req.user.user_id]);
@@ -335,7 +344,7 @@ app.get('/api/users/profile', authenticateToken, async (req, res) => {
 Update user profile - modifies user profile information including notification preferences,
 fragrance profile for personalization, and contact details with data integrity maintenance
 */
-app.put('/api/users/profile', authenticateToken, async (req, res) => {
+app.put('/api/users/profile', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const validatedData = updateUserInputSchema.parse({ ...req.body, user_id: req.user.user_id });
     
@@ -447,7 +456,7 @@ app.get('/api/products', async (req, res) => {
       occasion_tags, season_suitability, availability_status, is_featured, is_new_arrival,
       is_limited_edition, price_min, price_max, size_options, sort_by = 'sort_order',
       sort_order = 'asc', page = 1, per_page = 20
-    } = req.query;
+    } = req.query as any;
 
     const client = await pool.connect();
     
@@ -683,10 +692,10 @@ fragrance profiles, purchase history, and collaborative filtering algorithms sup
 multiple recommendation types for cross-selling and discovery
 @@need:external-api: ML recommendation service for advanced personalization algorithms based on user preferences, purchase history, and fragrance profiles
 */
-app.get('/api/products/:product_id/recommendations', optionalAuth, async (req, res) => {
+app.get('/api/products/:product_id/recommendations', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { product_id } = req.params;
-    const { type = 'similar', limit = 8 } = req.query;
+    const { type = 'similar', limit = 8 } = req.query as any;
     
     const client = await pool.connect();
     
@@ -813,7 +822,7 @@ Get featured products - retrieves featured products for homepage display
 */
 app.get('/api/products/featured', async (req, res) => {
   try {
-    const { limit = 12 } = req.query;
+    const { limit = 12 } = req.query as any;
     
     const client = await pool.connect();
     
@@ -841,7 +850,7 @@ Get new arrival products - retrieves recently launched products
 */
 app.get('/api/products/new-arrivals', async (req, res) => {
   try {
-    const { limit = 12 } = req.query;
+    const { limit = 12 } = req.query as any;
     
     const client = await pool.connect();
     
@@ -870,12 +879,12 @@ Get best-selling products - retrieves top-performing products by sales volume
 */
 app.get('/api/products/best-sellers', async (req, res) => {
   try {
-    const { limit = 12, category } = req.query;
+    const { limit = 12, category } = req.query as any;
     
     const client = await pool.connect();
     
     let whereClause = "p.availability_status = 'in_stock'";
-    const params = [parseInt(limit)];
+    const params: any[] = [parseInt(limit)];
     
     if (category) {
       whereClause += " AND c.category_name ILIKE $2";
@@ -920,7 +929,7 @@ Get all brands - retrieves brand catalog with filtering and sorting options
 */
 app.get('/api/brands', async (req, res) => {
   try {
-    const { is_active = true, is_niche_brand, query, sort_by = 'display_order', sort_order = 'asc' } = req.query;
+    const { is_active = true, is_niche_brand, query, sort_by = 'display_order', sort_order = 'asc' } = req.query as any;
     
     const client = await pool.connect();
     
@@ -1006,7 +1015,7 @@ Get brand products - retrieves all products for a specific brand with pagination
 app.get('/api/brands/:brand_id/products', async (req, res) => {
   try {
     const { brand_id } = req.params;
-    const { page = 1, per_page = 20, sort_by = 'sort_order' } = req.query;
+    const { page = 1, per_page = 20, sort_by = 'sort_order' } = req.query as any;
     
     const client = await pool.connect();
     
@@ -1071,7 +1080,7 @@ Get all categories - retrieves category hierarchy with optional parent filtering
 */
 app.get('/api/categories', async (req, res) => {
   try {
-    const { parent_category_id, is_active = true } = req.query;
+    const { parent_category_id, is_active = true } = req.query as any;
     
     const client = await pool.connect();
     
@@ -1147,7 +1156,7 @@ Get category products - retrieves all products in a specific category with pagin
 app.get('/api/categories/:category_id/products', async (req, res) => {
   try {
     const { category_id } = req.params;
-    const { page = 1, per_page = 20, sort_by = 'sort_order' } = req.query;
+    const { page = 1, per_page = 20, sort_by = 'sort_order' } = req.query as any;
     
     const client = await pool.connect();
     
@@ -1211,9 +1220,9 @@ app.get('/api/categories/:category_id/products', async (req, res) => {
 Get cart - retrieves current cart contents supporting both authenticated users and guest sessions
 including cart items with current pricing, gift options, and sample inclusions
 */
-app.get('/api/cart', optionalAuth, async (req, res) => {
+app.get('/api/cart', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { session_id } = req.query;
+    const { session_id } = req.query as any;
     
     const client = await pool.connect();
     
@@ -1238,7 +1247,7 @@ app.get('/api/cart', optionalAuth, async (req, res) => {
       return res.json({ cart_id: null, items: [], total: 0 });
     }
 
-    const cart = cartResult.rows[0];
+    const cart = cartResult.rows[0] as any;
 
     // Get cart items with product details
     const itemsResult = await client.query(`
@@ -1282,7 +1291,7 @@ app.get('/api/cart', optionalAuth, async (req, res) => {
 /*
 Create cart - creates new cart for guest or authenticated users
 */
-app.post('/api/cart', optionalAuth, async (req, res) => {
+app.post('/api/cart', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { session_id } = req.body;
     
@@ -1309,10 +1318,10 @@ app.post('/api/cart', optionalAuth, async (req, res) => {
 Add cart item - adds products to cart with size selection, quantity specification,
 and optional gift services with cart creation for new sessions and inventory validation
 */
-app.post('/api/cart/items', optionalAuth, async (req, res) => {
+app.post('/api/cart/items', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const validatedData = createCartItemInputSchema.parse(req.body);
-    const { cart_id, session_id } = req.query;
+    const { cart_id, session_id } = req.query as any;
     
     const client = await pool.connect();
     
@@ -1334,7 +1343,7 @@ app.post('/api/cart/items', optionalAuth, async (req, res) => {
       if (cartQuery) {
         const cartResult = await client.query(cartQuery, cartParams);
         if (cartResult.rows.length > 0) {
-          finalCartId = cartResult.rows[0].cart_id;
+          finalCartId = (cartResult.rows[0] as any).cart_id;
         }
       }
 
@@ -1417,7 +1426,7 @@ app.post('/api/cart/items', optionalAuth, async (req, res) => {
 /*
 Update cart item - modifies cart item quantities and gift service selections with inventory validation
 */
-app.put('/api/cart/items/:cart_item_id', optionalAuth, async (req, res) => {
+app.put('/api/cart/items/:cart_item_id', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { cart_item_id } = req.params;
     const validatedData = updateCartItemInputSchema.parse(req.body);
@@ -1508,7 +1517,7 @@ app.put('/api/cart/items/:cart_item_id', optionalAuth, async (req, res) => {
 /*
 Remove cart item - removes specific item from cart
 */
-app.delete('/api/cart/items/:cart_item_id', optionalAuth, async (req, res) => {
+app.delete('/api/cart/items/:cart_item_id', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { cart_item_id } = req.params;
     
@@ -1550,9 +1559,9 @@ app.delete('/api/cart/items/:cart_item_id', optionalAuth, async (req, res) => {
 /*
 Clear cart - removes all items from cart
 */
-app.delete('/api/cart/clear', optionalAuth, async (req, res) => {
+app.delete('/api/cart/clear', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { cart_id, session_id } = req.query;
+    const { cart_id, session_id } = req.query as any;
     
     const client = await pool.connect();
     
@@ -1574,7 +1583,7 @@ app.delete('/api/cart/clear', optionalAuth, async (req, res) => {
       if (cartQuery) {
         const cartResult = await client.query(cartQuery, cartParams);
         if (cartResult.rows.length > 0) {
-          finalCartId = cartResult.rows[0].cart_id;
+          finalCartId = (cartResult.rows[0] as any).cart_id;
         }
       }
     }
@@ -1600,9 +1609,9 @@ app.delete('/api/cart/clear', optionalAuth, async (req, res) => {
 /*
 Get user addresses - retrieves all addresses for authenticated user with optional type filtering
 */
-app.get('/api/addresses', authenticateToken, async (req, res) => {
+app.get('/api/addresses', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { address_type } = req.query;
+    const { address_type } = req.query as any;
     
     const client = await pool.connect();
     
@@ -1630,7 +1639,7 @@ app.get('/api/addresses', authenticateToken, async (req, res) => {
 Create address - creates new shipping or billing addresses with comprehensive geographic data
 and contact information for order fulfillment with default address management
 */
-app.post('/api/addresses', authenticateToken, async (req, res) => {
+app.post('/api/addresses', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const validatedData = createAddressInputSchema.parse(req.body);
     
@@ -1675,7 +1684,7 @@ app.post('/api/addresses', authenticateToken, async (req, res) => {
 /*
 Get address by ID - retrieves specific address with ownership verification
 */
-app.get('/api/addresses/:address_id', authenticateToken, async (req, res) => {
+app.get('/api/addresses/:address_id', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { address_id } = req.params;
     
@@ -1702,7 +1711,7 @@ app.get('/api/addresses/:address_id', authenticateToken, async (req, res) => {
 /*
 Update address - modifies existing address with ownership verification
 */
-app.put('/api/addresses/:address_id', authenticateToken, async (req, res) => {
+app.put('/api/addresses/:address_id', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { address_id } = req.params;
     const validatedData = createAddressInputSchema.parse(req.body);
@@ -1754,7 +1763,7 @@ app.put('/api/addresses/:address_id', authenticateToken, async (req, res) => {
 /*
 Delete address - removes address with ownership verification
 */
-app.delete('/api/addresses/:address_id', authenticateToken, async (req, res) => {
+app.delete('/api/addresses/:address_id', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { address_id } = req.params;
     
@@ -1788,7 +1797,7 @@ Get shipping methods - retrieves available shipping methods with optional filter
 */
 app.get('/api/shipping-methods', async (req, res) => {
   try {
-    const { is_active = true, destination_country, order_total } = req.query;
+    const { is_active = true, destination_country, order_total } = req.query as any;
     
     const client = await pool.connect();
     
@@ -1859,9 +1868,9 @@ app.get('/api/shipping-methods/:shipping_method_id', async (req, res) => {
 /*
 Get user orders - retrieves order history for authenticated users with filtering and pagination
 */
-app.get('/api/orders', authenticateToken, async (req, res) => {
+app.get('/api/orders', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { order_status, payment_status, date_from, date_to, page = 1, per_page = 10 } = req.query;
+    const { order_status, payment_status, date_from, date_to, page = 1, per_page = 10 } = req.query as any;
     
     const client = await pool.connect();
     
@@ -1949,7 +1958,7 @@ address assignment, shipping method selection, and payment processing integratio
 @@need:external-api: Payment processing API for payment method validation and charge processing
 @@need:external-api: Tax calculation service for accurate tax computation based on shipping address
 */
-app.post('/api/orders', optionalAuth, async (req, res) => {
+app.post('/api/orders', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const validatedData = createOrderInputSchema.parse(req.body);
     
@@ -2045,7 +2054,7 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
 /*
 Get order by ID - retrieves detailed order information with items
 */
-app.get('/api/orders/:order_id', optionalAuth, async (req, res) => {
+app.get('/api/orders/:order_id', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { order_id } = req.params;
     
@@ -2098,7 +2107,7 @@ for guest users and authenticated customers with real-time shipment status
 */
 app.get('/api/orders/track', async (req, res) => {
   try {
-    const { order_number, email } = req.query;
+    const { order_number, email } = req.query as any;
 
     if (!order_number) {
       return res.status(400).json(createErrorResponse('Order number is required', null, 'ORDER_NUMBER_REQUIRED'));
@@ -2183,7 +2192,7 @@ app.get('/api/reviews', async (req, res) => {
       product_id, user_id, rating, is_verified_purchase, is_featured,
       moderation_status = 'approved', sort_by = 'created_at', sort_order = 'desc',
       page = 1, per_page = 20
-    } = req.query;
+    } = req.query as any;
 
     const client = await pool.connect();
     
@@ -2279,7 +2288,7 @@ Create review - creates product reviews with fragrance-specific ratings includin
 sillage, and usage context tags with verified purchase linking and moderation workflow
 @@need:external-api: Content moderation service for inappropriate content detection and filtering
 */
-app.post('/api/reviews', authenticateToken, async (req, res) => {
+app.post('/api/reviews', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const validatedData = createReviewInputSchema.parse(req.body);
     
@@ -2375,7 +2384,7 @@ app.get('/api/reviews/:review_id', async (req, res) => {
 /*
 Update review - allows users to modify their own reviews
 */
-app.put('/api/reviews/:review_id', authenticateToken, async (req, res) => {
+app.put('/api/reviews/:review_id', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { review_id } = req.params;
     const validatedData = createReviewInputSchema.parse(req.body);
@@ -2421,7 +2430,7 @@ app.put('/api/reviews/:review_id', authenticateToken, async (req, res) => {
 /*
 Delete review - allows users to delete their own reviews
 */
-app.delete('/api/reviews/:review_id', authenticateToken, async (req, res) => {
+app.delete('/api/reviews/:review_id', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { review_id } = req.params;
     
@@ -2448,7 +2457,7 @@ app.delete('/api/reviews/:review_id', authenticateToken, async (req, res) => {
 /*
 Mark review helpful - allows users to vote on review helpfulness
 */
-app.post('/api/reviews/:review_id/helpful', optionalAuth, async (req, res) => {
+app.post('/api/reviews/:review_id/helpful', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { review_id } = req.params;
     const { helpful } = req.body;
@@ -2484,7 +2493,7 @@ app.post('/api/reviews/:review_id/helpful', optionalAuth, async (req, res) => {
 /*
 Get user wishlists - retrieves all wishlists for authenticated user
 */
-app.get('/api/wishlists', authenticateToken, async (req, res) => {
+app.get('/api/wishlists', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const client = await pool.connect();
     
@@ -2508,7 +2517,7 @@ app.get('/api/wishlists', authenticateToken, async (req, res) => {
 /*
 Create wishlist - creates new named wishlists with privacy controls and sharing capabilities
 */
-app.post('/api/wishlists', authenticateToken, async (req, res) => {
+app.post('/api/wishlists', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { wishlist_name = 'My Wishlist', is_public = false } = req.body;
     
@@ -2539,7 +2548,7 @@ app.post('/api/wishlists', authenticateToken, async (req, res) => {
 /*
 Get wishlist by ID - retrieves wishlist details with items
 */
-app.get('/api/wishlists/:wishlist_id', optionalAuth, async (req, res) => {
+app.get('/api/wishlists/:wishlist_id', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { wishlist_id } = req.params;
     
@@ -2585,7 +2594,7 @@ app.get('/api/wishlists/:wishlist_id', optionalAuth, async (req, res) => {
 /*
 Update wishlist - modifies wishlist name and privacy settings
 */
-app.put('/api/wishlists/:wishlist_id', authenticateToken, async (req, res) => {
+app.put('/api/wishlists/:wishlist_id', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { wishlist_id } = req.params;
     const { wishlist_name, is_public } = req.body;
@@ -2622,7 +2631,7 @@ app.put('/api/wishlists/:wishlist_id', authenticateToken, async (req, res) => {
 /*
 Delete wishlist - removes wishlist with ownership verification
 */
-app.delete('/api/wishlists/:wishlist_id', authenticateToken, async (req, res) => {
+app.delete('/api/wishlists/:wishlist_id', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { wishlist_id } = req.params;
     
@@ -2649,7 +2658,7 @@ app.delete('/api/wishlists/:wishlist_id', authenticateToken, async (req, res) =>
 /*
 Add wishlist item - adds products to wishlists with optional size preferences and personal notes
 */
-app.post('/api/wishlists/:wishlist_id/items', authenticateToken, async (req, res) => {
+app.post('/api/wishlists/:wishlist_id/items', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { wishlist_id } = req.params;
     const validatedData = createWishlistItemInputSchema.parse(req.body);
@@ -2701,7 +2710,7 @@ app.post('/api/wishlists/:wishlist_id/items', authenticateToken, async (req, res
 /*
 Remove wishlist item - removes specific product from wishlist
 */
-app.delete('/api/wishlists/:wishlist_id/items/:wishlist_item_id', authenticateToken, async (req, res) => {
+app.delete('/api/wishlists/:wishlist_id/items/:wishlist_item_id', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { wishlist_id, wishlist_item_id } = req.params;
     
@@ -2850,7 +2859,7 @@ Submit quiz results - processes fragrance personality quiz responses to generate
 fragrance family recommendations and specific product suggestions for discovery
 @@need:external-api: Fragrance recommendation AI/ML service for personality analysis and product matching algorithms
 */
-app.post('/api/fragrance-quiz/submit', optionalAuth, async (req, res) => {
+app.post('/api/fragrance-quiz/submit', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { personality_type, quiz_answers, recommended_families, intensity_preference, occasion_preferences, season_preferences } = req.body;
     
@@ -2966,7 +2975,7 @@ Get sample programs - retrieves available sample programs and sets with filterin
 */
 app.get('/api/samples', async (req, res) => {
   try {
-    const { set_type, fragrance_family, brand_id } = req.query;
+    const { set_type, fragrance_family, brand_id } = req.query as any;
     
     // Mock sample sets data
     const sampleSets = [
@@ -3014,7 +3023,7 @@ Get individual samples - retrieves individual sample options with availability
 */
 app.get('/api/samples/individual', async (req, res) => {
   try {
-    const { product_id, brand_id, page = 1, per_page = 20 } = req.query;
+    const { product_id, brand_id, page = 1, per_page = 20 } = req.query as any;
     
     const client = await pool.connect();
     
@@ -3096,9 +3105,9 @@ app.get('/api/samples/individual', async (req, res) => {
 /*
 Get sample orders - retrieves user's sample order history
 */
-app.get('/api/sample-orders', authenticateToken, async (req, res) => {
+app.get('/api/sample-orders', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { order_status, page = 1, per_page = 10 } = req.query;
+    const { order_status, page = 1, per_page = 10 } = req.query as any;
     
     const client = await pool.connect();
     
@@ -3164,7 +3173,7 @@ app.get('/api/sample-orders', authenticateToken, async (req, res) => {
 /*
 Create sample order - creates new sample orders for fragrance discovery with separate fulfillment workflow
 */
-app.post('/api/sample-orders', optionalAuth, async (req, res) => {
+app.post('/api/sample-orders', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { items, customer_email, shipping_address_id } = req.body;
 
@@ -3221,7 +3230,7 @@ app.post('/api/sample-orders', optionalAuth, async (req, res) => {
 /*
 Get sample order by ID - retrieves detailed sample order information
 */
-app.get('/api/sample-orders/:sample_order_id', optionalAuth, async (req, res) => {
+app.get('/api/sample-orders/:sample_order_id', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { sample_order_id } = req.params;
     
@@ -3274,7 +3283,7 @@ Get gift guides - retrieves gift guides and recommendations with filtering optio
 */
 app.get('/api/gifts/guides', async (req, res) => {
   try {
-    const { recipient, occasion, price_range, relationship } = req.query;
+    const { recipient, occasion, price_range, relationship } = req.query as any;
     
     const client = await pool.connect();
     
@@ -3357,7 +3366,7 @@ Get gift sets - retrieves available gift sets with filtering options
 */
 app.get('/api/gifts/sets', async (req, res) => {
   try {
-    const { occasion, price_min, price_max, brand_id } = req.query;
+    const { occasion, price_min, price_max, brand_id } = req.query as any;
     
     // Mock gift sets data
     const giftSets = [
@@ -3408,7 +3417,7 @@ app.get('/api/gifts/sets', async (req, res) => {
 /*
 Get user gift cards - retrieves gift cards owned by authenticated user
 */
-app.get('/api/gift-cards', authenticateToken, async (req, res) => {
+app.get('/api/gift-cards', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const client = await pool.connect();
     
@@ -3433,7 +3442,7 @@ app.get('/api/gift-cards', authenticateToken, async (req, res) => {
 Create gift card - creates digital gift cards with customizable amounts and delivery scheduling
 @@need:external-api: Email service for gift card delivery to recipients
 */
-app.post('/api/gift-cards', optionalAuth, async (req, res) => {
+app.post('/api/gift-cards', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { initial_amount, purchaser_email, recipient_email, recipient_name, gift_message, delivery_date } = req.body;
 
@@ -3733,9 +3742,9 @@ app.get('/api/promotions/active', async (req, res) => {
 /*
 Get user tickets - retrieves support tickets for authenticated user
 */
-app.get('/api/support/tickets', authenticateToken, async (req, res) => {
+app.get('/api/support/tickets', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { status, category, page = 1, per_page = 10 } = req.query;
+    const { status, category, page = 1, per_page = 10 } = req.query as any;
     
     const client = await pool.connect();
     
@@ -3799,7 +3808,7 @@ app.get('/api/support/tickets', authenticateToken, async (req, res) => {
 Create support ticket - creates customer service tickets with categorization and priority assignment
 @@need:external-api: Email notification service for ticket confirmation and CRM system integration
 */
-app.post('/api/support/tickets', optionalAuth, async (req, res) => {
+app.post('/api/support/tickets', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { customer_email, customer_name, subject, message, category, priority = 'medium', order_id } = req.body;
 
@@ -3835,7 +3844,7 @@ app.post('/api/support/tickets', optionalAuth, async (req, res) => {
 /*
 Get support ticket by ID - retrieves detailed ticket information
 */
-app.get('/api/support/tickets/:ticket_id', optionalAuth, async (req, res) => {
+app.get('/api/support/tickets/:ticket_id', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { ticket_id } = req.params;
     
@@ -3879,7 +3888,7 @@ Get FAQs - retrieves frequently asked questions with search and filtering
 */
 app.get('/api/support/faq', async (req, res) => {
   try {
-    const { category, query } = req.query;
+    const { category, query } = req.query as any;
     
     // Mock FAQ data
     const faqs = [
@@ -4032,7 +4041,7 @@ app.post('/api/newsletter/unsubscribe', async (req, res) => {
 /*
 Get newsletter preferences - retrieves user's newsletter subscription preferences
 */
-app.get('/api/newsletter/preferences', authenticateToken, async (req, res) => {
+app.get('/api/newsletter/preferences', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const client = await pool.connect();
     
@@ -4057,7 +4066,7 @@ app.get('/api/newsletter/preferences', authenticateToken, async (req, res) => {
 /*
 Update newsletter preferences - modifies subscription preferences
 */
-app.put('/api/newsletter/preferences', authenticateToken, async (req, res) => {
+app.put('/api/newsletter/preferences', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { preferences } = req.body;
 
@@ -4096,7 +4105,7 @@ brands, categories, and popular search terms for enhanced discovery experience
 */
 app.get('/api/search/suggestions', async (req, res) => {
   try {
-    const { query, limit = 10 } = req.query;
+    const { query, limit = 10 } = req.query as any;
 
     if (!query || query.length < 2) {
       return res.json({
@@ -4200,7 +4209,7 @@ app.get('/api/search/trending', async (req, res) => {
 /*
 Track product view - records product page views for analytics and recommendation engine training
 */
-app.post('/api/analytics/product-views', optionalAuth, async (req, res) => {
+app.post('/api/analytics/product-views', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { product_id, session_id, referrer_url } = req.body;
 
@@ -4234,7 +4243,7 @@ app.post('/api/analytics/product-views', optionalAuth, async (req, res) => {
 Track search query - records search queries for analytics and search optimization
 @@need:external-api: Analytics platform for real-time data streaming and search behavior analysis
 */
-app.post('/api/analytics/search-tracking', optionalAuth, async (req, res) => {
+app.post('/api/analytics/search-tracking', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { search_query, results_count, session_id } = req.body;
 
