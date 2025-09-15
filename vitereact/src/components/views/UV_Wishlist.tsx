@@ -305,7 +305,7 @@ const UV_Wishlist: React.FC = () => {
           auto_dismiss: true,
           duration: 3000
         });
-      } catch (error) {
+      } catch {
         showNotification({
           type: 'error',
           message: 'Failed to copy link',

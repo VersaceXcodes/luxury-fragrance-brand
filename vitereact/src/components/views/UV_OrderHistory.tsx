@@ -265,7 +265,7 @@ const UV_OrderHistory: React.FC = () => {
       const trackingData = await loadOrderTracking(order.order_number);
       setTrackingInfo(trackingData);
       setShowTrackingModal(true);
-    } catch (error: any) {
+    } catch {
       showNotification({
         type: 'error',
         message: 'Failed to load tracking information',

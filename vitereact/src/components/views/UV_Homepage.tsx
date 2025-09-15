@@ -94,7 +94,7 @@ const UV_Homepage: React.FC = () => {
   ];
 
   // API Queries
-  const { } = useQuery({
+  useQuery({
     queryKey: ['featured-products'],
     queryFn: async () => {
       const response = await axios.get(`${getApiUrl()}/api/products/featured?limit=12`);

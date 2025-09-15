@@ -148,7 +148,7 @@ const UV_LoginRegistration: React.FC = () => {
       uppercase: /[A-Z]/.test(password),
       lowercase: /[a-z]/.test(password),
       number: /\d/.test(password),
-      special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+      special: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)
     };
     
     const passedCount = Object.values(requirements).filter(Boolean).length;
@@ -187,7 +187,7 @@ const UV_LoginRegistration: React.FC = () => {
   };
   
   const validatePhoneNumber = (phone: string): string | null => {
-    if (phone && !/^\+?[\d\s\-\(\)]+$/.test(phone)) return 'Please enter a valid phone number';
+    if (phone && !/^\+?[\d\s\-()]+$/.test(phone)) return 'Please enter a valid phone number';
     return null;
   };
   
@@ -319,7 +319,7 @@ const UV_LoginRegistration: React.FC = () => {
       // For now, simulate the action
       setResetSent(true);
       setFormErrors(prev => ({ ...prev, email: null }));
-    } catch (error: any) {
+    } catch {
       setFormErrors(prev => ({ ...prev, general: 'Failed to send reset email. Please try again.' }));
     }
   };

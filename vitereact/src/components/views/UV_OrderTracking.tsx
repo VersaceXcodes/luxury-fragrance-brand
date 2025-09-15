@@ -170,7 +170,7 @@ const UV_OrderTracking: React.FC = () => {
     if (order_id && guestTrackingEnabled) {
       setGuestTrackingEnabled(false);
     }
-  }, [order_id]);
+  }, [order_id, guestTrackingEnabled]);
 
   return (
     <>

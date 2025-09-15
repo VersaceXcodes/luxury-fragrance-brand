@@ -351,7 +351,7 @@ const UV_Checkout: React.FC = () => {
       setSelectedShippingAddress(shippingAddressId);
       setSelectedBillingAddress(billingAddressId);
       setCurrentStep('payment');
-    } catch (error) {
+    } catch {
       // Error handling is done in mutation
     }
   };

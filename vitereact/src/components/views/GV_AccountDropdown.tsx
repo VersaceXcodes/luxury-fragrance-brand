@@ -94,7 +94,7 @@ const GV_AccountDropdown: React.FC = () => {
         auto_dismiss: true,
         duration: 3000
       });
-    } catch (error) {
+    } catch {
       showNotification({
         type: 'error',
         message: 'Logout failed, but you have been logged out locally',

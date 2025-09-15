@@ -455,7 +455,7 @@ export const useAppStore = create<AppState>()(
 
           // Load cart and preferences for authenticated user
           get().load_cart();
-        } catch (error) {
+        } catch {
           // Token is invalid, clear auth state
           set(() => ({
             authentication_state: {
@@ -724,7 +724,7 @@ export const useAppStore = create<AppState>()(
               session_id: cart.session_id || state.cart_state.session_id,
             },
           }));
-        } catch (error: any) {
+        } catch {
           // Don't show error for cart loading - might be empty or not exist yet
           set((state) => ({
             cart_state: {

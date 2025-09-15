@@ -118,7 +118,7 @@ const UV_ShoppingCart: React.FC = () => {
     try {
       await applyPromotion(promotionCode.trim());
       setPromotionCode('');
-    } catch (error) {
+    } catch {
       // Error handled in store
     } finally {
       setIsApplyingPromotion(false);
@@ -152,7 +152,7 @@ const UV_ShoppingCart: React.FC = () => {
       setRemovedItems(prev => 
         prev.filter(item => item.timestamp !== removedItem.timestamp)
       );
-    } catch (error) {
+    } catch {
       // Error handled in store
     }
   };

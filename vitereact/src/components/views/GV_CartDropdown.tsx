@@ -76,7 +76,7 @@ const GV_CartDropdown: React.FC = () => {
     try {
       await applyPromotion(promotionalCode);
       setPromotionalCode('');
-    } catch (error) {
+    } catch {
       // Error handling is done in the store action
     } finally {
       setIsApplyingPromo(false);

@@ -67,7 +67,7 @@ const GV_SearchOverlay: React.FC = () => {
       if (stored) {
         try {
           setRecentSearches(JSON.parse(stored));
-        } catch (e) {
+        } catch {
           setRecentSearches([]);
         }
       }
