@@ -17,15 +17,7 @@ interface ShippingMethod {
   requires_signature: boolean;
 }
 
-interface PromotionValidation {
-  is_valid: boolean;
-  discount_amount: number;
-  discount_type: string;
-  promotion?: {
-    description: string;
-  };
-  error_message?: string;
-}
+
 
 const UV_ShoppingCart: React.FC = () => {
   // Zustand state selectors (individual to prevent infinite loops)
@@ -37,9 +29,7 @@ const UV_ShoppingCart: React.FC = () => {
   const total = useAppStore(state => state.cart_state.total);
   const appliedPromotions = useAppStore(state => state.cart_state.applied_promotions);
   const freeShippingThreshold = useAppStore(state => state.cart_state.free_shipping_threshold);
-  const isCartLoading = useAppStore(state => state.cart_state.is_loading);
-  const authToken = useAppStore(state => state.authentication_state.auth_token);
-  const isAuthenticated = useAppStore(state => state.authentication_state.authentication_status.is_authenticated);
+
   
   // Zustand actions
   const updateCartItem = useAppStore(state => state.update_cart_item);
@@ -61,7 +51,7 @@ const UV_ShoppingCart: React.FC = () => {
   }, [loadCart]);
 
   // Shipping methods query
-  const { data: shippingMethods = [], isLoading: isLoadingShipping } = useQuery({
+  const { data: shippingMethods = [] } = useQuery({
     queryKey: ['shipping-methods', zipCode, subtotal],
     queryFn: async () => {
       if (!zipCode) return [];
@@ -91,7 +81,7 @@ const UV_ShoppingCart: React.FC = () => {
     mutationFn: async ({ cartItemId, quantity }: { cartItemId: string; quantity: number }) => {
       await updateCartItem(cartItemId, { quantity });
     },
-    onError: (error: any) => {
+    onError: () => {
       showNotification({
         type: 'error',
         message: 'Failed to update quantity',

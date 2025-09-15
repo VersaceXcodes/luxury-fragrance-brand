@@ -115,7 +115,7 @@ const UV_Wishlist: React.FC = () => {
   }, [wishlists, currentWishlistId]);
 
   // Fetch current wishlist items
-  const { data: currentWishlist, isLoading: wishlistItemsLoading, error: wishlistItemsError } = useQuery({
+  const { data: currentWishlist, isLoading: wishlistItemsLoading } = useQuery({
     queryKey: ['wishlist', currentWishlistId],
     queryFn: async (): Promise<WishlistWithItems> => {
       if (!currentWishlistId) throw new Error('No wishlist selected');
@@ -195,7 +195,7 @@ const UV_Wishlist: React.FC = () => {
         duration: 3000
       });
     },
-    onError: (error: any) => {
+    onError: () => {
       showNotification({
         type: 'error',
         message: 'Failed to add item to cart',

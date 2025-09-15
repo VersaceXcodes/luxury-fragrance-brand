@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useAppStore } from '@/store/main';
@@ -31,12 +31,7 @@ interface Brand {
   is_active: boolean;
 }
 
-interface Category {
-  category_id: string;
-  category_name: string;
-  parent_category_id: string | null;
-  is_active: boolean;
-}
+
 
 interface ProductsResponse {
   data: Product[];
@@ -174,16 +169,7 @@ const UV_ProductListing: React.FC = () => {
     staleTime: 300000, // 5 minutes
   });
 
-  const categoriesQuery = useQuery({
-    queryKey: ['categories'],
-    queryFn: async (): Promise<Category[]> => {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/categories`, {
-        params: { is_active: true }
-      });
-      return response.data;
-    },
-    staleTime: 300000, // 5 minutes
-  });
+
 
   // Filter options
   const fragranceFamilies = [
@@ -290,7 +276,7 @@ const UV_ProductListing: React.FC = () => {
   const products = productsQuery.data?.data || [];
   const pagination = productsQuery.data?.pagination;
   const brands = brandsQuery.data || [];
-  const categories = categoriesQuery.data || [];
+
 
   return (
     <>
@@ -832,7 +818,7 @@ const UV_ProductListing: React.FC = () => {
                   {pagination && pagination.has_next && (
                     <div className="mt-8 text-center">
                       <button
-                        onClick={() => setLoadMoreMode(true)}
+                        onClick={() => setCurrentPage(prev => prev + 1)}
                         className="px-6 py-3 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors duration-200"
                       >
                         Load More Products

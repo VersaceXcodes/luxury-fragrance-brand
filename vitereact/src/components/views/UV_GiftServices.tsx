@@ -469,7 +469,7 @@ const UV_GiftServices: React.FC = () => {
                       <button
                         onClick={() => {
                           // Add all products in set to cart
-                          set.products.forEach(product => handleAddToCart(product, true));
+                          set.products.forEach(product => handleAddToCart(product));
                         }}
                         className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors font-medium"
                       >

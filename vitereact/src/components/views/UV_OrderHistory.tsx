@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useAppStore } from '@/store/main';
 
@@ -73,10 +73,8 @@ interface TrackingResponse {
 
 const UV_OrderHistory: React.FC = () => {
   // Zustand state - individual selectors to avoid infinite loops
-  const currentUser = useAppStore(state => state.authentication_state.current_user);
   const authToken = useAppStore(state => state.authentication_state.auth_token);
   const isAuthenticated = useAppStore(state => state.authentication_state.authentication_status.is_authenticated);
-  const addToCart = useAppStore(state => state.add_to_cart);
   const showNotification = useAppStore(state => state.show_notification);
 
   // Local state
@@ -103,7 +101,7 @@ const UV_OrderHistory: React.FC = () => {
   const [trackingInfo, setTrackingInfo] = useState<TrackingResponse | null>(null);
   const [showTrackingModal, setShowTrackingModal] = useState(false);
 
-  const queryClient = useQueryClient();
+
 
   // API base URL
   const getApiUrl = () => {
@@ -175,7 +173,7 @@ const UV_OrderHistory: React.FC = () => {
 
   // Mutation for reordering
   const reorderMutation = useMutation({
-    mutationFn: async (order: Order) => {
+    mutationFn: async () => {
       // Since the API endpoint for reordering is missing, we'll simulate it
       // by adding items to cart one by one (this would need the order items)
       throw new Error('Reorder functionality is not yet implemented on the server');
@@ -277,8 +275,8 @@ const UV_OrderHistory: React.FC = () => {
     }
   };
 
-  const handleReorder = (order: Order) => {
-    reorderMutation.mutate(order);
+  const handleReorder = () => {
+    reorderMutation.mutate();
   };
 
   // Status badge component
@@ -563,7 +561,7 @@ const UV_OrderHistory: React.FC = () => {
                           )}
                           {order.order_status === 'delivered' && (
                             <button
-                              onClick={() => handleReorder(order)}
+                              onClick={() => handleReorder()}
                               disabled={reorderMutation.isPending}
                               className="text-xs px-2 py-1 bg-green-100 text-green-800 rounded hover:bg-green-200 disabled:opacity-50"
                             >
@@ -713,7 +711,7 @@ const UV_OrderHistory: React.FC = () => {
                       )}
                       {selectedOrder.order_status === 'delivered' && (
                         <button
-                          onClick={() => handleReorder(selectedOrder)}
+                          onClick={() => handleReorder()}
                           disabled={reorderMutation.isPending}
                           className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm disabled:opacity-50"
                         >
