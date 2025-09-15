@@ -1,0 +1,19 @@
+{
+  "timestamp": 1757935143634,
+  "operation": {
+    "id": "webapp:react:root",
+    "refs": {
+      "id": "app",
+      "version": "1757935080435"
+    }
+  },
+  "projectId": "luxury-fragrance-brand",
+  "files": [
+    {
+      "path": "/mnt/data/luxury-fragrance-brand/vitereact/src/App.tsx",
+      "type": "text",
+      "size": 7716,
+      "dependencies": false
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "timestamp": 1757935244862,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "GV_MobileNavigation",
+      "version": "1757935147395"
+    }
+  },
+  "projectId": "luxury-fragrance-brand",
+  "files": [
+    {
+      "path": "/mnt/data/luxury-fragrance-brand/vitereact/src/components/views/GV_MobileNavigation.tsx",
+      "type": "text",
+      "size": 22009,
+      "dependencies": false
+    }
+  ]
+}

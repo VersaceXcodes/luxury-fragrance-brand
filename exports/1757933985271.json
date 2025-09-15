@@ -1,0 +1,15 @@
+{
+  "timestamp": 1757933985271,
+  "operation": {
+    "id": "db:schemas:zod"
+  },
+  "projectId": "luxury-fragrance-brand",
+  "files": [
+    {
+      "path": "/mnt/data/luxury-fragrance-brand/backend/schema.ts",
+      "type": "text",
+      "size": 32020,
+      "dependencies": false
+    }
+  ]
+}

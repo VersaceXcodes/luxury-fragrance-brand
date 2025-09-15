@@ -1,0 +1,3598 @@
+openapi: 3.0.0
+info:
+  title: LuxeScent API
+  description: Comprehensive API for luxury fragrance e-commerce platform
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        user_id:
+          type: string
+        email:
+          type: string
+          format: email
+        password_hash:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone_number:
+          type: string
+          nullable: true
+        date_of_birth:
+          type: string
+          nullable: true
+        loyalty_tier:
+          type: string
+          enum:
+            - bronze
+            - silver
+            - gold
+            - platinum
+          nullable: true
+        email_verified:
+          type: boolean
+        notification_preferences:
+          type: string
+        fragrance_profile:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    CreateUserRequest:
+      type: object
+      required:
+        - email
+        - password
+        - first_name
+        - last_name
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        password:
+          type: string
+          minLength: 8
+          maxLength: 255
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        phone_number:
+          type: string
+          maxLength: 20
+          nullable: true
+        date_of_birth:
+          type: string
+          nullable: true
+        notification_preferences:
+          type: string
+          default: '{"email_marketing": false, "sms_updates": false, "restock_alerts":
+            true, "price_drop_alerts": true}'
+    UpdateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        phone_number:
+          type: string
+          maxLength: 20
+          nullable: true
+        date_of_birth:
+          type: string
+          nullable: true
+        notification_preferences:
+          type: string
+        fragrance_profile:
+          type: string
+          nullable: true
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+    Brand:
+      type: object
+      properties:
+        brand_id:
+          type: string
+        brand_name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        logo_url:
+          type: string
+          nullable: true
+        heritage_story:
+          type: string
+          nullable: true
+        country_origin:
+          type: string
+          nullable: true
+        is_niche_brand:
+          type: boolean
+        display_order:
+          type: integer
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+    Category:
+      type: object
+      properties:
+        category_id:
+          type: string
+        category_name:
+          type: string
+        parent_category_id:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        display_order:
+          type: integer
+        is_active:
+          type: boolean
+    Product:
+      type: object
+      properties:
+        product_id:
+          type: string
+        brand_id:
+          type: string
+        category_id:
+          type: string
+        product_name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        short_description:
+          type: string
+          nullable: true
+        fragrance_families:
+          type: string
+        concentration:
+          type: string
+          enum:
+            - Eau de Cologne
+            - Eau de Toilette
+            - Eau de Parfum
+            - Parfum
+            - Extrait de Parfum
+        gender_category:
+          type: string
+          enum:
+            - Men
+            - Women
+            - Unisex
+        top_notes:
+          type: string
+          nullable: true
+        middle_notes:
+          type: string
+          nullable: true
+        base_notes:
+          type: string
+          nullable: true
+        complete_notes_list:
+          type: string
+          nullable: true
+        occasion_tags:
+          type: string
+          nullable: true
+        season_suitability:
+          type: string
+          nullable: true
+        longevity_hours:
+          type: integer
+          nullable: true
+        sillage_rating:
+          type: integer
+          nullable: true
+        intensity_level:
+          type: string
+          enum:
+            - Very Light
+            - Light
+            - Moderate
+            - Strong
+            - Very Strong
+          nullable: true
+        ingredients_list:
+          type: string
+          nullable: true
+        care_instructions:
+          type: string
+          nullable: true
+        base_price:
+          type: number
+        sale_price:
+          type: number
+          nullable: true
+        availability_status:
+          type: string
+          enum:
+            - in_stock
+            - out_of_stock
+            - discontinued
+            - preorder
+        is_featured:
+          type: boolean
+        is_new_arrival:
+          type: boolean
+        is_limited_edition:
+          type: boolean
+        sku_prefix:
+          type: string
+        weight_grams:
+          type: integer
+          nullable: true
+        launch_date:
+          type: string
+          nullable: true
+        meta_title:
+          type: string
+          nullable: true
+        meta_description:
+          type: string
+          nullable: true
+        sort_order:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    ProductSize:
+      type: object
+      properties:
+        size_id:
+          type: string
+        product_id:
+          type: string
+        size_ml:
+          type: integer
+        price:
+          type: number
+        sale_price:
+          type: number
+          nullable: true
+        stock_quantity:
+          type: integer
+        reserved_quantity:
+          type: integer
+        low_stock_threshold:
+          type: integer
+        sku:
+          type: string
+        is_sample_available:
+          type: boolean
+        sample_price:
+          type: number
+          nullable: true
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+    Cart:
+      type: object
+      properties:
+        cart_id:
+          type: string
+        user_id:
+          type: string
+          nullable: true
+        session_id:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    CartItem:
+      type: object
+      properties:
+        cart_item_id:
+          type: string
+        cart_id:
+          type: string
+        product_id:
+          type: string
+        size_ml:
+          type: integer
+        quantity:
+          type: integer
+        unit_price:
+          type: number
+        gift_wrap:
+          type: boolean
+        sample_included:
+          type: boolean
+        added_at:
+          type: string
+          format: date-time
+    CreateCartItemRequest:
+      type: object
+      required:
+        - product_id
+        - size_ml
+        - unit_price
+      properties:
+        product_id:
+          type: string
+        size_ml:
+          type: integer
+        quantity:
+          type: integer
+          default: 1
+        unit_price:
+          type: number
+        gift_wrap:
+          type: boolean
+          default: false
+        sample_included:
+          type: boolean
+          default: false
+    UpdateCartItemRequest:
+      type: object
+      properties:
+        quantity:
+          type: integer
+        gift_wrap:
+          type: boolean
+        sample_included:
+          type: boolean
+    Address:
+      type: object
+      properties:
+        address_id:
+          type: string
+        user_id:
+          type: string
+        address_type:
+          type: string
+          enum:
+            - shipping
+            - billing
+            - both
+        first_name:
+          type: string
+        last_name:
+          type: string
+        company:
+          type: string
+          nullable: true
+        address_line_1:
+          type: string
+        address_line_2:
+          type: string
+          nullable: true
+        city:
+          type: string
+        state_province:
+          type: string
+        postal_code:
+          type: string
+        country:
+          type: string
+        phone_number:
+          type: string
+          nullable: true
+        is_default:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+    CreateAddressRequest:
+      type: object
+      required:
+        - address_type
+        - first_name
+        - last_name
+        - address_line_1
+        - city
+        - state_province
+        - postal_code
+        - country
+      properties:
+        address_type:
+          type: string
+          enum:
+            - shipping
+            - billing
+            - both
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        company:
+          type: string
+          maxLength: 255
+          nullable: true
+        address_line_1:
+          type: string
+          minLength: 1
+          maxLength: 255
+        address_line_2:
+          type: string
+          maxLength: 255
+          nullable: true
+        city:
+          type: string
+          minLength: 1
+          maxLength: 255
+        state_province:
+          type: string
+          minLength: 1
+          maxLength: 255
+        postal_code:
+          type: string
+          minLength: 1
+          maxLength: 20
+        country:
+          type: string
+          minLength: 2
+          maxLength: 100
+        phone_number:
+          type: string
+          maxLength: 20
+          nullable: true
+        is_default:
+          type: boolean
+          default: false
+    Order:
+      type: object
+      properties:
+        order_id:
+          type: string
+        user_id:
+          type: string
+          nullable: true
+        order_number:
+          type: string
+        order_status:
+          type: string
+          enum:
+            - pending
+            - processing
+            - shipped
+            - delivered
+            - cancelled
+            - refunded
+        payment_status:
+          type: string
+          enum:
+            - pending
+            - paid
+            - failed
+            - refunded
+            - partially_refunded
+        fulfillment_status:
+          type: string
+          enum:
+            - unfulfilled
+            - partial
+            - fulfilled
+        subtotal:
+          type: number
+        tax_amount:
+          type: number
+        shipping_cost:
+          type: number
+        discount_amount:
+          type: number
+        total_amount:
+          type: number
+        currency:
+          type: string
+        shipping_address_id:
+          type: string
+        billing_address_id:
+          type: string
+        shipping_method_id:
+          type: string
+        payment_method_id:
+          type: string
+          nullable: true
+        tracking_number:
+          type: string
+          nullable: true
+        shipped_at:
+          type: string
+          nullable: true
+        delivered_at:
+          type: string
+          nullable: true
+        gift_message:
+          type: string
+          nullable: true
+        special_instructions:
+          type: string
+          nullable: true
+        customer_email:
+          type: string
+        customer_phone:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    CreateOrderRequest:
+      type: object
+      required:
+        - subtotal
+        - total_amount
+        - shipping_address_id
+        - billing_address_id
+        - shipping_method_id
+        - customer_email
+      properties:
+        user_id:
+          type: string
+          nullable: true
+        subtotal:
+          type: number
+        tax_amount:
+          type: number
+          default: 0
+        shipping_cost:
+          type: number
+          default: 0
+        discount_amount:
+          type: number
+          default: 0
+        total_amount:
+          type: number
+        currency:
+          type: string
+          default: USD
+        shipping_address_id:
+          type: string
+        billing_address_id:
+          type: string
+        shipping_method_id:
+          type: string
+        payment_method_id:
+          type: string
+          nullable: true
+        gift_message:
+          type: string
+          maxLength: 500
+          nullable: true
+        special_instructions:
+          type: string
+          maxLength: 500
+          nullable: true
+        customer_email:
+          type: string
+          format: email
+        customer_phone:
+          type: string
+          nullable: true
+    Review:
+      type: object
+      properties:
+        review_id:
+          type: string
+        product_id:
+          type: string
+        user_id:
+          type: string
+        order_id:
+          type: string
+          nullable: true
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        title:
+          type: string
+          nullable: true
+        review_text:
+          type: string
+          nullable: true
+        longevity_rating:
+          type: integer
+          minimum: 1
+          maximum: 10
+          nullable: true
+        sillage_rating:
+          type: integer
+          minimum: 1
+          maximum: 10
+          nullable: true
+        occasion_tags:
+          type: string
+          nullable: true
+        season_tags:
+          type: string
+          nullable: true
+        is_verified_purchase:
+          type: boolean
+        helpful_votes:
+          type: integer
+        total_votes:
+          type: integer
+        is_featured:
+          type: boolean
+        moderation_status:
+          type: string
+          enum:
+            - pending
+            - approved
+            - rejected
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    CreateReviewRequest:
+      type: object
+      required:
+        - product_id
+        - rating
+      properties:
+        product_id:
+          type: string
+        order_id:
+          type: string
+          nullable: true
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        title:
+          type: string
+          maxLength: 255
+          nullable: true
+        review_text:
+          type: string
+          maxLength: 2000
+          nullable: true
+        longevity_rating:
+          type: integer
+          minimum: 1
+          maximum: 10
+          nullable: true
+        sillage_rating:
+          type: integer
+          minimum: 1
+          maximum: 10
+          nullable: true
+        occasion_tags:
+          type: string
+          nullable: true
+        season_tags:
+          type: string
+          nullable: true
+    Wishlist:
+      type: object
+      properties:
+        wishlist_id:
+          type: string
+        user_id:
+          type: string
+        wishlist_name:
+          type: string
+        is_public:
+          type: boolean
+        is_default:
+          type: boolean
+        share_token:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    WishlistItem:
+      type: object
+      properties:
+        wishlist_item_id:
+          type: string
+        wishlist_id:
+          type: string
+        product_id:
+          type: string
+        size_ml:
+          type: integer
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        added_at:
+          type: string
+          format: date-time
+    CreateWishlistItemRequest:
+      type: object
+      required:
+        - product_id
+      properties:
+        product_id:
+          type: string
+        size_ml:
+          type: integer
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+    ShippingMethod:
+      type: object
+      properties:
+        shipping_method_id:
+          type: string
+        method_name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        cost:
+          type: number
+        free_threshold:
+          type: number
+          nullable: true
+        estimated_days_min:
+          type: integer
+        estimated_days_max:
+          type: integer
+        is_express:
+          type: boolean
+        requires_signature:
+          type: boolean
+        is_active:
+          type: boolean
+        sort_order:
+          type: integer
+    QuizResult:
+      type: object
+      properties:
+        quiz_result_id:
+          type: string
+        user_id:
+          type: string
+          nullable: true
+        session_id:
+          type: string
+          nullable: true
+        personality_type:
+          type: string
+        quiz_answers:
+          type: string
+        recommended_families:
+          type: string
+        recommended_products:
+          type: string
+          nullable: true
+        intensity_preference:
+          type: string
+          nullable: true
+        occasion_preferences:
+          type: string
+          nullable: true
+        season_preferences:
+          type: string
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+    CreateQuizResultRequest:
+      type: object
+      required:
+        - personality_type
+        - quiz_answers
+        - recommended_families
+      properties:
+        personality_type:
+          type: string
+        quiz_answers:
+          type: string
+        recommended_families:
+          type: string
+        recommended_products:
+          type: string
+          nullable: true
+        intensity_preference:
+          type: string
+          nullable: true
+        occasion_preferences:
+          type: string
+          nullable: true
+        season_preferences:
+          type: string
+          nullable: true
+    SampleOrder:
+      type: object
+      properties:
+        sample_order_id:
+          type: string
+        user_id:
+          type: string
+          nullable: true
+        sample_order_number:
+          type: string
+        order_status:
+          type: string
+          enum:
+            - pending
+            - processing
+            - shipped
+            - delivered
+            - cancelled
+        total_amount:
+          type: number
+        shipping_cost:
+          type: number
+        customer_email:
+          type: string
+        shipping_address_id:
+          type: string
+        tracking_number:
+          type: string
+          nullable: true
+        shipped_at:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    GiftCard:
+      type: object
+      properties:
+        gift_card_id:
+          type: string
+        gift_card_code:
+          type: string
+        initial_amount:
+          type: number
+        current_balance:
+          type: number
+        currency:
+          type: string
+        purchaser_email:
+          type: string
+        recipient_email:
+          type: string
+          nullable: true
+        recipient_name:
+          type: string
+          nullable: true
+        gift_message:
+          type: string
+          nullable: true
+        delivery_date:
+          type: string
+          nullable: true
+        expiry_date:
+          type: string
+          nullable: true
+        is_active:
+          type: boolean
+        order_id:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    CreateGiftCardRequest:
+      type: object
+      required:
+        - initial_amount
+        - purchaser_email
+      properties:
+        initial_amount:
+          type: number
+        purchaser_email:
+          type: string
+          format: email
+        recipient_email:
+          type: string
+          format: email
+          nullable: true
+        recipient_name:
+          type: string
+          nullable: true
+        gift_message:
+          type: string
+          nullable: true
+        delivery_date:
+          type: string
+          nullable: true
+    Promotion:
+      type: object
+      properties:
+        promotion_id:
+          type: string
+        promotion_code:
+          type: string
+        promotion_name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        discount_type:
+          type: string
+          enum:
+            - percentage
+            - fixed_amount
+            - free_shipping
+        discount_value:
+          type: number
+        minimum_order_amount:
+          type: number
+          nullable: true
+        maximum_discount:
+          type: number
+          nullable: true
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+        usage_limit:
+          type: integer
+          nullable: true
+        current_usage:
+          type: integer
+        is_active:
+          type: boolean
+        applicable_products:
+          type: string
+          nullable: true
+        applicable_categories:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    CustomerServiceTicket:
+      type: object
+      properties:
+        ticket_id:
+          type: string
+        user_id:
+          type: string
+          nullable: true
+        ticket_number:
+          type: string
+        customer_email:
+          type: string
+        customer_name:
+          type: string
+        subject:
+          type: string
+        message:
+          type: string
+        category:
+          type: string
+          enum:
+            - order_inquiry
+            - product_question
+            - returns
+            - technical_support
+            - general
+        priority:
+          type: string
+          enum:
+            - low
+            - medium
+            - high
+            - urgent
+        status:
+          type: string
+          enum:
+            - open
+            - in_progress
+            - resolved
+            - closed
+        assigned_agent_id:
+          type: string
+          nullable: true
+        order_id:
+          type: string
+          nullable: true
+        resolution_notes:
+          type: string
+          nullable: true
+        resolved_at:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    CreateTicketRequest:
+      type: object
+      required:
+        - customer_email
+        - customer_name
+        - subject
+        - message
+        - category
+      properties:
+        customer_email:
+          type: string
+          format: email
+        customer_name:
+          type: string
+        subject:
+          type: string
+        message:
+          type: string
+        category:
+          type: string
+          enum:
+            - order_inquiry
+            - product_question
+            - returns
+            - technical_support
+            - general
+        priority:
+          type: string
+          enum:
+            - low
+            - medium
+            - high
+            - urgent
+          default: medium
+        order_id:
+          type: string
+          nullable: true
+    NewsletterSubscription:
+      type: object
+      properties:
+        subscription_id:
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+          nullable: true
+        user_id:
+          type: string
+          nullable: true
+        subscription_source:
+          type: string
+        preferences:
+          type: string
+        is_active:
+          type: boolean
+        confirmed_at:
+          type: string
+          nullable: true
+        unsubscribed_at:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    CreateNewsletterSubscriptionRequest:
+      type: object
+      required:
+        - email
+        - subscription_source
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+          nullable: true
+        subscription_source:
+          type: string
+        preferences:
+          type: string
+          default: '{"new_arrivals": true, "sales": true, "exclusive_offers": true}'
+    SearchResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        pagination:
+          type: object
+          properties:
+            total:
+              type: integer
+            page:
+              type: integer
+            per_page:
+              type: integer
+            total_pages:
+              type: integer
+            has_next:
+              type: boolean
+            has_prev:
+              type: boolean
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        code:
+          type: integer
+paths:
+  /auth/register:
+    post:
+      operationId: registerUser
+      summary: Register a new user account
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/login:
+    post:
+      operationId: loginUser
+      summary: Authenticate user and return JWT token
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/logout:
+    post:
+      operationId: logoutUser
+      summary: Logout user and invalidate token
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Logout successful
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/refresh:
+    post:
+      operationId: refreshToken
+      summary: Refresh JWT token
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /users/profile:
+    get:
+      operationId: getUserProfile
+      summary: Get current user profile
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      operationId: updateUserProfile
+      summary: Update current user profile
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+      responses:
+        "200":
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /users/{user_id}:
+    get:
+      operationId: getUserById
+      summary: Get user by ID (public profile info)
+      tags:
+        - Users
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                  first_name:
+                    type: string
+                  last_name:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /products:
+    get:
+      operationId: searchProducts
+      summary: Search and filter products
+      tags:
+        - Products
+      parameters:
+        - name: query
+          in: query
+          schema:
+            type: string
+        - name: brand_ids
+          in: query
+          schema:
+            type: string
+        - name: category_id
+          in: query
+          schema:
+            type: string
+        - name: gender_category
+          in: query
+          schema:
+            type: string
+            enum:
+              - Men
+              - Women
+              - Unisex
+        - name: concentration
+          in: query
+          schema:
+            type: string
+            enum:
+              - Eau de Cologne
+              - Eau de Toilette
+              - Eau de Parfum
+              - Parfum
+              - Extrait de Parfum
+        - name: fragrance_families
+          in: query
+          schema:
+            type: string
+        - name: occasion_tags
+          in: query
+          schema:
+            type: string
+        - name: season_suitability
+          in: query
+          schema:
+            type: string
+        - name: availability_status
+          in: query
+          schema:
+            type: string
+            enum:
+              - in_stock
+              - out_of_stock
+              - discontinued
+              - preorder
+        - name: is_featured
+          in: query
+          schema:
+            type: boolean
+        - name: is_new_arrival
+          in: query
+          schema:
+            type: boolean
+        - name: is_limited_edition
+          in: query
+          schema:
+            type: boolean
+        - name: price_min
+          in: query
+          schema:
+            type: number
+        - name: price_max
+          in: query
+          schema:
+            type: number
+        - name: size_options
+          in: query
+          schema:
+            type: string
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum:
+              - product_name
+              - base_price
+              - created_at
+              - sort_order
+              - best_selling
+              - rating
+            default: sort_order
+        - name: sort_order
+          in: query
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: asc
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Products retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SearchResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Product"
+  /products/{product_id}:
+    get:
+      operationId: getProductById
+      summary: Get detailed product information
+      tags:
+        - Products
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Product retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /products/{product_id}/sizes:
+    get:
+      operationId: getProductSizes
+      summary: Get available sizes for a product
+      tags:
+        - Products
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Product sizes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductSize"
+  /products/{product_id}/recommendations:
+    get:
+      operationId: getProductRecommendations
+      summary: Get recommended products based on the current product
+      tags:
+        - Products
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum:
+              - similar
+              - complementary
+              - frequently_bought
+              - recently_viewed
+            default: similar
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 8
+      responses:
+        "200":
+          description: Recommendations retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+  /products/featured:
+    get:
+      operationId: getFeaturedProducts
+      summary: Get featured products for homepage
+      tags:
+        - Products
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 12
+      responses:
+        "200":
+          description: Featured products retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+  /products/new-arrivals:
+    get:
+      operationId: getNewArrivalProducts
+      summary: Get new arrival products
+      tags:
+        - Products
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 12
+      responses:
+        "200":
+          description: New arrivals retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+  /products/best-sellers:
+    get:
+      operationId: getBestSellerProducts
+      summary: Get best-selling products
+      tags:
+        - Products
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 12
+        - name: category
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Best sellers retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+  /brands:
+    get:
+      operationId: getBrands
+      summary: Get all brands
+      tags:
+        - Brands
+      parameters:
+        - name: is_active
+          in: query
+          schema:
+            type: boolean
+            default: true
+        - name: is_niche_brand
+          in: query
+          schema:
+            type: boolean
+        - name: query
+          in: query
+          schema:
+            type: string
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum:
+              - brand_name
+              - display_order
+              - created_at
+            default: display_order
+        - name: sort_order
+          in: query
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: asc
+      responses:
+        "200":
+          description: Brands retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Brand"
+  /brands/{brand_id}:
+    get:
+      operationId: getBrandById
+      summary: Get brand details
+      tags:
+        - Brands
+      parameters:
+        - name: brand_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Brand retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Brand"
+        "404":
+          description: Brand not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /brands/{brand_id}/products:
+    get:
+      operationId: getBrandProducts
+      summary: Get products by brand
+      tags:
+        - Brands
+      parameters:
+        - name: brand_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum:
+              - product_name
+              - base_price
+              - created_at
+            default: sort_order
+      responses:
+        "200":
+          description: Brand products retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SearchResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Product"
+  /categories:
+    get:
+      operationId: getCategories
+      summary: Get all categories
+      tags:
+        - Categories
+      parameters:
+        - name: parent_category_id
+          in: query
+          schema:
+            type: string
+            nullable: true
+        - name: is_active
+          in: query
+          schema:
+            type: boolean
+            default: true
+      responses:
+        "200":
+          description: Categories retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+  /categories/{category_id}:
+    get:
+      operationId: getCategoryById
+      summary: Get category details
+      tags:
+        - Categories
+      parameters:
+        - name: category_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Category retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+  /categories/{category_id}/products:
+    get:
+      operationId: getCategoryProducts
+      summary: Get products by category
+      tags:
+        - Categories
+      parameters:
+        - name: category_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum:
+              - product_name
+              - base_price
+              - created_at
+            default: sort_order
+      responses:
+        "200":
+          description: Category products retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SearchResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Product"
+  /cart:
+    get:
+      operationId: getCart
+      summary: Get current user's cart
+      tags:
+        - Cart
+      parameters:
+        - name: session_id
+          in: query
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Cart retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Cart"
+                  - type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/CartItem"
+    post:
+      operationId: createCart
+      summary: Create a new cart
+      tags:
+        - Cart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                session_id:
+                  type: string
+                  nullable: true
+      responses:
+        "201":
+          description: Cart created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+  /cart/items:
+    post:
+      operationId: addCartItem
+      summary: Add item to cart
+      tags:
+        - Cart
+      parameters:
+        - name: cart_id
+          in: query
+          schema:
+            type: string
+        - name: session_id
+          in: query
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCartItemRequest"
+      responses:
+        "201":
+          description: Item added to cart successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartItem"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /cart/items/{cart_item_id}:
+    put:
+      operationId: updateCartItem
+      summary: Update cart item
+      tags:
+        - Cart
+      parameters:
+        - name: cart_item_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCartItemRequest"
+      responses:
+        "200":
+          description: Cart item updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartItem"
+    delete:
+      operationId: removeCartItem
+      summary: Remove item from cart
+      tags:
+        - Cart
+      parameters:
+        - name: cart_item_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Item removed from cart successfully
+  /cart/clear:
+    delete:
+      operationId: clearCart
+      summary: Clear all items from cart
+      tags:
+        - Cart
+      parameters:
+        - name: cart_id
+          in: query
+          schema:
+            type: string
+        - name: session_id
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Cart cleared successfully
+  /addresses:
+    get:
+      operationId: getUserAddresses
+      summary: Get user's addresses
+      tags:
+        - Addresses
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: address_type
+          in: query
+          schema:
+            type: string
+            enum:
+              - shipping
+              - billing
+              - both
+      responses:
+        "200":
+          description: Addresses retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Address"
+    post:
+      operationId: createAddress
+      summary: Create new address
+      tags:
+        - Addresses
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAddressRequest"
+      responses:
+        "201":
+          description: Address created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Address"
+  /addresses/{address_id}:
+    get:
+      operationId: getAddressById
+      summary: Get address by ID
+      tags:
+        - Addresses
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: address_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Address retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Address"
+    put:
+      operationId: updateAddress
+      summary: Update address
+      tags:
+        - Addresses
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: address_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAddressRequest"
+      responses:
+        "200":
+          description: Address updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Address"
+    delete:
+      operationId: deleteAddress
+      summary: Delete address
+      tags:
+        - Addresses
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: address_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Address deleted successfully
+  /shipping-methods:
+    get:
+      operationId: getShippingMethods
+      summary: Get available shipping methods
+      tags:
+        - Shipping
+      parameters:
+        - name: is_active
+          in: query
+          schema:
+            type: boolean
+            default: true
+        - name: destination_country
+          in: query
+          schema:
+            type: string
+        - name: order_total
+          in: query
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Shipping methods retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ShippingMethod"
+  /shipping-methods/{shipping_method_id}:
+    get:
+      operationId: getShippingMethodById
+      summary: Get shipping method details
+      tags:
+        - Shipping
+      parameters:
+        - name: shipping_method_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Shipping method retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShippingMethod"
+  /orders:
+    get:
+      operationId: getUserOrders
+      summary: Get user's orders
+      tags:
+        - Orders
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: order_status
+          in: query
+          schema:
+            type: string
+            enum:
+              - pending
+              - processing
+              - shipped
+              - delivered
+              - cancelled
+              - refunded
+        - name: payment_status
+          in: query
+          schema:
+            type: string
+            enum:
+              - pending
+              - paid
+              - failed
+              - refunded
+              - partially_refunded
+        - name: date_from
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Orders retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SearchResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Order"
+    post:
+      operationId: createOrder
+      summary: Create new order
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderRequest"
+      responses:
+        "201":
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+  /orders/{order_id}:
+    get:
+      operationId: getOrderById
+      summary: Get order details
+      tags:
+        - Orders
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Order retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+  /orders/track:
+    get:
+      operationId: trackOrder
+      summary: Track order by order number
+      tags:
+        - Orders
+      parameters:
+        - name: order_number
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: query
+          schema:
+            type: string
+            format: email
+      responses:
+        "200":
+          description: Order tracking information retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  order:
+                    $ref: "#/components/schemas/Order"
+                  tracking_events:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        event_type:
+                          type: string
+                        description:
+                          type: string
+                        location:
+                          type: string
+                        timestamp:
+                          type: string
+                          format: date-time
+  /reviews:
+    get:
+      operationId: getReviews
+      summary: Get reviews with filtering options
+      tags:
+        - Reviews
+      parameters:
+        - name: product_id
+          in: query
+          schema:
+            type: string
+        - name: user_id
+          in: query
+          schema:
+            type: string
+        - name: rating
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+        - name: is_verified_purchase
+          in: query
+          schema:
+            type: boolean
+        - name: is_featured
+          in: query
+          schema:
+            type: boolean
+        - name: moderation_status
+          in: query
+          schema:
+            type: string
+            enum:
+              - pending
+              - approved
+              - rejected
+            default: approved
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum:
+              - created_at
+              - rating
+              - helpful_votes
+            default: created_at
+        - name: sort_order
+          in: query
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Reviews retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SearchResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Review"
+    post:
+      operationId: createReview
+      summary: Create new product review
+      tags:
+        - Reviews
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateReviewRequest"
+      responses:
+        "201":
+          description: Review created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+  /reviews/{review_id}:
+    get:
+      operationId: getReviewById
+      summary: Get review details
+      tags:
+        - Reviews
+      parameters:
+        - name: review_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Review retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+    put:
+      operationId: updateReview
+      summary: Update review
+      tags:
+        - Reviews
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: review_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateReviewRequest"
+      responses:
+        "200":
+          description: Review updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+    delete:
+      operationId: deleteReview
+      summary: Delete review
+      tags:
+        - Reviews
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: review_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Review deleted successfully
+  /reviews/{review_id}/helpful:
+    post:
+      operationId: markReviewHelpful
+      summary: Mark review as helpful
+      tags:
+        - Reviews
+      parameters:
+        - name: review_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                helpful:
+                  type: boolean
+      responses:
+        "200":
+          description: Review helpfulness recorded successfully
+  /wishlists:
+    get:
+      operationId: getUserWishlists
+      summary: Get user's wishlists
+      tags:
+        - Wishlists
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Wishlists retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Wishlist"
+    post:
+      operationId: createWishlist
+      summary: Create new wishlist
+      tags:
+        - Wishlists
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                wishlist_name:
+                  type: string
+                  default: My Wishlist
+                is_public:
+                  type: boolean
+                  default: false
+      responses:
+        "201":
+          description: Wishlist created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Wishlist"
+  /wishlists/{wishlist_id}:
+    get:
+      operationId: getWishlistById
+      summary: Get wishlist details with items
+      tags:
+        - Wishlists
+      parameters:
+        - name: wishlist_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Wishlist retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wishlist"
+                  - type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/WishlistItem"
+    put:
+      operationId: updateWishlist
+      summary: Update wishlist
+      tags:
+        - Wishlists
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: wishlist_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                wishlist_name:
+                  type: string
+                is_public:
+                  type: boolean
+      responses:
+        "200":
+          description: Wishlist updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Wishlist"
+    delete:
+      operationId: deleteWishlist
+      summary: Delete wishlist
+      tags:
+        - Wishlists
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: wishlist_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Wishlist deleted successfully
+  /wishlists/{wishlist_id}/items:
+    post:
+      operationId: addWishlistItem
+      summary: Add item to wishlist
+      tags:
+        - Wishlists
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: wishlist_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateWishlistItemRequest"
+      responses:
+        "201":
+          description: Item added to wishlist successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WishlistItem"
+  /wishlists/{wishlist_id}/items/{wishlist_item_id}:
+    delete:
+      operationId: removeWishlistItem
+      summary: Remove item from wishlist
+      tags:
+        - Wishlists
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: wishlist_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: wishlist_item_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Item removed from wishlist successfully
+  /wishlists/shared/{share_token}:
+    get:
+      operationId: getSharedWishlist
+      summary: Get shared wishlist by token
+      tags:
+        - Wishlists
+      parameters:
+        - name: share_token
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Shared wishlist retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wishlist"
+                  - type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/WishlistItem"
+  /fragrance-quiz/questions:
+    get:
+      operationId: getQuizQuestions
+      summary: Get fragrance discovery quiz questions
+      tags:
+        - Fragrance Quiz
+      responses:
+        "200":
+          description: Quiz questions retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    question_id:
+                      type: string
+                    question_text:
+                      type: string
+                    question_type:
+                      type: string
+                      enum:
+                        - single_choice
+                        - multiple_choice
+                        - scale
+                        - image_selection
+                    options:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          option_id:
+                            type: string
+                          option_text:
+                            type: string
+                          image_url:
+                            type: string
+                            nullable: true
+                    step:
+                      type: integer
+  /fragrance-quiz/submit:
+    post:
+      operationId: submitQuizResults
+      summary: Submit quiz answers and get personalized recommendations
+      tags:
+        - Fragrance Quiz
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateQuizResultRequest"
+      responses:
+        "201":
+          description: Quiz results processed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/QuizResult"
+                  - type: object
+                    properties:
+                      recommended_products:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Product"
+  /fragrance-quiz/results/{quiz_result_id}:
+    get:
+      operationId: getQuizResults
+      summary: Get quiz results by ID
+      tags:
+        - Fragrance Quiz
+      parameters:
+        - name: quiz_result_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Quiz results retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/QuizResult"
+                  - type: object
+                    properties:
+                      recommended_products:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Product"
+  /samples:
+    get:
+      operationId: getSamplePrograms
+      summary: Get available sample programs and sets
+      tags:
+        - Samples
+      parameters:
+        - name: set_type
+          in: query
+          schema:
+            type: string
+            enum:
+              - discovery
+              - brand
+              - seasonal
+              - custom
+        - name: fragrance_family
+          in: query
+          schema:
+            type: string
+        - name: brand_id
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Sample programs retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    set_id:
+                      type: string
+                    set_name:
+                      type: string
+                    description:
+                      type: string
+                    price:
+                      type: number
+                    sample_count:
+                      type: integer
+                    products:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/Product"
+  /samples/individual:
+    get:
+      operationId: getIndividualSamples
+      summary: Get individual sample options
+      tags:
+        - Samples
+      parameters:
+        - name: product_id
+          in: query
+          schema:
+            type: string
+        - name: brand_id
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Individual samples retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SearchResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            product:
+                              $ref: "#/components/schemas/Product"
+                            sample_size_ml:
+                              type: integer
+                            sample_price:
+                              type: number
+                            is_available:
+                              type: boolean
+  /sample-orders:
+    get:
+      operationId: getSampleOrders
+      summary: Get user's sample orders
+      tags:
+        - Samples
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: order_status
+          in: query
+          schema:
+            type: string
+            enum:
+              - pending
+              - processing
+              - shipped
+              - delivered
+              - cancelled
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Sample orders retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SearchResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/SampleOrder"
+    post:
+      operationId: createSampleOrder
+      summary: Create new sample order
+      tags:
+        - Samples
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - items
+                - customer_email
+                - shipping_address_id
+              properties:
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      product_id:
+                        type: string
+                      sample_size_ml:
+                        type: integer
+                      quantity:
+                        type: integer
+                        default: 1
+                customer_email:
+                  type: string
+                  format: email
+                shipping_address_id:
+                  type: string
+      responses:
+        "201":
+          description: Sample order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SampleOrder"
+  /sample-orders/{sample_order_id}:
+    get:
+      operationId: getSampleOrderById
+      summary: Get sample order details
+      tags:
+        - Samples
+      parameters:
+        - name: sample_order_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Sample order retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SampleOrder"
+  /gifts/guides:
+    get:
+      operationId: getGiftGuides
+      summary: Get gift guides and recommendations
+      tags:
+        - Gifts
+      parameters:
+        - name: recipient
+          in: query
+          schema:
+            type: string
+            enum:
+              - her
+              - him
+              - anyone
+        - name: occasion
+          in: query
+          schema:
+            type: string
+            enum:
+              - birthday
+              - anniversary
+              - holiday
+              - wedding
+              - graduation
+              - christmas
+              - valentines
+        - name: price_range
+          in: query
+          schema:
+            type: string
+            enum:
+              - under_50
+              - 50_100
+              - 100_200
+              - luxury
+        - name: relationship
+          in: query
+          schema:
+            type: string
+            enum:
+              - partner
+              - friend
+              - family
+              - colleague
+      responses:
+        "200":
+          description: Gift guides retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    guide_id:
+                      type: string
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    products:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/Product"
+  /gifts/sets:
+    get:
+      operationId: getGiftSets
+      summary: Get available gift sets
+      tags:
+        - Gifts
+      parameters:
+        - name: occasion
+          in: query
+          schema:
+            type: string
+        - name: price_min
+          in: query
+          schema:
+            type: number
+        - name: price_max
+          in: query
+          schema:
+            type: number
+        - name: brand_id
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Gift sets retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    gift_set_id:
+                      type: string
+                    set_name:
+                      type: string
+                    description:
+                      type: string
+                    price:
+                      type: number
+                    savings_amount:
+                      type: number
+                    products:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/Product"
+  /gift-cards:
+    get:
+      operationId: getUserGiftCards
+      summary: Get user's gift cards
+      tags:
+        - Gifts
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Gift cards retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GiftCard"
+    post:
+      operationId: createGiftCard
+      summary: Purchase a gift card
+      tags:
+        - Gifts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateGiftCardRequest"
+      responses:
+        "201":
+          description: Gift card created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GiftCard"
+  /gift-cards/{gift_card_code}/balance:
+    get:
+      operationId: getGiftCardBalance
+      summary: Check gift card balance
+      tags:
+        - Gifts
+      parameters:
+        - name: gift_card_code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Gift card balance retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  current_balance:
+                    type: number
+                  currency:
+                    type: string
+                  is_active:
+                    type: boolean
+                  expiry_date:
+                    type: string
+                    nullable: true
+  /gift-cards/{gift_card_code}/redeem:
+    post:
+      operationId: redeemGiftCard
+      summary: Redeem gift card for order
+      tags:
+        - Gifts
+      parameters:
+        - name: gift_card_code
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - order_id
+                - amount
+              properties:
+                order_id:
+                  type: string
+                amount:
+                  type: number
+      responses:
+        "200":
+          description: Gift card redeemed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  redeemed_amount:
+                    type: number
+                  remaining_balance:
+                    type: number
+  /promotions/validate:
+    post:
+      operationId: validatePromotionCode
+      summary: Validate promotion code
+      tags:
+        - Promotions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - promotion_code
+              properties:
+                promotion_code:
+                  type: string
+                order_total:
+                  type: number
+                products:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: Promotion code validated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  is_valid:
+                    type: boolean
+                  discount_amount:
+                    type: number
+                  discount_type:
+                    type: string
+                  promotion:
+                    $ref: "#/components/schemas/Promotion"
+                  error_message:
+                    type: string
+                    nullable: true
+  /promotions/active:
+    get:
+      operationId: getActivePromotions
+      summary: Get currently active promotions
+      tags:
+        - Promotions
+      responses:
+        "200":
+          description: Active promotions retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Promotion"
+  /support/tickets:
+    get:
+      operationId: getUserTickets
+      summary: Get user's support tickets
+      tags:
+        - Customer Service
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - open
+              - in_progress
+              - resolved
+              - closed
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum:
+              - order_inquiry
+              - product_question
+              - returns
+              - technical_support
+              - general
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Support tickets retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SearchResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/CustomerServiceTicket"
+    post:
+      operationId: createSupportTicket
+      summary: Create new support ticket
+      tags:
+        - Customer Service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTicketRequest"
+      responses:
+        "201":
+          description: Support ticket created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerServiceTicket"
+  /support/tickets/{ticket_id}:
+    get:
+      operationId: getTicketById
+      summary: Get support ticket details
+      tags:
+        - Customer Service
+      parameters:
+        - name: ticket_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Support ticket retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerServiceTicket"
+  /support/faq:
+    get:
+      operationId: getFAQs
+      summary: Get frequently asked questions
+      tags:
+        - Customer Service
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum:
+              - orders
+              - shipping
+              - returns
+              - products
+              - account
+              - payment
+        - name: query
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: FAQs retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    faq_id:
+                      type: string
+                    question:
+                      type: string
+                    answer:
+                      type: string
+                    category:
+                      type: string
+                    helpful_votes:
+                      type: integer
+  /newsletter/subscribe:
+    post:
+      operationId: subscribeToNewsletter
+      summary: Subscribe to newsletter
+      tags:
+        - Newsletter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateNewsletterSubscriptionRequest"
+      responses:
+        "201":
+          description: Newsletter subscription created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsletterSubscription"
+  /newsletter/unsubscribe:
+    post:
+      operationId: unsubscribeFromNewsletter
+      summary: Unsubscribe from newsletter
+      tags:
+        - Newsletter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                unsubscribe_token:
+                  type: string
+      responses:
+        "200":
+          description: Newsletter unsubscription successful
+  /newsletter/preferences:
+    get:
+      operationId: getNewsletterPreferences
+      summary: Get newsletter preferences
+      tags:
+        - Newsletter
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Newsletter preferences retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsletterSubscription"
+    put:
+      operationId: updateNewsletterPreferences
+      summary: Update newsletter preferences
+      tags:
+        - Newsletter
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                preferences:
+                  type: string
+      responses:
+        "200":
+          description: Newsletter preferences updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsletterSubscription"
+  /search/suggestions:
+    get:
+      operationId: getSearchSuggestions
+      summary: Get search suggestions and autocomplete
+      tags:
+        - Search
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Search suggestions retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        product_id:
+                          type: string
+                        product_name:
+                          type: string
+                        brand_name:
+                          type: string
+                  brands:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        brand_id:
+                          type: string
+                        brand_name:
+                          type: string
+                  categories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        category_id:
+                          type: string
+                        category_name:
+                          type: string
+                  popular_searches:
+                    type: array
+                    items:
+                      type: string
+  /search/trending:
+    get:
+      operationId: getTrendingSearches
+      summary: Get trending search terms
+      tags:
+        - Search
+      responses:
+        "200":
+          description: Trending searches retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    search_term:
+                      type: string
+                    search_count:
+                      type: integer
+  /analytics/product-views:
+    post:
+      operationId: trackProductView
+      summary: Track product view for analytics
+      tags:
+        - Analytics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - product_id
+              properties:
+                product_id:
+                  type: string
+                user_id:
+                  type: string
+                  nullable: true
+                session_id:
+                  type: string
+                  nullable: true
+                referrer_url:
+                  type: string
+                  nullable: true
+      responses:
+        "200":
+          description: Product view tracked successfully
+  /analytics/search-tracking:
+    post:
+      operationId: trackSearchQuery
+      summary: Track search query for analytics
+      tags:
+        - Analytics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - search_query
+              properties:
+                search_query:
+                  type: string
+                results_count:
+                  type: integer
+                user_id:
+                  type: string
+                  nullable: true
+                session_id:
+                  type: string
+                  nullable: true
+      responses:
+        "200":
+          description: Search query tracked successfully
+  /health:
+    get:
+      operationId: healthCheck
+      summary: API health check
+      tags:
+        - Utility
+      responses:
+        "200":
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  timestamp:
+                    type: string
+                    format: date-time
+  /config/frontend:
+    get:
+      operationId: getFrontendConfig
+      summary: Get frontend configuration
+      tags:
+        - Utility
+      responses:
+        "200":
+          description: Frontend config retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  free_shipping_threshold:
+                    type: number
+                  currency:
+                    type: string
+                  supported_countries:
+                    type: array
+                    items:
+                      type: string
+                  payment_methods:
+                    type: array
+                    items:
+                      type: string
+                  max_cart_items:
+                    type: integer
+                  max_wishlist_items:
+                    type: integer

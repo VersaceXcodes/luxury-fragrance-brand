@@ -1,0 +1,19 @@
+{
+  "timestamp": 1757935245588,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "GV_AccountDropdown",
+      "version": "1757935147995"
+    }
+  },
+  "projectId": "luxury-fragrance-brand",
+  "files": [
+    {
+      "path": "/mnt/data/luxury-fragrance-brand/vitereact/src/components/views/GV_AccountDropdown.tsx",
+      "type": "text",
+      "size": 17560,
+      "dependencies": false
+    }
+  ]
+}

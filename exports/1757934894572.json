@@ -1,0 +1,15 @@
+{
+  "timestamp": 1757934894572,
+  "operation": {
+    "id": "settings:config:package"
+  },
+  "projectId": "luxury-fragrance-brand",
+  "files": [
+    {
+      "path": "/mnt/data/luxury-fragrance-brand/backend/.env",
+      "type": "text",
+      "size": 418,
+      "dependencies": false
+    }
+  ]
+}

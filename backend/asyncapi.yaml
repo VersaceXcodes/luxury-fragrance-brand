@@ -1,0 +1,1827 @@
+asyncapi: 2.0.0
+info:
+  title: LuxeScent Realtime Events API
+  version: 1.0.0
+  description: Realtime events for the LuxeScent luxury fragrance e-commerce platform
+servers:
+  development:
+    url: http://localhost:3000
+    protocol: socketio
+    description: Development server for realtime events
+channels:
+  cart/item-added:
+    subscribe:
+      operationId: onCartItemAdded
+      message:
+        $ref: "#/components/messages/CartItemAdded"
+  cart/item-removed:
+    subscribe:
+      operationId: onCartItemRemoved
+      message:
+        $ref: "#/components/messages/CartItemRemoved"
+  cart/item-updated:
+    subscribe:
+      operationId: onCartItemUpdated
+      message:
+        $ref: "#/components/messages/CartItemUpdated"
+  cart/cleared:
+    subscribe:
+      operationId: onCartCleared
+      message:
+        $ref: "#/components/messages/CartCleared"
+  cart/promotion-applied:
+    subscribe:
+      operationId: onCartPromotionApplied
+      message:
+        $ref: "#/components/messages/CartPromotionApplied"
+  cart/promotion-removed:
+    subscribe:
+      operationId: onCartPromotionRemoved
+      message:
+        $ref: "#/components/messages/CartPromotionRemoved"
+  inventory/stock-updated:
+    subscribe:
+      operationId: onInventoryStockUpdated
+      message:
+        $ref: "#/components/messages/InventoryStockUpdated"
+  inventory/low-stock-alert:
+    subscribe:
+      operationId: onInventoryLowStockAlert
+      message:
+        $ref: "#/components/messages/InventoryLowStockAlert"
+  inventory/out-of-stock:
+    subscribe:
+      operationId: onInventoryOutOfStock
+      message:
+        $ref: "#/components/messages/InventoryOutOfStock"
+  inventory/back-in-stock:
+    subscribe:
+      operationId: onInventoryBackInStock
+      message:
+        $ref: "#/components/messages/InventoryBackInStock"
+  orders/status-changed:
+    subscribe:
+      operationId: onOrderStatusChanged
+      message:
+        $ref: "#/components/messages/OrderStatusChanged"
+  orders/payment-updated:
+    subscribe:
+      operationId: onOrderPaymentUpdated
+      message:
+        $ref: "#/components/messages/OrderPaymentUpdated"
+  orders/shipped:
+    subscribe:
+      operationId: onOrderShipped
+      message:
+        $ref: "#/components/messages/OrderShipped"
+  orders/delivered:
+    subscribe:
+      operationId: onOrderDelivered
+      message:
+        $ref: "#/components/messages/OrderDelivered"
+  orders/tracking-updated:
+    subscribe:
+      operationId: onOrderTrackingUpdated
+      message:
+        $ref: "#/components/messages/OrderTrackingUpdated"
+  user/authenticated:
+    subscribe:
+      operationId: onUserAuthenticated
+      message:
+        $ref: "#/components/messages/UserAuthenticated"
+  user/logged-out:
+    subscribe:
+      operationId: onUserLoggedOut
+      message:
+        $ref: "#/components/messages/UserLoggedOut"
+  user/profile-updated:
+    subscribe:
+      operationId: onUserProfileUpdated
+      message:
+        $ref: "#/components/messages/UserProfileUpdated"
+  user/preferences-updated:
+    subscribe:
+      operationId: onUserPreferencesUpdated
+      message:
+        $ref: "#/components/messages/UserPreferencesUpdated"
+  products/updated:
+    subscribe:
+      operationId: onProductUpdated
+      message:
+        $ref: "#/components/messages/ProductUpdated"
+  products/price-changed:
+    subscribe:
+      operationId: onProductPriceChanged
+      message:
+        $ref: "#/components/messages/ProductPriceChanged"
+  products/new-arrival:
+    subscribe:
+      operationId: onProductNewArrival
+      message:
+        $ref: "#/components/messages/ProductNewArrival"
+  products/availability-changed:
+    subscribe:
+      operationId: onProductAvailabilityChanged
+      message:
+        $ref: "#/components/messages/ProductAvailabilityChanged"
+  reviews/posted:
+    subscribe:
+      operationId: onReviewPosted
+      message:
+        $ref: "#/components/messages/ReviewPosted"
+  reviews/approved:
+    subscribe:
+      operationId: onReviewApproved
+      message:
+        $ref: "#/components/messages/ReviewApproved"
+  reviews/rejected:
+    subscribe:
+      operationId: onReviewRejected
+      message:
+        $ref: "#/components/messages/ReviewRejected"
+  reviews/helpful-vote-updated:
+    subscribe:
+      operationId: onReviewHelpfulVoteUpdated
+      message:
+        $ref: "#/components/messages/ReviewHelpfulVoteUpdated"
+  wishlists/item-added:
+    subscribe:
+      operationId: onWishlistItemAdded
+      message:
+        $ref: "#/components/messages/WishlistItemAdded"
+  wishlists/item-removed:
+    subscribe:
+      operationId: onWishlistItemRemoved
+      message:
+        $ref: "#/components/messages/WishlistItemRemoved"
+  wishlists/created:
+    subscribe:
+      operationId: onWishlistCreated
+      message:
+        $ref: "#/components/messages/WishlistCreated"
+  wishlists/updated:
+    subscribe:
+      operationId: onWishlistUpdated
+      message:
+        $ref: "#/components/messages/WishlistUpdated"
+  notifications/sent:
+    subscribe:
+      operationId: onNotificationSent
+      message:
+        $ref: "#/components/messages/NotificationSent"
+  notifications/dismissed:
+    subscribe:
+      operationId: onNotificationDismissed
+      message:
+        $ref: "#/components/messages/NotificationDismissed"
+  search/suggestions-updated:
+    subscribe:
+      operationId: onSearchSuggestionsUpdated
+      message:
+        $ref: "#/components/messages/SearchSuggestionsUpdated"
+  search/recommendations-updated:
+    subscribe:
+      operationId: onSearchRecommendationsUpdated
+      message:
+        $ref: "#/components/messages/SearchRecommendationsUpdated"
+  customer-service/message-received:
+    subscribe:
+      operationId: onCustomerServiceMessageReceived
+      message:
+        $ref: "#/components/messages/CustomerServiceMessageReceived"
+  customer-service/ticket-updated:
+    subscribe:
+      operationId: onCustomerServiceTicketUpdated
+      message:
+        $ref: "#/components/messages/CustomerServiceTicketUpdated"
+  customer-service/agent-typing:
+    subscribe:
+      operationId: onCustomerServiceAgentTyping
+      message:
+        $ref: "#/components/messages/CustomerServiceAgentTyping"
+  promotions/activated:
+    subscribe:
+      operationId: onPromotionActivated
+      message:
+        $ref: "#/components/messages/PromotionActivated"
+  promotions/expired:
+    subscribe:
+      operationId: onPromotionExpired
+      message:
+        $ref: "#/components/messages/PromotionExpired"
+  promotions/usage-updated:
+    subscribe:
+      operationId: onPromotionUsageUpdated
+      message:
+        $ref: "#/components/messages/PromotionUsageUpdated"
+  samples/order-status-changed:
+    subscribe:
+      operationId: onSampleOrderStatusChanged
+      message:
+        $ref: "#/components/messages/SampleOrderStatusChanged"
+  samples/shipped:
+    subscribe:
+      operationId: onSampleOrderShipped
+      message:
+        $ref: "#/components/messages/SampleOrderShipped"
+  gift-cards/balance-updated:
+    subscribe:
+      operationId: onGiftCardBalanceUpdated
+      message:
+        $ref: "#/components/messages/GiftCardBalanceUpdated"
+  gift-cards/transaction-completed:
+    subscribe:
+      operationId: onGiftCardTransactionCompleted
+      message:
+        $ref: "#/components/messages/GiftCardTransactionCompleted"
+  quiz/results-updated:
+    subscribe:
+      operationId: onQuizResultsUpdated
+      message:
+        $ref: "#/components/messages/QuizResultsUpdated"
+  abandonment/cart-reminder:
+    subscribe:
+      operationId: onAbandonmentCartReminder
+      message:
+        $ref: "#/components/messages/AbandonmentCartReminder"
+  abandonment/cart-recovered:
+    subscribe:
+      operationId: onAbandonmentCartRecovered
+      message:
+        $ref: "#/components/messages/AbandonmentCartRecovered"
+components:
+  messages:
+    CartItemAdded:
+      payload:
+        type: object
+        required:
+          - cart_id
+          - cart_item_id
+          - product_id
+          - size_ml
+          - quantity
+          - unit_price
+          - cart_totals
+          - timestamp
+        properties:
+          cart_id:
+            type: string
+          cart_item_id:
+            type: string
+          product_id:
+            type: string
+          product_name:
+            type: string
+          brand_name:
+            type: string
+          size_ml:
+            type: integer
+          quantity:
+            type: integer
+          unit_price:
+            type: number
+          gift_wrap:
+            type: boolean
+          sample_included:
+            type: boolean
+          cart_totals:
+            type: object
+            required:
+              - item_count
+              - subtotal
+              - shipping_cost
+              - tax_amount
+              - total
+            properties:
+              item_count:
+                type: integer
+              subtotal:
+                type: number
+              shipping_cost:
+                type: number
+              tax_amount:
+                type: number
+              total:
+                type: number
+              applied_promotions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    discount_amount:
+                      type: number
+                    description:
+                      type: string
+          timestamp:
+            type: string
+    CartItemRemoved:
+      payload:
+        type: object
+        required:
+          - cart_id
+          - cart_item_id
+          - product_id
+          - cart_totals
+          - timestamp
+        properties:
+          cart_id:
+            type: string
+          cart_item_id:
+            type: string
+          product_id:
+            type: string
+          product_name:
+            type: string
+          brand_name:
+            type: string
+          cart_totals:
+            type: object
+            required:
+              - item_count
+              - subtotal
+              - shipping_cost
+              - tax_amount
+              - total
+            properties:
+              item_count:
+                type: integer
+              subtotal:
+                type: number
+              shipping_cost:
+                type: number
+              tax_amount:
+                type: number
+              total:
+                type: number
+              applied_promotions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    discount_amount:
+                      type: number
+                    description:
+                      type: string
+          timestamp:
+            type: string
+    CartItemUpdated:
+      payload:
+        type: object
+        required:
+          - cart_id
+          - cart_item_id
+          - product_id
+          - quantity
+          - cart_totals
+          - timestamp
+        properties:
+          cart_id:
+            type: string
+          cart_item_id:
+            type: string
+          product_id:
+            type: string
+          quantity:
+            type: integer
+          unit_price:
+            type: number
+          gift_wrap:
+            type: boolean
+          sample_included:
+            type: boolean
+          cart_totals:
+            type: object
+            required:
+              - item_count
+              - subtotal
+              - shipping_cost
+              - tax_amount
+              - total
+            properties:
+              item_count:
+                type: integer
+              subtotal:
+                type: number
+              shipping_cost:
+                type: number
+              tax_amount:
+                type: number
+              total:
+                type: number
+              applied_promotions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    discount_amount:
+                      type: number
+                    description:
+                      type: string
+          timestamp:
+            type: string
+    CartCleared:
+      payload:
+        type: object
+        required:
+          - cart_id
+          - user_id
+          - timestamp
+        properties:
+          cart_id:
+            type: string
+          user_id:
+            type: string
+          session_id:
+            type: string
+          timestamp:
+            type: string
+    CartPromotionApplied:
+      payload:
+        type: object
+        required:
+          - cart_id
+          - promotion_code
+          - discount_amount
+          - cart_totals
+          - timestamp
+        properties:
+          cart_id:
+            type: string
+          promotion_code:
+            type: string
+          promotion_name:
+            type: string
+          discount_amount:
+            type: number
+          discount_type:
+            type: string
+          cart_totals:
+            type: object
+            required:
+              - item_count
+              - subtotal
+              - shipping_cost
+              - tax_amount
+              - total
+            properties:
+              item_count:
+                type: integer
+              subtotal:
+                type: number
+              shipping_cost:
+                type: number
+              tax_amount:
+                type: number
+              total:
+                type: number
+              applied_promotions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    discount_amount:
+                      type: number
+                    description:
+                      type: string
+          timestamp:
+            type: string
+    CartPromotionRemoved:
+      payload:
+        type: object
+        required:
+          - cart_id
+          - promotion_code
+          - cart_totals
+          - timestamp
+        properties:
+          cart_id:
+            type: string
+          promotion_code:
+            type: string
+          cart_totals:
+            type: object
+            required:
+              - item_count
+              - subtotal
+              - shipping_cost
+              - tax_amount
+              - total
+            properties:
+              item_count:
+                type: integer
+              subtotal:
+                type: number
+              shipping_cost:
+                type: number
+              tax_amount:
+                type: number
+              total:
+                type: number
+              applied_promotions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    discount_amount:
+                      type: number
+                    description:
+                      type: string
+          timestamp:
+            type: string
+    InventoryStockUpdated:
+      payload:
+        type: object
+        required:
+          - product_id
+          - size_ml
+          - stock_quantity
+          - reserved_quantity
+          - timestamp
+        properties:
+          product_id:
+            type: string
+          product_name:
+            type: string
+          brand_name:
+            type: string
+          size_ml:
+            type: integer
+          stock_quantity:
+            type: integer
+          reserved_quantity:
+            type: integer
+          low_stock_threshold:
+            type: integer
+          previous_stock:
+            type: integer
+          change_reason:
+            type: string
+          timestamp:
+            type: string
+    InventoryLowStockAlert:
+      payload:
+        type: object
+        required:
+          - product_id
+          - size_ml
+          - stock_quantity
+          - low_stock_threshold
+          - timestamp
+        properties:
+          product_id:
+            type: string
+          product_name:
+            type: string
+          brand_name:
+            type: string
+          size_ml:
+            type: integer
+          stock_quantity:
+            type: integer
+          low_stock_threshold:
+            type: integer
+          alert_level:
+            type: string
+          timestamp:
+            type: string
+    InventoryOutOfStock:
+      payload:
+        type: object
+        required:
+          - product_id
+          - size_ml
+          - timestamp
+        properties:
+          product_id:
+            type: string
+          product_name:
+            type: string
+          brand_name:
+            type: string
+          size_ml:
+            type: integer
+          estimated_restock_date:
+            type: string
+          notification_subscribers:
+            type: integer
+          timestamp:
+            type: string
+    InventoryBackInStock:
+      payload:
+        type: object
+        required:
+          - product_id
+          - size_ml
+          - stock_quantity
+          - timestamp
+        properties:
+          product_id:
+            type: string
+          product_name:
+            type: string
+          brand_name:
+            type: string
+          size_ml:
+            type: integer
+          stock_quantity:
+            type: integer
+          was_out_of_stock_since:
+            type: string
+          notification_sent_to:
+            type: integer
+          timestamp:
+            type: string
+    OrderStatusChanged:
+      payload:
+        type: object
+        required:
+          - order_id
+          - order_number
+          - user_id
+          - old_status
+          - new_status
+          - timestamp
+        properties:
+          order_id:
+            type: string
+          order_number:
+            type: string
+          user_id:
+            type: string
+          customer_email:
+            type: string
+          old_status:
+            type: string
+          new_status:
+            type: string
+          status_reason:
+            type: string
+          estimated_completion:
+            type: string
+          timestamp:
+            type: string
+    OrderPaymentUpdated:
+      payload:
+        type: object
+        required:
+          - order_id
+          - order_number
+          - payment_status
+          - timestamp
+        properties:
+          order_id:
+            type: string
+          order_number:
+            type: string
+          user_id:
+            type: string
+          payment_status:
+            type: string
+          payment_method:
+            type: string
+          transaction_id:
+            type: string
+          amount_paid:
+            type: number
+          timestamp:
+            type: string
+    OrderShipped:
+      payload:
+        type: object
+        required:
+          - order_id
+          - order_number
+          - tracking_number
+          - shipping_carrier
+          - timestamp
+        properties:
+          order_id:
+            type: string
+          order_number:
+            type: string
+          user_id:
+            type: string
+          tracking_number:
+            type: string
+          shipping_carrier:
+            type: string
+          shipping_method:
+            type: string
+          estimated_delivery_date:
+            type: string
+          tracking_url:
+            type: string
+          timestamp:
+            type: string
+    OrderDelivered:
+      payload:
+        type: object
+        required:
+          - order_id
+          - order_number
+          - delivered_at
+          - timestamp
+        properties:
+          order_id:
+            type: string
+          order_number:
+            type: string
+          user_id:
+            type: string
+          delivered_at:
+            type: string
+          delivery_confirmation:
+            type: string
+          signature_required:
+            type: boolean
+          delivery_notes:
+            type: string
+          timestamp:
+            type: string
+    OrderTrackingUpdated:
+      payload:
+        type: object
+        required:
+          - order_id
+          - tracking_number
+          - tracking_status
+          - timestamp
+        properties:
+          order_id:
+            type: string
+          tracking_number:
+            type: string
+          tracking_status:
+            type: string
+          location:
+            type: string
+          estimated_delivery:
+            type: string
+          tracking_details:
+            type: array
+            items:
+              type: object
+              properties:
+                timestamp:
+                  type: string
+                status:
+                  type: string
+                location:
+                  type: string
+                description:
+                  type: string
+          timestamp:
+            type: string
+    UserAuthenticated:
+      payload:
+        type: object
+        required:
+          - user_id
+          - email
+          - first_name
+          - last_name
+          - authentication_method
+          - timestamp
+        properties:
+          user_id:
+            type: string
+          email:
+            type: string
+          first_name:
+            type: string
+          last_name:
+            type: string
+          loyalty_tier:
+            type: string
+          email_verified:
+            type: boolean
+          authentication_method:
+            type: string
+          session_token:
+            type: string
+          cart_merged:
+            type: boolean
+          timestamp:
+            type: string
+    UserLoggedOut:
+      payload:
+        type: object
+        required:
+          - user_id
+          - session_id
+          - timestamp
+        properties:
+          user_id:
+            type: string
+          session_id:
+            type: string
+          logout_reason:
+            type: string
+          session_duration:
+            type: integer
+          timestamp:
+            type: string
+    UserProfileUpdated:
+      payload:
+        type: object
+        required:
+          - user_id
+          - updated_fields
+          - timestamp
+        properties:
+          user_id:
+            type: string
+          updated_fields:
+            type: array
+            items:
+              type: string
+          first_name:
+            type: string
+          last_name:
+            type: string
+          phone_number:
+            type: string
+          date_of_birth:
+            type: string
+          email_verified:
+            type: boolean
+          timestamp:
+            type: string
+    UserPreferencesUpdated:
+      payload:
+        type: object
+        required:
+          - user_id
+          - preference_type
+          - timestamp
+        properties:
+          user_id:
+            type: string
+          preference_type:
+            type: string
+          notification_preferences:
+            type: object
+            properties:
+              email_marketing:
+                type: boolean
+              sms_updates:
+                type: boolean
+              restock_alerts:
+                type: boolean
+              price_drop_alerts:
+                type: boolean
+          fragrance_profile:
+            type: object
+            properties:
+              preferred_families:
+                type: array
+                items:
+                  type: string
+              intensity_preference:
+                type: string
+              occasion_preferences:
+                type: array
+                items:
+                  type: string
+              season_preferences:
+                type: array
+                items:
+                  type: string
+          timestamp:
+            type: string
+    ProductUpdated:
+      payload:
+        type: object
+        required:
+          - product_id
+          - updated_fields
+          - timestamp
+        properties:
+          product_id:
+            type: string
+          product_name:
+            type: string
+          brand_name:
+            type: string
+          updated_fields:
+            type: array
+            items:
+              type: string
+          description:
+            type: string
+          base_price:
+            type: number
+          sale_price:
+            type: number
+          availability_status:
+            type: string
+          is_featured:
+            type: boolean
+          is_new_arrival:
+            type: boolean
+          timestamp:
+            type: string
+    ProductPriceChanged:
+      payload:
+        type: object
+        required:
+          - product_id
+          - size_ml
+          - old_price
+          - new_price
+          - timestamp
+        properties:
+          product_id:
+            type: string
+          product_name:
+            type: string
+          brand_name:
+            type: string
+          size_ml:
+            type: integer
+          old_price:
+            type: number
+          new_price:
+            type: number
+          sale_price:
+            type: number
+          discount_percentage:
+            type: number
+          price_change_reason:
+            type: string
+          effective_date:
+            type: string
+          timestamp:
+            type: string
+    ProductNewArrival:
+      payload:
+        type: object
+        required:
+          - product_id
+          - product_name
+          - brand_name
+          - launch_date
+          - timestamp
+        properties:
+          product_id:
+            type: string
+          product_name:
+            type: string
+          brand_name:
+            type: string
+          description:
+            type: string
+          fragrance_families:
+            type: string
+          concentration:
+            type: string
+          gender_category:
+            type: string
+          base_price:
+            type: number
+          launch_date:
+            type: string
+          is_limited_edition:
+            type: boolean
+          pre_order_available:
+            type: boolean
+          timestamp:
+            type: string
+    ProductAvailabilityChanged:
+      payload:
+        type: object
+        required:
+          - product_id
+          - old_status
+          - new_status
+          - timestamp
+        properties:
+          product_id:
+            type: string
+          product_name:
+            type: string
+          brand_name:
+            type: string
+          old_status:
+            type: string
+          new_status:
+            type: string
+          affected_sizes:
+            type: array
+            items:
+              type: object
+              properties:
+                size_ml:
+                  type: integer
+                stock_quantity:
+                  type: integer
+          reason:
+            type: string
+          estimated_restock:
+            type: string
+          timestamp:
+            type: string
+    ReviewPosted:
+      payload:
+        type: object
+        required:
+          - review_id
+          - product_id
+          - user_id
+          - rating
+          - timestamp
+        properties:
+          review_id:
+            type: string
+          product_id:
+            type: string
+          product_name:
+            type: string
+          user_id:
+            type: string
+          user_name:
+            type: string
+          rating:
+            type: integer
+          title:
+            type: string
+          review_text:
+            type: string
+          longevity_rating:
+            type: integer
+          sillage_rating:
+            type: integer
+          is_verified_purchase:
+            type: boolean
+          moderation_status:
+            type: string
+          timestamp:
+            type: string
+    ReviewApproved:
+      payload:
+        type: object
+        required:
+          - review_id
+          - product_id
+          - timestamp
+        properties:
+          review_id:
+            type: string
+          product_id:
+            type: string
+          product_name:
+            type: string
+          user_id:
+            type: string
+          rating:
+            type: integer
+          approved_by:
+            type: string
+          approval_notes:
+            type: string
+          is_featured:
+            type: boolean
+          timestamp:
+            type: string
+    ReviewRejected:
+      payload:
+        type: object
+        required:
+          - review_id
+          - product_id
+          - rejection_reason
+          - timestamp
+        properties:
+          review_id:
+            type: string
+          product_id:
+            type: string
+          user_id:
+            type: string
+          rejection_reason:
+            type: string
+          rejected_by:
+            type: string
+          rejection_notes:
+            type: string
+          timestamp:
+            type: string
+    ReviewHelpfulVoteUpdated:
+      payload:
+        type: object
+        required:
+          - review_id
+          - helpful_votes
+          - total_votes
+          - timestamp
+        properties:
+          review_id:
+            type: string
+          product_id:
+            type: string
+          helpful_votes:
+            type: integer
+          total_votes:
+            type: integer
+          vote_type:
+            type: string
+          voter_id:
+            type: string
+          timestamp:
+            type: string
+    WishlistItemAdded:
+      payload:
+        type: object
+        required:
+          - wishlist_id
+          - wishlist_item_id
+          - product_id
+          - user_id
+          - timestamp
+        properties:
+          wishlist_id:
+            type: string
+          wishlist_item_id:
+            type: string
+          product_id:
+            type: string
+          product_name:
+            type: string
+          brand_name:
+            type: string
+          user_id:
+            type: string
+          size_ml:
+            type: integer
+          notes:
+            type: string
+          wishlist_name:
+            type: string
+          total_items:
+            type: integer
+          timestamp:
+            type: string
+    WishlistItemRemoved:
+      payload:
+        type: object
+        required:
+          - wishlist_id
+          - wishlist_item_id
+          - product_id
+          - user_id
+          - timestamp
+        properties:
+          wishlist_id:
+            type: string
+          wishlist_item_id:
+            type: string
+          product_id:
+            type: string
+          product_name:
+            type: string
+          user_id:
+            type: string
+          wishlist_name:
+            type: string
+          total_items:
+            type: integer
+          timestamp:
+            type: string
+    WishlistCreated:
+      payload:
+        type: object
+        required:
+          - wishlist_id
+          - user_id
+          - wishlist_name
+          - timestamp
+        properties:
+          wishlist_id:
+            type: string
+          user_id:
+            type: string
+          wishlist_name:
+            type: string
+          is_public:
+            type: boolean
+          is_default:
+            type: boolean
+          share_token:
+            type: string
+          timestamp:
+            type: string
+    WishlistUpdated:
+      payload:
+        type: object
+        required:
+          - wishlist_id
+          - user_id
+          - updated_fields
+          - timestamp
+        properties:
+          wishlist_id:
+            type: string
+          user_id:
+            type: string
+          updated_fields:
+            type: array
+            items:
+              type: string
+          wishlist_name:
+            type: string
+          is_public:
+            type: boolean
+          is_default:
+            type: boolean
+          timestamp:
+            type: string
+    NotificationSent:
+      payload:
+        type: object
+        required:
+          - notification_id
+          - user_id
+          - notification_type
+          - message
+          - timestamp
+        properties:
+          notification_id:
+            type: string
+          user_id:
+            type: string
+          notification_type:
+            type: string
+          message:
+            type: string
+          title:
+            type: string
+          priority:
+            type: string
+          channel:
+            type: string
+          auto_dismiss:
+            type: boolean
+          action_url:
+            type: string
+          metadata:
+            type: object
+          timestamp:
+            type: string
+    NotificationDismissed:
+      payload:
+        type: object
+        required:
+          - notification_id
+          - user_id
+          - timestamp
+        properties:
+          notification_id:
+            type: string
+          user_id:
+            type: string
+          dismissed_by:
+            type: string
+          timestamp:
+            type: string
+    SearchSuggestionsUpdated:
+      payload:
+        type: object
+        required:
+          - user_id
+          - query
+          - suggestions
+          - timestamp
+        properties:
+          user_id:
+            type: string
+          session_id:
+            type: string
+          query:
+            type: string
+          suggestions:
+            type: array
+            items:
+              type: object
+              properties:
+                type:
+                  type: string
+                text:
+                  type: string
+                url:
+                  type: string
+                image_url:
+                  type: string
+                metadata:
+                  type: object
+          result_count:
+            type: integer
+          search_time_ms:
+            type: integer
+          timestamp:
+            type: string
+    SearchRecommendationsUpdated:
+      payload:
+        type: object
+        required:
+          - user_id
+          - recommendation_type
+          - products
+          - timestamp
+        properties:
+          user_id:
+            type: string
+          recommendation_type:
+            type: string
+          context:
+            type: string
+          products:
+            type: array
+            items:
+              type: object
+              properties:
+                product_id:
+                  type: string
+                product_name:
+                  type: string
+                brand_name:
+                  type: string
+                base_price:
+                  type: number
+                sale_price:
+                  type: number
+                image_url:
+                  type: string
+                relevance_score:
+                  type: number
+                reason:
+                  type: string
+          algorithm_version:
+            type: string
+          timestamp:
+            type: string
+    CustomerServiceMessageReceived:
+      payload:
+        type: object
+        required:
+          - message_id
+          - ticket_id
+          - sender_type
+          - message_text
+          - timestamp
+        properties:
+          message_id:
+            type: string
+          ticket_id:
+            type: string
+          ticket_number:
+            type: string
+          sender_type:
+            type: string
+          sender_name:
+            type: string
+          sender_email:
+            type: string
+          message_text:
+            type: string
+          is_internal:
+            type: boolean
+          attachments:
+            type: array
+            items:
+              type: object
+              properties:
+                filename:
+                  type: string
+                url:
+                  type: string
+                size:
+                  type: integer
+          timestamp:
+            type: string
+    CustomerServiceTicketUpdated:
+      payload:
+        type: object
+        required:
+          - ticket_id
+          - ticket_number
+          - status
+          - timestamp
+        properties:
+          ticket_id:
+            type: string
+          ticket_number:
+            type: string
+          user_id:
+            type: string
+          customer_email:
+            type: string
+          status:
+            type: string
+          priority:
+            type: string
+          assigned_agent_id:
+            type: string
+          assigned_agent_name:
+            type: string
+          category:
+            type: string
+          subject:
+            type: string
+          resolution_notes:
+            type: string
+          estimated_resolution:
+            type: string
+          timestamp:
+            type: string
+    CustomerServiceAgentTyping:
+      payload:
+        type: object
+        required:
+          - ticket_id
+          - agent_name
+          - is_typing
+          - timestamp
+        properties:
+          ticket_id:
+            type: string
+          agent_id:
+            type: string
+          agent_name:
+            type: string
+          is_typing:
+            type: boolean
+          timestamp:
+            type: string
+    PromotionActivated:
+      payload:
+        type: object
+        required:
+          - promotion_id
+          - promotion_code
+          - promotion_name
+          - start_date
+          - timestamp
+        properties:
+          promotion_id:
+            type: string
+          promotion_code:
+            type: string
+          promotion_name:
+            type: string
+          description:
+            type: string
+          discount_type:
+            type: string
+          discount_value:
+            type: number
+          minimum_order_amount:
+            type: number
+          maximum_discount:
+            type: number
+          start_date:
+            type: string
+          end_date:
+            type: string
+          usage_limit:
+            type: integer
+          applicable_products:
+            type: array
+            items:
+              type: string
+          applicable_categories:
+            type: array
+            items:
+              type: string
+          timestamp:
+            type: string
+    PromotionExpired:
+      payload:
+        type: object
+        required:
+          - promotion_id
+          - promotion_code
+          - end_date
+          - timestamp
+        properties:
+          promotion_id:
+            type: string
+          promotion_code:
+            type: string
+          promotion_name:
+            type: string
+          end_date:
+            type: string
+          total_usage:
+            type: integer
+          total_discount_amount:
+            type: number
+          timestamp:
+            type: string
+    PromotionUsageUpdated:
+      payload:
+        type: object
+        required:
+          - promotion_id
+          - current_usage
+          - usage_limit
+          - timestamp
+        properties:
+          promotion_id:
+            type: string
+          promotion_code:
+            type: string
+          current_usage:
+            type: integer
+          usage_limit:
+            type: integer
+          usage_percentage:
+            type: number
+          order_id:
+            type: string
+          user_id:
+            type: string
+          discount_amount:
+            type: number
+          timestamp:
+            type: string
+    SampleOrderStatusChanged:
+      payload:
+        type: object
+        required:
+          - sample_order_id
+          - sample_order_number
+          - old_status
+          - new_status
+          - timestamp
+        properties:
+          sample_order_id:
+            type: string
+          sample_order_number:
+            type: string
+          user_id:
+            type: string
+          customer_email:
+            type: string
+          old_status:
+            type: string
+          new_status:
+            type: string
+          total_amount:
+            type: number
+          item_count:
+            type: integer
+          estimated_shipping:
+            type: string
+          timestamp:
+            type: string
+    SampleOrderShipped:
+      payload:
+        type: object
+        required:
+          - sample_order_id
+          - sample_order_number
+          - tracking_number
+          - timestamp
+        properties:
+          sample_order_id:
+            type: string
+          sample_order_number:
+            type: string
+          user_id:
+            type: string
+          tracking_number:
+            type: string
+          shipping_carrier:
+            type: string
+          estimated_delivery:
+            type: string
+          sample_items:
+            type: array
+            items:
+              type: object
+              properties:
+                product_id:
+                  type: string
+                product_name:
+                  type: string
+                brand_name:
+                  type: string
+                sample_size_ml:
+                  type: integer
+                quantity:
+                  type: integer
+          timestamp:
+            type: string
+    GiftCardBalanceUpdated:
+      payload:
+        type: object
+        required:
+          - gift_card_id
+          - gift_card_code
+          - current_balance
+          - timestamp
+        properties:
+          gift_card_id:
+            type: string
+          gift_card_code:
+            type: string
+          previous_balance:
+            type: number
+          current_balance:
+            type: number
+          transaction_amount:
+            type: number
+          transaction_type:
+            type: string
+          order_id:
+            type: string
+          recipient_email:
+            type: string
+          timestamp:
+            type: string
+    GiftCardTransactionCompleted:
+      payload:
+        type: object
+        required:
+          - transaction_id
+          - gift_card_id
+          - transaction_type
+          - amount
+          - timestamp
+        properties:
+          transaction_id:
+            type: string
+          gift_card_id:
+            type: string
+          gift_card_code:
+            type: string
+          transaction_type:
+            type: string
+          amount:
+            type: number
+          balance_after:
+            type: number
+          order_id:
+            type: string
+          recipient_email:
+            type: string
+          merchant_reference:
+            type: string
+          timestamp:
+            type: string
+    QuizResultsUpdated:
+      payload:
+        type: object
+        required:
+          - quiz_result_id
+          - user_id
+          - personality_type
+          - recommended_families
+          - timestamp
+        properties:
+          quiz_result_id:
+            type: string
+          user_id:
+            type: string
+          session_id:
+            type: string
+          personality_type:
+            type: string
+          quiz_answers:
+            type: object
+          recommended_families:
+            type: array
+            items:
+              type: string
+          recommended_products:
+            type: array
+            items:
+              type: object
+              properties:
+                product_id:
+                  type: string
+                product_name:
+                  type: string
+                brand_name:
+                  type: string
+                match_score:
+                  type: number
+                match_reasons:
+                  type: array
+                  items:
+                    type: string
+          intensity_preference:
+            type: string
+          occasion_preferences:
+            type: array
+            items:
+              type: string
+          season_preferences:
+            type: array
+            items:
+              type: string
+          completed_at:
+            type: string
+          timestamp:
+            type: string
+    AbandonmentCartReminder:
+      payload:
+        type: object
+        required:
+          - abandoned_cart_id
+          - cart_id
+          - user_id
+          - reminder_type
+          - timestamp
+        properties:
+          abandoned_cart_id:
+            type: string
+          cart_id:
+            type: string
+          user_id:
+            type: string
+          email:
+            type: string
+          reminder_type:
+            type: string
+          reminder_sequence:
+            type: integer
+          cart_value:
+            type: number
+          total_items:
+            type: integer
+          cart_items:
+            type: array
+            items:
+              type: object
+              properties:
+                product_id:
+                  type: string
+                product_name:
+                  type: string
+                brand_name:
+                  type: string
+                size_ml:
+                  type: integer
+                quantity:
+                  type: integer
+                unit_price:
+                  type: number
+          abandoned_at:
+            type: string
+          incentive_offered:
+            type: object
+            properties:
+              type:
+                type: string
+              value:
+                type: number
+              code:
+                type: string
+          timestamp:
+            type: string
+    AbandonmentCartRecovered:
+      payload:
+        type: object
+        required:
+          - abandoned_cart_id
+          - cart_id
+          - recovery_order_id
+          - timestamp
+        properties:
+          abandoned_cart_id:
+            type: string
+          cart_id:
+            type: string
+          user_id:
+            type: string
+          recovery_order_id:
+            type: string
+          order_number:
+            type: string
+          recovery_method:
+            type: string
+          time_to_recovery_hours:
+            type: number
+          cart_value:
+            type: number
+          order_value:
+            type: number
+          recovery_rate:
+            type: number
+          abandoned_at:
+            type: string
+          recovered_at:
+            type: string
+          timestamp:
+            type: string

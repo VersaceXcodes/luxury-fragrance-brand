@@ -1,0 +1,15 @@
+{
+  "timestamp": 1757934195790,
+  "operation": {
+    "id": "backend:specifications:openapi"
+  },
+  "projectId": "luxury-fragrance-brand",
+  "files": [
+    {
+      "path": "/mnt/data/luxury-fragrance-brand/backend/openapi.yaml",
+      "type": "text",
+      "size": 91046,
+      "dependencies": false
+    }
+  ]
+}

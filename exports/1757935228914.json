@@ -1,0 +1,19 @@
+{
+  "timestamp": 1757935228914,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "GV_TopNavigation",
+      "version": "latest"
+    }
+  },
+  "projectId": "luxury-fragrance-brand",
+  "files": [
+    {
+      "path": "/mnt/data/luxury-fragrance-brand/vitereact/src/components/views/GV_TopNavigation.tsx",
+      "type": "text",
+      "size": 17524,
+      "dependencies": false
+    }
+  ]
+}

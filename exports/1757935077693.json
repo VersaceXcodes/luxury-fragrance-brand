@@ -1,0 +1,21 @@
+{
+  "timestamp": 1757935077693,
+  "operation": {
+    "id": "backend:tests:main"
+  },
+  "projectId": "luxury-fragrance-brand",
+  "files": [
+    {
+      "path": "/mnt/data/luxury-fragrance-brand/backend/server.test.ts",
+      "type": "text",
+      "size": 54593,
+      "dependencies": false
+    },
+    {
+      "path": "/mnt/data/luxury-fragrance-brand/backend/jest.config.ts",
+      "type": "text",
+      "size": 524,
+      "dependencies": false
+    }
+  ]
+}

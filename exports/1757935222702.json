@@ -1,0 +1,19 @@
+{
+  "timestamp": 1757935222702,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "GV_CartDropdown",
+      "version": "latest"
+    }
+  },
+  "projectId": "luxury-fragrance-brand",
+  "files": [
+    {
+      "path": "/mnt/data/luxury-fragrance-brand/vitereact/src/components/views/GV_CartDropdown.tsx",
+      "type": "text",
+      "size": 15005,
+      "dependencies": false
+    }
+  ]
+}

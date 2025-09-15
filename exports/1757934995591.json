@@ -1,0 +1,15 @@
+{
+  "timestamp": 1757934995591,
+  "operation": {
+    "id": "settings:config:package"
+  },
+  "projectId": "luxury-fragrance-brand",
+  "files": [
+    {
+      "path": "/mnt/data/luxury-fragrance-brand/vitereact/package.json",
+      "type": "text",
+      "size": 2949,
+      "dependencies": true
+    }
+  ]
+}

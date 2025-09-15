@@ -1,0 +1,15 @@
+{
+  "timestamp": 1757933884716,
+  "operation": {
+    "id": "db:postgres"
+  },
+  "projectId": "luxury-fragrance-brand",
+  "files": [
+    {
+      "path": "/mnt/data/luxury-fragrance-brand/backend/db.sql",
+      "type": "text",
+      "size": 53614,
+      "dependencies": false
+    }
+  ]
+}
