@@ -27,27 +27,34 @@ const pool = new Pool(
 async function initDb() {
   const client = await pool.connect();
   try {
-    // Begin transaction
-    await client.query('BEGIN');
-    
     // Read and split SQL commands
     const dbInitCommands = fs
       .readFileSync(`./db.sql`, "utf-8")
       .toString()
       .split(/(?=CREATE TABLE |INSERT INTO)/);
 
-    // Execute each command
+    // Execute each command individually (no transaction for better error handling)
     for (let cmd of dbInitCommands) {
       console.dir({ "backend:db:init:command": cmd });
-      await client.query(cmd);
+      try {
+        await client.query(cmd);
+      } catch (error) {
+        // Skip duplicate key errors for INSERT statements
+        if (error.code === '23505' && cmd.trim().startsWith('INSERT')) {
+          console.log('Skipping duplicate data insertion:', error.detail);
+          continue;
+        }
+        // Skip empty commands
+        if (cmd.trim() === '' || cmd.trim().startsWith('--')) {
+          continue;
+        }
+        console.error('Error executing command:', error.message);
+        throw error;
+      }
     }
 
-    // Commit transaction
-    await client.query('COMMIT');
     console.log('Database initialization completed successfully');
   } catch (e) {
-    // Rollback on error
-    await client.query('ROLLBACK');
     console.error('Database initialization failed:', e);
     throw e;
   } finally {

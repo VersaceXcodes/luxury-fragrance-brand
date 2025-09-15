@@ -1,7 +1,7 @@
 -- Create tables in dependency order
 
 -- Independent tables first
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     user_id VARCHAR(255) PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE users (
     updated_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE brands (
+CREATE TABLE IF NOT EXISTS brands (
     brand_id VARCHAR(255) PRIMARY KEY,
     brand_name VARCHAR(255) NOT NULL,
     description TEXT,
@@ -30,7 +30,7 @@ CREATE TABLE brands (
     created_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE categories (
+CREATE TABLE IF NOT EXISTS categories (
     category_id VARCHAR(255) PRIMARY KEY,
     category_name VARCHAR(255) NOT NULL,
     parent_category_id VARCHAR(255) REFERENCES categories(category_id),
@@ -39,7 +39,7 @@ CREATE TABLE categories (
     is_active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
-CREATE TABLE shipping_methods (
+CREATE TABLE IF NOT EXISTS shipping_methods (
     shipping_method_id VARCHAR(255) PRIMARY KEY,
     method_name VARCHAR(255) NOT NULL,
     description TEXT,
@@ -54,7 +54,7 @@ CREATE TABLE shipping_methods (
 );
 
 -- Tables with one level dependencies
-CREATE TABLE products (
+CREATE TABLE IF NOT EXISTS products (
     product_id VARCHAR(255) PRIMARY KEY,
     brand_id VARCHAR(255) NOT NULL REFERENCES brands(brand_id),
     category_id VARCHAR(255) NOT NULL REFERENCES categories(category_id),
@@ -91,7 +91,7 @@ CREATE TABLE products (
     updated_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE addresses (
+CREATE TABLE IF NOT EXISTS addresses (
     address_id VARCHAR(255) PRIMARY KEY,
     user_id VARCHAR(255) NOT NULL REFERENCES users(user_id),
     address_type VARCHAR(255) NOT NULL,
@@ -109,7 +109,7 @@ CREATE TABLE addresses (
     created_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE payment_methods (
+CREATE TABLE IF NOT EXISTS payment_methods (
     payment_method_id VARCHAR(255) PRIMARY KEY,
     user_id VARCHAR(255) NOT NULL REFERENCES users(user_id),
     payment_type VARCHAR(255) NOT NULL,
@@ -123,7 +123,7 @@ CREATE TABLE payment_methods (
     created_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE wishlists (
+CREATE TABLE IF NOT EXISTS wishlists (
     wishlist_id VARCHAR(255) PRIMARY KEY,
     user_id VARCHAR(255) NOT NULL REFERENCES users(user_id),
     wishlist_name VARCHAR(255) NOT NULL DEFAULT 'My Wishlist',
@@ -133,7 +133,7 @@ CREATE TABLE wishlists (
     created_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE newsletter_subscriptions (
+CREATE TABLE IF NOT EXISTS newsletter_subscriptions (
     subscription_id VARCHAR(255) PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
     first_name VARCHAR(255),
@@ -146,7 +146,7 @@ CREATE TABLE newsletter_subscriptions (
     created_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE carts (
+CREATE TABLE IF NOT EXISTS carts (
     cart_id VARCHAR(255) PRIMARY KEY,
     user_id VARCHAR(255) REFERENCES users(user_id),
     session_id VARCHAR(255),
@@ -154,7 +154,7 @@ CREATE TABLE carts (
     updated_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE promotions (
+CREATE TABLE IF NOT EXISTS promotions (
     promotion_id VARCHAR(255) PRIMARY KEY,
     promotion_code VARCHAR(255) UNIQUE NOT NULL,
     promotion_name VARCHAR(255) NOT NULL,
@@ -174,7 +174,7 @@ CREATE TABLE promotions (
 );
 
 -- Tables with two level dependencies
-CREATE TABLE product_sizes (
+CREATE TABLE IF NOT EXISTS product_sizes (
     size_id VARCHAR(255) PRIMARY KEY,
     product_id VARCHAR(255) NOT NULL REFERENCES products(product_id),
     size_ml INTEGER NOT NULL,
@@ -190,7 +190,7 @@ CREATE TABLE product_sizes (
     created_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE product_images (
+CREATE TABLE IF NOT EXISTS product_images (
     image_id VARCHAR(255) PRIMARY KEY,
     product_id VARCHAR(255) NOT NULL REFERENCES products(product_id),
     image_url VARCHAR(255) NOT NULL,
@@ -200,7 +200,7 @@ CREATE TABLE product_images (
     is_primary BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-CREATE TABLE orders (
+CREATE TABLE IF NOT EXISTS orders (
     order_id VARCHAR(255) PRIMARY KEY,
     user_id VARCHAR(255) REFERENCES users(user_id),
     order_number VARCHAR(255) UNIQUE NOT NULL,
@@ -228,7 +228,7 @@ CREATE TABLE orders (
     updated_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE reviews (
+CREATE TABLE IF NOT EXISTS reviews (
     review_id VARCHAR(255) PRIMARY KEY,
     product_id VARCHAR(255) NOT NULL REFERENCES products(product_id),
     user_id VARCHAR(255) NOT NULL REFERENCES users(user_id),
@@ -249,7 +249,7 @@ CREATE TABLE reviews (
     updated_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE wishlist_items (
+CREATE TABLE IF NOT EXISTS wishlist_items (
     wishlist_item_id VARCHAR(255) PRIMARY KEY,
     wishlist_id VARCHAR(255) NOT NULL REFERENCES wishlists(wishlist_id),
     product_id VARCHAR(255) NOT NULL REFERENCES products(product_id),
@@ -258,7 +258,7 @@ CREATE TABLE wishlist_items (
     added_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE cart_items (
+CREATE TABLE IF NOT EXISTS cart_items (
     cart_item_id VARCHAR(255) PRIMARY KEY,
     cart_id VARCHAR(255) NOT NULL REFERENCES carts(cart_id),
     product_id VARCHAR(255) NOT NULL REFERENCES products(product_id),
@@ -270,7 +270,7 @@ CREATE TABLE cart_items (
     added_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE sample_orders (
+CREATE TABLE IF NOT EXISTS sample_orders (
     sample_order_id VARCHAR(255) PRIMARY KEY,
     user_id VARCHAR(255) REFERENCES users(user_id),
     sample_order_number VARCHAR(255) UNIQUE NOT NULL,
@@ -284,7 +284,7 @@ CREATE TABLE sample_orders (
     created_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE quiz_results (
+CREATE TABLE IF NOT EXISTS quiz_results (
     quiz_result_id VARCHAR(255) PRIMARY KEY,
     user_id VARCHAR(255) REFERENCES users(user_id),
     session_id VARCHAR(255),
@@ -298,7 +298,7 @@ CREATE TABLE quiz_results (
     completed_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE gift_cards (
+CREATE TABLE IF NOT EXISTS gift_cards (
     gift_card_id VARCHAR(255) PRIMARY KEY,
     gift_card_code VARCHAR(255) UNIQUE NOT NULL,
     initial_amount DECIMAL(10,2) NOT NULL,
@@ -315,7 +315,7 @@ CREATE TABLE gift_cards (
     created_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE customer_service_tickets (
+CREATE TABLE IF NOT EXISTS customer_service_tickets (
     ticket_id VARCHAR(255) PRIMARY KEY,
     user_id VARCHAR(255) REFERENCES users(user_id),
     ticket_number VARCHAR(255) UNIQUE NOT NULL,
@@ -334,7 +334,7 @@ CREATE TABLE customer_service_tickets (
     updated_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE inventory_tracking (
+CREATE TABLE IF NOT EXISTS inventory_tracking (
     tracking_id VARCHAR(255) PRIMARY KEY,
     product_id VARCHAR(255) NOT NULL REFERENCES products(product_id),
     size_ml INTEGER NOT NULL,
@@ -347,7 +347,7 @@ CREATE TABLE inventory_tracking (
     created_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE abandoned_carts (
+CREATE TABLE IF NOT EXISTS abandoned_carts (
     abandoned_cart_id VARCHAR(255) PRIMARY KEY,
     cart_id VARCHAR(255) NOT NULL REFERENCES carts(cart_id),
     user_id VARCHAR(255) REFERENCES users(user_id),
@@ -361,7 +361,7 @@ CREATE TABLE abandoned_carts (
     recovery_order_id VARCHAR(255) REFERENCES orders(order_id)
 );
 
-CREATE TABLE product_views (
+CREATE TABLE IF NOT EXISTS product_views (
     view_id VARCHAR(255) PRIMARY KEY,
     product_id VARCHAR(255) NOT NULL REFERENCES products(product_id),
     user_id VARCHAR(255) REFERENCES users(user_id),
@@ -373,7 +373,7 @@ CREATE TABLE product_views (
 );
 
 -- Tables with three+ level dependencies
-CREATE TABLE order_items (
+CREATE TABLE IF NOT EXISTS order_items (
     order_item_id VARCHAR(255) PRIMARY KEY,
     order_id VARCHAR(255) NOT NULL REFERENCES orders(order_id),
     product_id VARCHAR(255) NOT NULL REFERENCES products(product_id),
@@ -388,7 +388,7 @@ CREATE TABLE order_items (
     sku VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE review_photos (
+CREATE TABLE IF NOT EXISTS review_photos (
     review_photo_id VARCHAR(255) PRIMARY KEY,
     review_id VARCHAR(255) NOT NULL REFERENCES reviews(review_id),
     photo_url VARCHAR(255) NOT NULL,
@@ -397,7 +397,7 @@ CREATE TABLE review_photos (
     uploaded_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE sample_order_items (
+CREATE TABLE IF NOT EXISTS sample_order_items (
     sample_item_id VARCHAR(255) PRIMARY KEY,
     sample_order_id VARCHAR(255) NOT NULL REFERENCES sample_orders(sample_order_id),
     product_id VARCHAR(255) NOT NULL REFERENCES products(product_id),
@@ -406,7 +406,7 @@ CREATE TABLE sample_order_items (
     quantity INTEGER NOT NULL DEFAULT 1
 );
 
-CREATE TABLE gift_card_transactions (
+CREATE TABLE IF NOT EXISTS gift_card_transactions (
     transaction_id VARCHAR(255) PRIMARY KEY,
     gift_card_id VARCHAR(255) NOT NULL REFERENCES gift_cards(gift_card_id),
     order_id VARCHAR(255) REFERENCES orders(order_id),
@@ -416,7 +416,7 @@ CREATE TABLE gift_card_transactions (
     created_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE promotion_uses (
+CREATE TABLE IF NOT EXISTS promotion_uses (
     promotion_use_id VARCHAR(255) PRIMARY KEY,
     promotion_id VARCHAR(255) NOT NULL REFERENCES promotions(promotion_id),
     order_id VARCHAR(255) NOT NULL REFERENCES orders(order_id),
@@ -425,7 +425,7 @@ CREATE TABLE promotion_uses (
     used_at VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE ticket_messages (
+CREATE TABLE IF NOT EXISTS ticket_messages (
     message_id VARCHAR(255) PRIMARY KEY,
     ticket_id VARCHAR(255) NOT NULL REFERENCES customer_service_tickets(ticket_id),
     sender_type VARCHAR(255) NOT NULL,
@@ -443,7 +443,8 @@ INSERT INTO users (user_id, email, password_hash, first_name, last_name, phone_n
 ('user_002', 'bob.jones@email.com', 'admin123', 'Bob', 'Jones', '+1234567891', '1985-08-22', 'silver', TRUE, '{"email_marketing": false, "sms_updates": true, "restock_alerts": true, "price_drop_alerts": false}', '{"preferred_families": ["woody", "oriental"], "intensity": "strong"}', '2024-01-16T10:30:00Z', '2024-01-16T10:30:00Z'),
 ('user_003', 'carol.white@email.com', 'user123', 'Carol', 'White', '+1234567892', '1992-12-03', 'bronze', FALSE, '{"email_marketing": true, "sms_updates": true, "restock_alerts": true, "price_drop_alerts": true}', '{"preferred_families": ["citrus", "aquatic"], "intensity": "light"}', '2024-01-17T11:15:00Z', '2024-01-17T11:15:00Z'),
 ('user_004', 'david.brown@email.com', 'secure456', 'David', 'Brown', '+1234567893', '1988-03-18', 'platinum', TRUE, '{"email_marketing": true, "sms_updates": false, "restock_alerts": true, "price_drop_alerts": true}', '{"preferred_families": ["spicy", "leather"], "intensity": "very_strong"}', '2024-01-18T14:20:00Z', '2024-01-18T14:20:00Z'),
-('user_005', 'emma.davis@email.com', 'mypass789', 'Emma', 'Davis', '+1234567894', '1995-07-09', 'gold', TRUE, '{"email_marketing": false, "sms_updates": false, "restock_alerts": true, "price_drop_alerts": false}', '{"preferred_families": ["gourmand", "vanilla"], "intensity": "moderate"}', '2024-01-19T16:45:00Z', '2024-01-19T16:45:00Z');
+('user_005', 'emma.davis@email.com', 'mypass789', 'Emma', 'Davis', '+1234567894', '1995-07-09', 'gold', TRUE, '{"email_marketing": false, "sms_updates": false, "restock_alerts": true, "price_drop_alerts": false}', '{"preferred_families": ["gourmand", "vanilla"], "intensity": "moderate"}', '2024-01-19T16:45:00Z', '2024-01-19T16:45:00Z')
+ON CONFLICT (user_id) DO NOTHING;
 
 -- Brands
 INSERT INTO brands (brand_id, brand_name, description, logo_url, heritage_story, country_origin, is_niche_brand, display_order, is_active, created_at) VALUES 
