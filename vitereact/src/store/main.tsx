@@ -196,7 +196,7 @@ const generateId = (): string => {
 
 // API base URL
 const getApiUrl = (): string => {
-  return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+  return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
 };
 
 // Create the store

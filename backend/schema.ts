@@ -22,15 +22,15 @@ export const userSchema = z.object({
 
 export const createUserInputSchema = z.object({
   email: z.string().email().max(255),
-  password_hash: z.string().min(8).max(255),
+  password: z.string().min(8).max(255),
   first_name: z.string().min(1).max(255),
   last_name: z.string().min(1).max(255),
-  phone_number: z.string().max(20).nullable(),
-  date_of_birth: z.string().nullable(),
-  loyalty_tier: z.enum(['bronze', 'silver', 'gold', 'platinum']).nullable(),
+  phone_number: z.string().max(20).nullable().optional(),
+  date_of_birth: z.string().nullable().optional(),
+  loyalty_tier: z.enum(['bronze', 'silver', 'gold', 'platinum']).nullable().optional(),
   email_verified: z.boolean().default(false),
   notification_preferences: z.string().default('{"email_marketing": false, "sms_updates": false, "restock_alerts": true, "price_drop_alerts": true}'),
-  fragrance_profile: z.string().nullable()
+  fragrance_profile: z.string().nullable().optional()
 });
 
 export const updateUserInputSchema = z.object({
@@ -662,6 +662,41 @@ export const searchWishlistsInputSchema = z.object({
 });
 
 // ============================================================================
+// WISHLIST_ITEMS SCHEMAS
+// ============================================================================
+
+export const wishlistItemSchema = z.object({
+  wishlist_item_id: z.string(),
+  wishlist_id: z.string(),
+  product_id: z.string(),
+  size_ml: z.number().int().nullable(),
+  notes: z.string().nullable(),
+  added_at: z.coerce.date()
+});
+
+export const createWishlistItemInputSchema = z.object({
+  wishlist_id: z.string(),
+  product_id: z.string(),
+  size_ml: z.number().int().positive().nullable(),
+  notes: z.string().max(500).nullable()
+});
+
+export const updateWishlistItemInputSchema = z.object({
+  wishlist_item_id: z.string(),
+  size_ml: z.number().int().positive().nullable().optional(),
+  notes: z.string().max(500).nullable().optional()
+});
+
+export const searchWishlistItemsInputSchema = z.object({
+  wishlist_id: z.string().optional(),
+  product_id: z.string().optional(),
+  limit: z.number().int().positive().default(50),
+  offset: z.number().int().nonnegative().default(0),
+  sort_by: z.enum(['added_at', 'product_name']).default('added_at'),
+  sort_order: z.enum(['asc', 'desc']).default('desc')
+});
+
+// ============================================================================
 // SHIPPING_METHODS SCHEMAS
 // ============================================================================
 
@@ -774,6 +809,11 @@ export type Wishlist = z.infer<typeof wishlistSchema>;
 export type CreateWishlistInput = z.infer<typeof createWishlistInputSchema>;
 export type UpdateWishlistInput = z.infer<typeof updateWishlistInputSchema>;
 export type SearchWishlistsInput = z.infer<typeof searchWishlistsInputSchema>;
+
+export type WishlistItem = z.infer<typeof wishlistItemSchema>;
+export type CreateWishlistItemInput = z.infer<typeof createWishlistItemInputSchema>;
+export type UpdateWishlistItemInput = z.infer<typeof updateWishlistItemInputSchema>;
+export type SearchWishlistItemsInput = z.infer<typeof searchWishlistItemsInputSchema>;
 
 export type ShippingMethod = z.infer<typeof shippingMethodSchema>;
 export type CreateShippingMethodInput = z.infer<typeof createShippingMethodInputSchema>;

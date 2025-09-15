@@ -430,7 +430,7 @@ app.get('/api/products', async (req, res) => {
 
     const client = await pool.connect();
     
-    let whereConditions = ['p.is_active = true'];
+    let whereConditions = ['1=1'];
     let queryParams = [];
     let paramCount = 1;
 
@@ -541,8 +541,8 @@ app.get('/api/products', async (req, res) => {
     // Main query
     const mainQuery = `
       SELECT p.*, b.brand_name, b.logo_url as brand_logo, c.category_name,
-             (SELECT json_agg(json_build_object('image_url', pi.image_url, 'is_primary', pi.is_primary, 'alt_text', pi.alt_text))
-              FROM product_images pi WHERE pi.product_id = p.product_id ORDER BY pi.display_order) as images
+             (SELECT json_agg(json_build_object('image_url', pi.image_url, 'is_primary', pi.is_primary, 'alt_text', pi.alt_text) ORDER BY pi.display_order)
+              FROM product_images pi WHERE pi.product_id = p.product_id) as images
       FROM products p
       LEFT JOIN brands b ON p.brand_id = b.brand_id
       LEFT JOIN categories c ON p.category_id = c.category_id
@@ -909,7 +909,7 @@ app.get('/api/brands', async (req, res) => {
 
     if (is_active !== undefined) {
       whereConditions.push(`is_active = $${paramCount++}`);
-      queryParams.push(is_active === 'true');
+      queryParams.push(is_active === 'true' || is_active === true);
     }
 
     if (is_niche_brand !== undefined) {
@@ -1060,7 +1060,7 @@ app.get('/api/categories', async (req, res) => {
 
     if (is_active !== undefined) {
       whereConditions.push(`is_active = $${paramCount++}`);
-      queryParams.push(is_active === 'true');
+      queryParams.push(is_active === 'true' || is_active === true);
     }
 
     if (parent_category_id !== undefined) {
@@ -1777,7 +1777,7 @@ app.get('/api/shipping-methods', async (req, res) => {
 
     if (is_active !== undefined) {
       whereConditions.push(`is_active = $${paramCount++}`);
-      queryParams.push(is_active === 'true');
+      queryParams.push(is_active === 'true' || is_active === true);
     }
 
     const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : '';
