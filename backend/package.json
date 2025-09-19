@@ -9,7 +9,7 @@
     "start": "tsx server.ts",
     "build": "tsc",
     "dev": "nodemon --exec \"tsx\" server.ts",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
   },

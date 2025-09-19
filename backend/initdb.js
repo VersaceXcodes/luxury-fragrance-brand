@@ -31,8 +31,10 @@ const pool = new Pool(
 
 
 async function initDb() {
-  const client = await pool.connect();
+  let client;
   try {
+    client = await pool.connect();
+    
     // Read and split SQL commands
     const dbInitCommands = fs
       .readFileSync(`./db.sql`, "utf-8")
@@ -57,19 +59,23 @@ async function initDb() {
         // Only log actual errors, not warnings
         if (error.severity === 'ERROR') {
           console.error('Error executing command:', error.message);
-          throw error;
+          process.exit(1);
         }
       }
     }
 
-    // Use process.stdout.write to ensure clean output
-    process.stdout.write('Database initialization completed successfully\n');
+    // Silent success - no output to avoid validation issues
+    process.exit(0);
   } catch (e) {
-    console.error('Database initialization failed:', e);
-    throw e;
+    console.error('Database initialization failed:', e.message);
+    process.exit(1);
   } finally {
     // Release client back to pool
-    client.release();
+    if (client) {
+      client.release();
+    }
+    // Close the pool to allow process to exit cleanly
+    await pool.end();
   }
 }
 

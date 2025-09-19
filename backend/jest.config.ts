@@ -1,28 +1,31 @@
 module.exports = {
-  "preset": "ts-jest",
-  "testEnvironment": "node",
-  "testMatch": [
+  preset: "ts-jest",
+  testEnvironment: "node",
+  testMatch: [
     "**/__tests__/**/*.test.ts",
     "**/?(*.)+(spec|test).ts"
   ],
-  "testPathIgnorePatterns": [
+  testPathIgnorePatterns: [
     "/node_modules/",
     "server.test.ts"
   ],
-  "collectCoverageFrom": [
+  transform: {
+    "^.+\\.ts$": "ts-jest"
+  },
+  collectCoverageFrom: [
     "src/**/*.ts",
     "!src/**/*.d.ts",
     "!src/types/**"
   ],
-  "coverageDirectory": "coverage",
-  "coverageReporters": [
+  coverageDirectory: "coverage",
+  coverageReporters: [
     "text",
     "lcov",
     "html"
   ],
-  "testTimeout": 30000,
-  "maxWorkers": 1,
-  "verbose": true,
-  "detectOpenHandles": true,
-  "forceExit": true
+  testTimeout: 30000,
+  maxWorkers: 1,
+  verbose: true,
+  detectOpenHandles: true,
+  forceExit: true
 };
