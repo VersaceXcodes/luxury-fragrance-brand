@@ -55,7 +55,10 @@ const pool = new Pool(
   DATABASE_URL
     ? { 
         connectionString: DATABASE_URL, 
-        ssl: { rejectUnauthorized: false } 
+        ssl: { rejectUnauthorized: false },
+        max: 20,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 2000,
       }
     : {
         host: PGHOST,
@@ -64,8 +67,31 @@ const pool = new Pool(
         password: PGPASSWORD,
         port: Number(PGPORT),
         ssl: { rejectUnauthorized: false },
+        max: 20,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 2000,
       }
 );
+
+// Test database connection
+pool.on('connect', () => {
+  console.log('Connected to the database');
+});
+
+pool.on('error', (err) => {
+  console.error('Database connection error:', err);
+});
+
+// Test initial connection
+(async () => {
+  try {
+    const client = await pool.connect();
+    console.log('Database connection successful');
+    client.release();
+  } catch (err) {
+    console.error('Failed to connect to database:', err);
+  }
+})();
 
 // Initialize Express app
 const app = express();
@@ -73,14 +99,63 @@ const port = parseInt(process.env.PORT || '3000', 10);
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: [
+    process.env.FRONTEND_URL || 'http://localhost:5173',
+    'https://123luxury-fragrance-brand.launchpulse.ai',
+    'http://localhost:3001',
+    'http://localhost:5173'
+  ],
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
 }));
 app.use(express.json({ limit: "5mb" }));
 app.use(morgan('combined'));
 
+// Set JSON response headers for all API routes
+app.use('/api', (req: Request, res: Response, next: NextFunction) => {
+  res.setHeader('Content-Type', 'application/json');
+  next();
+});
+
+// Global error handler middleware
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error('Unhandled error:', err);
+  
+  // Ensure we always return JSON for API routes
+  if (req.path.startsWith('/api') && !res.headersSent) {
+    res.setHeader('Content-Type', 'application/json');
+    res.status(500).json(createErrorResponse(
+      'Internal server error',
+      process.env.NODE_ENV === 'development' ? err : null,
+      'INTERNAL_SERVER_ERROR'
+    ));
+  } else if (!res.headersSent) {
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
+// API health check
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    message: 'API is running',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
 
 // Error response utility
 function createErrorResponse(message: string, error: Error | null = null, errorCode: string | null = null) {
@@ -4308,6 +4383,16 @@ app.get('/api/config/frontend', async (req, res) => {
     console.error('Get frontend config error:', error);
     res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
   }
+});
+
+// Handle 404 for API routes
+app.use('/api/*', (req: Request, res: Response) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.status(404).json(createErrorResponse(
+    `API endpoint not found: ${req.method} ${req.path}`,
+    null,
+    'ENDPOINT_NOT_FOUND'
+  ));
 });
 
 // Catch-all route for SPA routing (excluding API routes)
