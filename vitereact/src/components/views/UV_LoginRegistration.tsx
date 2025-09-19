@@ -428,16 +428,29 @@ const UV_LoginRegistration: React.FC = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-primary-200/30 to-secondary-200/30 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-secondary-200/30 to-primary-200/30 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">LuxeScent</h1>
-            <p className="text-sm text-gray-600">Discover Your Signature Scent</p>
+            <div className="flex justify-center mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-2xl flex items-center justify-center shadow-large">
+                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+              </div>
+            </div>
+            <h1 className="text-4xl font-display font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent mb-2">LuxeScent</h1>
+            <p className="text-neutral-600 font-medium">Discover Your Signature Scent</p>
           </div>
         </div>
 
-        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white py-8 px-4 shadow-xl rounded-lg sm:px-10">
+        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10">
+          <div className="bg-white/80 backdrop-blur-xl py-10 px-6 shadow-large rounded-3xl border border-white/20 sm:px-12">
             {showPasswordReset ? (
               // Password Reset Form
               <div>
@@ -529,11 +542,11 @@ const UV_LoginRegistration: React.FC = () => {
             ) : (
               // Login/Registration Forms
               <div>
-                <div className="text-center mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">
+                <div className="text-center mb-8">
+                  <h2 className="text-3xl font-display font-bold text-neutral-900 mb-2">
                     {isRegisterMode ? 'Create Your Account' : 'Welcome Back'}
                   </h2>
-                  <p className="text-sm text-gray-600 mt-2">
+                  <p className="text-neutral-600">
                     {isRegisterMode 
                       ? 'Join our luxury fragrance community' 
                       : 'Sign in to your account'
@@ -542,13 +555,13 @@ const UV_LoginRegistration: React.FC = () => {
                 </div>
 
                 {/* Social Login Buttons */}
-                <div className="space-y-3 mb-6">
+                <div className="space-y-3 mb-8">
                   <button
                     onClick={() => handleSocialLogin('google')}
                     disabled={socialLoginState.is_processing}
-                    className="w-full flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors disabled:opacity-50"
+                    className="w-full flex justify-center items-center px-6 py-3 border border-neutral-200 rounded-2xl shadow-soft bg-white text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:shadow-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500/20 transition-all duration-200 disabled:opacity-50 group"
                   >
-                    <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-200" viewBox="0 0 24 24">
                       <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                       <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                       <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -560,9 +573,9 @@ const UV_LoginRegistration: React.FC = () => {
                   <button
                     onClick={() => handleSocialLogin('facebook')}
                     disabled={socialLoginState.is_processing}
-                    className="w-full flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors disabled:opacity-50"
+                    className="w-full flex justify-center items-center px-6 py-3 border border-neutral-200 rounded-2xl shadow-soft bg-white text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:shadow-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500/20 transition-all duration-200 disabled:opacity-50 group"
                   >
-                    <svg className="w-5 h-5 mr-2" fill="#1877F2" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-200" fill="#1877F2" viewBox="0 0 24 24">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                     </svg>
                     Continue with Facebook
@@ -575,12 +588,12 @@ const UV_LoginRegistration: React.FC = () => {
                   </div>
                 )}
 
-                <div className="relative mb-6">
+                <div className="relative mb-8">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-300" />
+                    <div className="w-full border-t border-neutral-200" />
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white text-gray-500">Or continue with email</span>
+                    <span className="px-4 bg-white text-neutral-500 font-medium">Or continue with email</span>
                   </div>
                 </div>
 
@@ -883,11 +896,11 @@ const UV_LoginRegistration: React.FC = () => {
                     <button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      className="w-full flex justify-center py-4 px-6 border border-transparent rounded-2xl shadow-medium text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 hover:shadow-large focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
                     >
                       {isLoading ? (
                         <span className="flex items-center">
-                          <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>

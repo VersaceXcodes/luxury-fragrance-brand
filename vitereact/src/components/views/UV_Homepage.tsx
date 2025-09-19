@@ -229,28 +229,43 @@ const UV_Homepage: React.FC = () => {
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className={`absolute inset-0 ${heroSlides[currentHeroSlide].backgroundImage}`} />
-        <div className="absolute inset-0 bg-black bg-opacity-40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
         
-        <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
-          <h1 className="text-5xl md:text-7xl font-bold mb-4 tracking-tight">
+        {/* Floating elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute bottom-32 right-16 w-24 h-24 bg-white/5 rounded-full blur-2xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/3 right-1/4 w-16 h-16 bg-white/10 rounded-full blur-lg animate-pulse delay-500"></div>
+        </div>
+        
+        <div className="relative z-10 text-center text-white max-w-5xl mx-auto px-4 animate-fade-in">
+          <h1 className="text-6xl md:text-8xl font-display font-bold mb-6 tracking-tight leading-none">
             {heroSlides[currentHeroSlide].title}
           </h1>
-          <p className="text-xl md:text-2xl mb-2 font-light">
+          <p className="text-2xl md:text-3xl mb-4 font-light text-white/90">
             {heroSlides[currentHeroSlide].subtitle}
           </p>
-          <p className="text-lg mb-8 max-w-2xl mx-auto opacity-90">
+          <p className="text-xl mb-10 max-w-3xl mx-auto text-white/80 leading-relaxed">
             {heroSlides[currentHeroSlide].description}
           </p>
           <Link
             to={heroSlides[currentHeroSlide].link}
-            className="inline-block bg-white text-gray-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition-colors duration-300 shadow-lg"
+            className="inline-flex items-center bg-white/95 backdrop-blur-sm text-neutral-900 px-10 py-5 rounded-2xl font-semibold text-lg hover:bg-white hover:shadow-large transition-all duration-300 transform hover:scale-105 active:scale-95 group"
           >
-            {heroSlides[currentHeroSlide].cta}
+            <span>{heroSlides[currentHeroSlide].cta}</span>
+            <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
           </Link>
           
           {isAuthenticated && currentUser && (
-            <div className="mt-6">
-              <p className="text-lg opacity-80">Welcome back, {currentUser.first_name}!</p>
+            <div className="mt-8 animate-fade-in delay-300">
+              <div className="inline-flex items-center bg-white/10 backdrop-blur-sm px-6 py-3 rounded-2xl border border-white/20">
+                <div className="w-8 h-8 bg-gradient-to-br from-primary-400 to-secondary-400 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3">
+                  {currentUser.first_name?.charAt(0).toUpperCase()}
+                </div>
+                <p className="text-lg text-white/90">Welcome back, {currentUser.first_name}!</p>
+              </div>
             </div>
           )}
         </div>
@@ -258,32 +273,34 @@ const UV_Homepage: React.FC = () => {
         {/* Hero Navigation */}
         <button
           onClick={prevHeroSlide}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-20"
+          className="absolute left-6 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl flex items-center justify-center text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 z-20 group"
           aria-label="Previous slide"
         >
-          <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+          <svg className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
         
         <button
           onClick={nextHeroSlide}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-20"
+          className="absolute right-6 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl flex items-center justify-center text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 z-20 group"
           aria-label="Next slide"
         >
-          <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+          <svg className="w-6 h-6 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
 
         {/* Hero Dots */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
           {heroSlides.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentHeroSlide(index)}
-              className={`w-3 h-3 rounded-full transition-colors ${
-                index === currentHeroSlide ? 'bg-white' : 'bg-white bg-opacity-50'
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                index === currentHeroSlide 
+                  ? 'bg-white scale-125 shadow-lg' 
+                  : 'bg-white/50 hover:bg-white/70 hover:scale-110'
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />
@@ -292,12 +309,18 @@ const UV_Homepage: React.FC = () => {
       </section>
 
       {/* New Arrivals Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-20 bg-gradient-to-b from-neutral-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">New Arrivals</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Discover the latest additions to our luxury fragrance collection
+          <div className="text-center mb-16 animate-fade-in">
+            <div className="inline-flex items-center bg-gradient-to-r from-primary-100 to-secondary-100 px-4 py-2 rounded-full mb-4">
+              <svg className="w-4 h-4 text-primary-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+              <span className="text-primary-700 font-semibold text-sm">New Arrivals</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-neutral-900 mb-6">Latest Luxury Fragrances</h2>
+            <p className="text-xl text-neutral-600 max-w-3xl mx-auto leading-relaxed">
+              Discover the latest additions to our curated collection of premium fragrances from renowned houses worldwide
             </p>
           </div>
 
@@ -315,49 +338,53 @@ const UV_Homepage: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {newArrivals.slice(0, 8).map((product) => (
-                <div key={product.product_id} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow group">
-                  <div className="aspect-square bg-gradient-to-br from-purple-100 to-pink-100 rounded-t-lg flex items-center justify-center relative overflow-hidden">
-                    <div className="text-4xl">🌸</div>
-                    <div className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {newArrivals.slice(0, 8).map((product, index) => (
+                <div key={product.product_id} className="bg-white rounded-3xl shadow-soft hover:shadow-large transition-all duration-300 group transform hover:-translate-y-2 animate-fade-in" style={{animationDelay: `${index * 100}ms`}}>
+                  <div className="aspect-square bg-gradient-to-br from-primary-100 via-white to-secondary-100 rounded-t-3xl flex items-center justify-center relative overflow-hidden">
+                    <div className="text-5xl group-hover:scale-110 transition-transform duration-300">🌸</div>
+                    <div className="absolute top-4 right-4 bg-gradient-to-r from-accent-500 to-accent-600 text-white text-xs px-3 py-1.5 rounded-full font-semibold shadow-medium">
                       NEW
                     </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-purple-600 transition-colors">
+                  <div className="p-6">
+                    <h3 className="font-semibold text-neutral-900 mb-2 group-hover:text-primary-600 transition-colors text-lg">
                       {product.product_name}
                     </h3>
-                    <p className="text-sm text-gray-600 mb-2">{product.concentration}</p>
-                    <div className="flex items-center justify-between">
+                    <p className="text-sm text-neutral-500 mb-4 font-medium">{product.concentration}</p>
+                    <div className="flex items-center justify-between mb-4">
                       <div className="flex flex-col">
                         {product.sale_price ? (
                           <>
-                            <span className="text-lg font-bold text-red-600">
+                            <span className="text-xl font-bold text-accent-600">
                               {formatPrice(product.sale_price)}
                             </span>
-                            <span className="text-sm text-gray-500 line-through">
+                            <span className="text-sm text-neutral-400 line-through">
                               {formatPrice(product.base_price)}
                             </span>
                           </>
                         ) : (
-                          <span className="text-lg font-bold text-gray-900">
+                          <span className="text-xl font-bold text-neutral-900">
                             {formatPrice(product.base_price)}
                           </span>
                         )}
                       </div>
                       <button
                         onClick={() => handleAddToCart(product)}
-                        className="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700 transition-colors"
+                        className="bg-gradient-to-r from-primary-600 to-secondary-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:from-primary-700 hover:to-secondary-700 hover:shadow-medium transition-all duration-200 transform hover:scale-105 active:scale-95"
                       >
                         Add to Cart
                       </button>
                     </div>
                     <Link
                       to={`/products/${product.product_id}`}
-                      className="block mt-3 text-center text-purple-600 hover:text-purple-800 text-sm font-medium"
+                      className="block text-center text-primary-600 hover:text-primary-700 text-sm font-semibold py-2 px-4 rounded-xl hover:bg-primary-50 transition-all duration-200 group"
                     >
-                      View Details →
+                      <span>View Details</span>
+                      <svg className="w-4 h-4 inline-block ml-1 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
                     </Link>
                   </div>
                 </div>
@@ -365,12 +392,15 @@ const UV_Homepage: React.FC = () => {
             </div>
           )}
 
-          <div className="text-center mt-10">
+          <div className="text-center mt-12">
             <Link
               to="/products?is_new_arrival=true"
-              className="inline-block bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+              className="inline-flex items-center bg-gradient-to-r from-primary-600 to-secondary-600 text-white px-10 py-4 rounded-2xl font-semibold text-lg hover:from-primary-700 hover:to-secondary-700 hover:shadow-large transition-all duration-200 transform hover:scale-105 active:scale-95 group"
             >
-              View All New Arrivals
+              <span>View All New Arrivals</span>
+              <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
             </Link>
           </div>
         </div>
