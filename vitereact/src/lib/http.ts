@@ -39,9 +39,9 @@ httpClient.interceptors.response.use(
     } else if (error.response?.status === 403) {
       // Forbidden
       console.error('Access denied');
-    } else if (error.response?.status >= 500) {
+    } else if (error.response?.status && error.response.status >= 500) {
       // Server errors
-      console.error('Server error:', error.response?.data?.message || 'Internal server error');
+      console.error('Server error:', (error.response?.data as any)?.message || 'Internal server error');
     } else if (error.code === 'ECONNABORTED') {
       // Timeout
       console.error('Request timeout');
