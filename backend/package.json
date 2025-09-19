@@ -6,9 +6,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec \"tsx\" server.ts",
+    "start": "tsx server.ts",
     "build": "tsc",
-    "dev": "tsx server.ts",
+    "dev": "nodemon --exec \"tsx\" server.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
@@ -33,6 +33,7 @@
     "morgan": "^1.10.0",
     "pg": "^8.13.3",
     "ts-node": "^10.9.2",
+    "tsx": "^4.7.1",
     "uuid": "*",
     "yaml": "^2.5.0",
     "zod": "^3.24.2"
@@ -53,7 +54,6 @@
     "nodemon": "^3.1.4",
     "supertest": "^6.3.3",
     "ts-jest": "^29.4.0",
-    "tsx": "^4.7.1",
     "typescript": "^5.8.2"
   }
 }
