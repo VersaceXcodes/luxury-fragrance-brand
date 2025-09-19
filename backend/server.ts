@@ -39,7 +39,7 @@ import {
   reviewSchema, createReviewInputSchema,
   wishlistSchema, wishlistItemSchema, createWishlistItemInputSchema,
   brandSchema, categorySchema, productSizeSchema, shippingMethodSchema
-} from './schema.ts';
+} from './schema.js';
 
 // Load environment variables
 dotenv.config();
