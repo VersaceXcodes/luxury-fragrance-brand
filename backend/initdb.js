@@ -11,15 +11,21 @@ const pool = new Pool(
   DATABASE_URL
     ? { 
         connectionString: DATABASE_URL, 
-        ssl: { require: true } 
+        ssl: { rejectUnauthorized: false },
+        max: 20,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 2000,
       }
     : {
-        host: PGHOST || "ep-ancient-dream-abbsot9k-pooler.eu-west-2.aws.neon.tech",
-        database: PGDATABASE || "neondb",
-        user: PGUSER || "neondb_owner",
-        password: PGPASSWORD || "npg_jAS3aITLC5DX",
+        host: PGHOST,
+        database: PGDATABASE,
+        user: PGUSER,
+        password: PGPASSWORD,
         port: Number(PGPORT),
-        ssl: { require: true },
+        ssl: { rejectUnauthorized: false },
+        max: 20,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 2000,
       }
 );
 
