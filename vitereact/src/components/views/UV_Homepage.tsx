@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
@@ -60,11 +60,96 @@ const UV_Homepage: React.FC = () => {
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterConsent, setNewsletterConsent] = useState(false);
 
-  // Hero carousel state (currently unused but kept for future implementation)
-  // const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
+  // Interactive elements state
+  const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
+  const [hoveredNote, setHoveredNote] = useState<string | null>(null);
+  const [visitorCount, setVisitorCount] = useState(0);
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [showQuickView, setShowQuickView] = useState<string | null>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   // API Base URL
   const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
+  // Interactive effects
+  useEffect(() => {
+    // Simulate visitor counter
+    const count = Math.floor(Math.random() * 50) + 150;
+    setVisitorCount(count);
+
+    // Auto-rotate hero slides
+    const heroInterval = setInterval(() => {
+      setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 6000);
+
+    // Auto-rotate testimonials
+    const testimonialInterval = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 4000);
+
+    // Mouse tracking for interactive effects
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      clearInterval(heroInterval);
+      clearInterval(testimonialInterval);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  // Hero slides data
+  const heroSlides = [
+    {
+      title: "Scent After Dark",
+      subtitle: "Artisanal fragrances, crafted in small batches",
+      description: "Discover our collection of sophisticated, sensual fragrances designed for those who appreciate the art of scent",
+      cta: "Explore Collection",
+      ctaLink: "/products",
+      background: "from-[var(--nocturne-onyx)] via-[var(--nocturne-warm-taupe)] to-[var(--nocturne-onyx)]"
+    },
+    {
+      title: "New Arrival: Midnight Saffron",
+      subtitle: "Limited Edition Release",
+      description: "An intoxicating blend of precious saffron and dark rose, crafted for the most discerning collectors",
+      cta: "Discover Now",
+      ctaLink: "/products/midnight-saffron",
+      background: "from-[var(--nocturne-onyx)] via-purple-900 to-[var(--nocturne-onyx)]"
+    },
+    {
+      title: "Sample Discovery Set",
+      subtitle: "Try before you commit",
+      description: "Explore our entire collection with 10ml samples. Perfect for discovering your signature scent",
+      cta: "Shop Samples",
+      ctaLink: "/samples",
+      background: "from-[var(--nocturne-onyx)] via-amber-900 to-[var(--nocturne-onyx)]"
+    }
+  ];
+
+  // Customer testimonials
+  const testimonials = [
+    {
+      text: "Nocturne Atelier creates the most sophisticated fragrances I've ever encountered. Each scent tells a story.",
+      author: "Sophie M.",
+      location: "Paris, France",
+      rating: 5
+    },
+    {
+      text: "The quality is unmatched. These aren't just perfumes, they're works of art that you wear.",
+      author: "Marcus L.",
+      location: "Berlin, Germany", 
+      rating: 5
+    },
+    {
+      text: "I've been searching for unique fragrances for years. Nocturne Atelier exceeded all my expectations.",
+      author: "Elena R.",
+      location: "Milan, Italy",
+      rating: 5
+    }
+  ];
 
   // Sample products data for Nocturne Atelier
   const sampleProducts = [
@@ -229,14 +314,18 @@ const UV_Homepage: React.FC = () => {
     });
   };
 
-  // Hero carousel functions (currently unused but kept for future implementation)
-  // const nextHeroSlide = () => {
-  //   setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
-  // };
+  // Hero carousel functions
+  const nextHeroSlide = () => {
+    setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
+  };
 
-  // const prevHeroSlide = () => {
-  //   setCurrentHeroSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
-  // };
+  const prevHeroSlide = () => {
+    setCurrentHeroSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentHeroSlide(index);
+  };
 
   // Utility functions (currently unused but kept for future implementation)
   // const formatPrice = (price: number) => {
@@ -261,52 +350,92 @@ const UV_Homepage: React.FC = () => {
 
   return (
     <>
-      {/* Hero Section */}
+      {/* Interactive Hero Section with Carousel */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[var(--color-bg-primary)]">
-        {/* Background Image */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[var(--nocturne-onyx)] via-[var(--nocturne-warm-taupe)] to-[var(--nocturne-onyx)]" />
+        {/* Dynamic Background based on current slide */}
+        <div className={`absolute inset-0 bg-gradient-to-br ${heroSlides[currentHeroSlide].background} transition-all duration-1000`} />
         <div className="absolute inset-0 bg-[url('/api/placeholder/1920/1080')] bg-cover bg-center opacity-20" />
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--nocturne-onyx)]/80 via-transparent to-[var(--nocturne-onyx)]/40" />
         
-        {/* Floating elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-10 w-32 h-32 bg-[var(--nocturne-champagne)]/10 rounded-full blur-xl animate-pulse"></div>
-          <div className="absolute bottom-32 right-16 w-24 h-24 bg-[var(--nocturne-porcelain)]/5 rounded-full blur-2xl animate-pulse delay-1000"></div>
-          <div className="absolute top-1/3 right-1/4 w-16 h-16 bg-[var(--nocturne-champagne)]/10 rounded-full blur-lg animate-pulse delay-500"></div>
+        {/* Interactive floating elements that follow mouse */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div 
+            className="absolute w-32 h-32 bg-[var(--nocturne-champagne)]/10 rounded-full blur-xl animate-pulse transition-all duration-1000"
+            style={{
+              left: `${10 + (mousePosition.x / window.innerWidth) * 5}%`,
+              top: `${20 + (mousePosition.y / window.innerHeight) * 10}%`
+            }}
+          ></div>
+          <div 
+            className="absolute w-24 h-24 bg-[var(--nocturne-porcelain)]/5 rounded-full blur-2xl animate-pulse delay-1000 transition-all duration-1000"
+            style={{
+              right: `${16 + (mousePosition.x / window.innerWidth) * 8}%`,
+              bottom: `${32 + (mousePosition.y / window.innerHeight) * 5}%`
+            }}
+          ></div>
+          <div 
+            className="absolute w-16 h-16 bg-[var(--nocturne-champagne)]/10 rounded-full blur-lg animate-pulse delay-500 transition-all duration-1000"
+            style={{
+              right: `${25 + (mousePosition.x / window.innerWidth) * 3}%`,
+              top: `${33 + (mousePosition.y / window.innerHeight) * 7}%`
+            }}
+          ></div>
         </div>
+
+        {/* Hero Navigation */}
+        <button
+          onClick={prevHeroSlide}
+          className="absolute left-8 top-1/2 transform -translate-y-1/2 z-20 bg-[var(--nocturne-porcelain)]/10 backdrop-blur-sm border border-[var(--nocturne-porcelain)]/20 rounded-full p-3 text-[var(--nocturne-porcelain)] hover:bg-[var(--nocturne-porcelain)]/20 transition-all duration-300 group"
+        >
+          <svg className="w-6 h-6 group-hover:-translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
         
+        <button
+          onClick={nextHeroSlide}
+          className="absolute right-8 top-1/2 transform -translate-y-1/2 z-20 bg-[var(--nocturne-porcelain)]/10 backdrop-blur-sm border border-[var(--nocturne-porcelain)]/20 rounded-full p-3 text-[var(--nocturne-porcelain)] hover:bg-[var(--nocturne-porcelain)]/20 transition-all duration-300 group"
+        >
+          <svg className="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
+        {/* Hero Content */}
         <div className="relative z-10 text-center text-[var(--nocturne-porcelain)] nocturne-container py-32">
-          <h1 className="text-h1 font-[var(--font-heading)] font-[var(--text-h1-weight)] mb-6 tracking-[var(--text-h1-spacing)] leading-[var(--text-h1-line)]">
-            Scent After Dark
-          </h1>
-          <p className="text-subtitle mb-4 font-[var(--font-weight-light)] text-[var(--nocturne-champagne)]">
-            Artisanal fragrances, crafted in small batches
-          </p>
-          <p className="text-body mb-12 max-w-2xl mx-auto text-[var(--nocturne-porcelain)]/80 leading-relaxed">
-            Discover our collection of sophisticated, sensual fragrances designed for those who appreciate the art of scent
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link
-              to="/products"
-              className="inline-flex items-center bg-[var(--color-interactive-primary)] text-[var(--color-fg-inverse)] px-8 py-4 rounded-[var(--radius-full)] font-[var(--font-weight-semibold)] text-body hover:bg-[var(--color-interactive-primary-hover)] transition-all duration-[var(--duration-normal)] transform hover:scale-105 active:scale-95 group"
-            >
-              <span>Explore Collection</span>
-              <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-[var(--duration-normal)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
+          <div className="animate-fade-in" key={currentHeroSlide}>
+            <h1 className="text-h1 font-[var(--font-heading)] font-[var(--text-h1-weight)] mb-6 tracking-[var(--text-h1-spacing)] leading-[var(--text-h1-line)] animate-slide-up">
+              {heroSlides[currentHeroSlide].title}
+            </h1>
+            <p className="text-subtitle mb-4 font-[var(--font-weight-light)] text-[var(--nocturne-champagne)] animate-slide-up delay-100">
+              {heroSlides[currentHeroSlide].subtitle}
+            </p>
+            <p className="text-body mb-12 max-w-2xl mx-auto text-[var(--nocturne-porcelain)]/80 leading-relaxed animate-slide-up delay-200">
+              {heroSlides[currentHeroSlide].description}
+            </p>
             
-            <Link
-              to="/samples"
-              className="inline-flex items-center bg-transparent border border-[var(--nocturne-champagne)] text-[var(--nocturne-champagne)] px-8 py-4 rounded-[var(--radius-full)] font-[var(--font-weight-semibold)] text-body hover:bg-[var(--nocturne-champagne)] hover:text-[var(--nocturne-onyx)] transition-all duration-[var(--duration-normal)] transform hover:scale-105 active:scale-95"
-            >
-              Try 10ml First
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up delay-300">
+              <Link
+                to={heroSlides[currentHeroSlide].ctaLink}
+                className="inline-flex items-center bg-[var(--color-interactive-primary)] text-[var(--color-fg-inverse)] px-8 py-4 rounded-[var(--radius-full)] font-[var(--font-weight-semibold)] text-body hover:bg-[var(--color-interactive-primary-hover)] transition-all duration-[var(--duration-normal)] transform hover:scale-105 active:scale-95 group"
+              >
+                <span>{heroSlides[currentHeroSlide].cta}</span>
+                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-[var(--duration-normal)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+              
+              <Link
+                to="/samples"
+                className="inline-flex items-center bg-transparent border border-[var(--nocturne-champagne)] text-[var(--nocturne-champagne)] px-8 py-4 rounded-[var(--radius-full)] font-[var(--font-weight-semibold)] text-body hover:bg-[var(--nocturne-champagne)] hover:text-[var(--nocturne-onyx)] transition-all duration-[var(--duration-normal)] transform hover:scale-105 active:scale-95"
+              >
+                Try 10ml First
+              </Link>
+            </div>
           </div>
           
           {isAuthenticated && currentUser && (
-            <div className="mt-8">
+            <div className="mt-8 animate-slide-up delay-400">
               <div className="inline-flex items-center bg-[var(--nocturne-porcelain)]/10 backdrop-blur-sm px-6 py-3 rounded-[var(--radius-full)] border border-[var(--nocturne-porcelain)]/20">
                 <div className="w-8 h-8 bg-[var(--nocturne-champagne)] rounded-full flex items-center justify-center text-[var(--nocturne-onyx)] font-[var(--font-weight-semibold)] text-caption mr-3">
                   {currentUser.first_name?.charAt(0).toUpperCase()}
@@ -315,6 +444,29 @@ const UV_Homepage: React.FC = () => {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Hero Slide Indicators */}
+        <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
+          {heroSlides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                index === currentHeroSlide 
+                  ? 'bg-[var(--nocturne-champagne)] scale-125' 
+                  : 'bg-[var(--nocturne-porcelain)]/30 hover:bg-[var(--nocturne-porcelain)]/50'
+              }`}
+            />
+          ))}
+        </div>
+
+        {/* Live visitor counter */}
+        <div className="absolute top-8 right-8 bg-[var(--nocturne-porcelain)]/10 backdrop-blur-sm px-4 py-2 rounded-[var(--radius-full)] border border-[var(--nocturne-porcelain)]/20 text-[var(--nocturne-porcelain)] text-caption">
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span>{visitorCount} exploring now</span>
+          </div>
         </div>
 
         {/* Scroll indicator */}
@@ -338,27 +490,61 @@ const UV_Homepage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {sampleProducts.map((product) => (
-              <NocturneProductCard
+            {sampleProducts.map((product, index) => (
+              <div
                 key={product.product_id}
-                id={product.product_id}
-                name={product.product_name}
-                family={product.family}
-                price={product.price}
-                image={product.image}
-                rating={product.rating}
-                reviewCount={product.reviewCount}
-                badges={product.badges as Array<'new' | 'bestseller' | 'limited'>}
-                onQuickAdd={(id, size) => {
-                  console.log(`Quick add ${id} in ${size}`);
-                  // Handle quick add to cart
-                }}
-                onClick={(id) => {
-                  console.log(`Navigate to product ${id}`);
-                  // Handle navigation to PDP
-                }}
-                className="animate-fade-in"
-              />
+                className="group relative"
+                onMouseEnter={() => setShowQuickView(product.product_id)}
+                onMouseLeave={() => setShowQuickView(null)}
+              >
+                <NocturneProductCard
+                  id={product.product_id}
+                  name={product.product_name}
+                  family={product.family}
+                  price={product.price}
+                  image={product.image}
+                  rating={product.rating}
+                  reviewCount={product.reviewCount}
+                  badges={product.badges as Array<'new' | 'bestseller' | 'limited'>}
+                  onQuickAdd={(id, size) => {
+                    console.log(`Quick add ${id} in ${size}`);
+                    showNotification({
+                      type: 'success',
+                      message: `Added ${product.product_name} (${size}) to cart!`,
+                      title: 'Added to Cart',
+                      auto_dismiss: true,
+                      duration: 3000
+                    });
+                  }}
+                  onClick={(id) => {
+                    console.log(`Navigate to product ${id}`);
+                  }}
+                  className={`animate-fade-in transition-all duration-500 hover:scale-105 ${
+                    showQuickView === product.product_id ? 'shadow-2xl' : ''
+                  }`}
+                  style={{ animationDelay: `${index * 100}ms` }}
+                />
+                
+                {/* Quick view overlay */}
+                {showQuickView === product.product_id && (
+                  <div className="absolute inset-0 bg-[var(--nocturne-onyx)]/90 backdrop-blur-sm rounded-[var(--radius-lg)] flex items-center justify-center z-10 animate-fade-in">
+                    <div className="text-center text-[var(--nocturne-porcelain)] p-6">
+                      <h4 className="text-subtitle font-[var(--font-weight-semibold)] mb-2">{product.product_name}</h4>
+                      <p className="text-caption mb-4">
+                        Top: {product.notes.top.join(', ')}
+                      </p>
+                      <div className="flex gap-2 justify-center">
+                        <NocturneButton size="sm" variant="outline">
+                          Quick View
+                        </NocturneButton>
+                        <NocturneButton size="sm">
+                          Add to Cart
+                        </NocturneButton>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
 
@@ -386,28 +572,41 @@ const UV_Homepage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {[
-              { family: 'Citrus', description: 'Fresh, energizing, bright', icon: '🍋', color: 'from-yellow-400 to-orange-400' },
-              { family: 'Floral', description: 'Romantic, elegant, feminine', icon: '🌸', color: 'from-pink-400 to-rose-400' },
-              { family: 'Amber', description: 'Warm, sensual, mysterious', icon: '🔥', color: 'from-amber-400 to-orange-600' },
-              { family: 'Woody', description: 'Sophisticated, grounding, rich', icon: '🌳', color: 'from-amber-600 to-brown-600' },
-              { family: 'Green', description: 'Natural, crisp, refreshing', icon: '🌿', color: 'from-green-400 to-emerald-500' }
-            ].map((note) => (
+              { family: 'Citrus', description: 'Fresh, energizing, bright', icon: '🍋', color: 'from-yellow-400 to-orange-400', products: 12 },
+              { family: 'Floral', description: 'Romantic, elegant, feminine', icon: '🌸', color: 'from-pink-400 to-rose-400', products: 8 },
+              { family: 'Amber', description: 'Warm, sensual, mysterious', icon: '🔥', color: 'from-amber-400 to-orange-600', products: 6 },
+              { family: 'Woody', description: 'Sophisticated, grounding, rich', icon: '🌳', color: 'from-amber-600 to-brown-600', products: 10 },
+              { family: 'Green', description: 'Natural, crisp, refreshing', icon: '🌿', color: 'from-green-400 to-emerald-500', products: 5 }
+            ].map((note, index) => (
               <Link
                 key={note.family}
                 to={`/products?family=${note.family.toLowerCase()}`}
-                className="group relative overflow-hidden rounded-[var(--radius-lg)] bg-gradient-to-br bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] hover:shadow-[var(--shadow-elevated)] transition-all duration-[var(--duration-normal)] transform hover:-translate-y-2"
+                className="group relative overflow-hidden rounded-[var(--radius-lg)] bg-gradient-to-br bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] hover:shadow-[var(--shadow-elevated)] transition-all duration-[var(--duration-normal)] transform hover:-translate-y-2 animate-slide-up"
+                style={{ animationDelay: `${index * 100}ms` }}
+                onMouseEnter={() => setHoveredNote(note.family)}
+                onMouseLeave={() => setHoveredNote(null)}
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${note.color} opacity-10 group-hover:opacity-20 transition-opacity duration-[var(--duration-normal)]`} />
                 <div className="relative p-8 text-center">
-                  <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-[var(--duration-normal)]">
+                  <div className={`text-4xl mb-4 transition-all duration-[var(--duration-normal)] ${
+                    hoveredNote === note.family ? 'scale-125 rotate-12' : 'group-hover:scale-110'
+                  }`}>
                     {note.icon}
                   </div>
                   <h3 className="text-h3 font-[var(--font-heading)] font-[var(--text-h3-weight)] text-[var(--color-fg-primary)] mb-2">
                     {note.family}
                   </h3>
-                  <p className="text-caption text-[var(--color-fg-secondary)] leading-relaxed">
+                  <p className="text-caption text-[var(--color-fg-secondary)] leading-relaxed mb-2">
                     {note.description}
                   </p>
+                  <div className="text-xs text-[var(--color-fg-tertiary)] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {note.products} fragrances
+                  </div>
+                  
+                  {/* Interactive pulse effect */}
+                  {hoveredNote === note.family && (
+                    <div className="absolute inset-0 rounded-[var(--radius-lg)] border-2 border-[var(--color-interactive-primary)] animate-pulse" />
+                  )}
                 </div>
               </Link>
             ))}
@@ -416,6 +615,67 @@ const UV_Homepage: React.FC = () => {
       </section>
 
 
+
+      {/* Customer Testimonials Section */}
+      <section className="py-24 bg-[var(--color-bg-secondary)]">
+        <div className="nocturne-container">
+          <div className="text-center mb-16">
+            <h2 className="text-h2 font-[var(--font-heading)] font-[var(--text-h2-weight)] text-[var(--color-fg-primary)] mb-6 tracking-[var(--text-h2-spacing)]">
+              What Our Connoisseurs Say
+            </h2>
+            <p className="text-subtitle text-[var(--color-fg-secondary)] max-w-2xl mx-auto leading-relaxed">
+              Join thousands of fragrance enthusiasts who have discovered their signature scent
+            </p>
+          </div>
+
+          <div className="relative max-w-4xl mx-auto">
+            <div className="overflow-hidden rounded-[var(--radius-xl)] bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] shadow-[var(--shadow-subtle)]">
+              <div className="p-12 text-center">
+                <div className="mb-6">
+                  {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
+                    <svg key={i} className="w-6 h-6 text-yellow-400 inline-block mx-1" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                
+                <blockquote className="text-h3 font-[var(--font-weight-light)] text-[var(--color-fg-primary)] mb-8 leading-relaxed italic">
+                  "{testimonials[currentTestimonial].text}"
+                </blockquote>
+                
+                <div className="flex items-center justify-center space-x-4">
+                  <div className="w-12 h-12 bg-[var(--color-interactive-primary)] rounded-full flex items-center justify-center text-[var(--color-fg-inverse)] font-[var(--font-weight-semibold)]">
+                    {testimonials[currentTestimonial].author.charAt(0)}
+                  </div>
+                  <div className="text-left">
+                    <p className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)]">
+                      {testimonials[currentTestimonial].author}
+                    </p>
+                    <p className="text-caption text-[var(--color-fg-secondary)]">
+                      {testimonials[currentTestimonial].location}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial indicators */}
+            <div className="flex justify-center mt-8 space-x-2">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index)}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    index === currentTestimonial 
+                      ? 'bg-[var(--color-interactive-primary)] scale-125' 
+                      : 'bg-[var(--color-border-primary)] hover:bg-[var(--color-interactive-primary)]/50'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Brand Story Section */}
       <section className="py-24 bg-[var(--color-bg-primary)]">
@@ -469,35 +729,59 @@ const UV_Homepage: React.FC = () => {
 
 
 
-      {/* Newsletter Section */}
-      <section className="py-24 bg-[var(--nocturne-onyx)] text-[var(--nocturne-porcelain)]">
-        <div className="nocturne-container">
+      {/* Interactive Newsletter Section */}
+      <section className="py-24 bg-[var(--nocturne-onyx)] text-[var(--nocturne-porcelain)] relative overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 w-40 h-40 bg-[var(--nocturne-champagne)] rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-10 right-10 w-32 h-32 bg-[var(--nocturne-porcelain)] rounded-full blur-2xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-[var(--nocturne-champagne)] rounded-full blur-xl animate-pulse delay-500"></div>
+        </div>
+
+        <div className="nocturne-container relative z-10">
           <div className="max-w-2xl mx-auto text-center">
+            <div className="mb-8">
+              <div className="inline-flex items-center bg-[var(--nocturne-champagne)]/10 backdrop-blur-sm px-4 py-2 rounded-[var(--radius-full)] border border-[var(--nocturne-champagne)]/20 mb-6">
+                <span className="text-[var(--nocturne-champagne)] text-caption font-[var(--font-weight-semibold)]">
+                  🎁 10% OFF YOUR FIRST ORDER
+                </span>
+              </div>
+            </div>
+            
             <h2 className="text-h2 font-[var(--font-heading)] font-[var(--text-h2-weight)] text-[var(--nocturne-porcelain)] mb-6 tracking-[var(--text-h2-spacing)]">
               Join the Atelier
             </h2>
             <p className="text-subtitle text-[var(--nocturne-champagne)] mb-12 leading-relaxed">
-              Be the first to discover new creations, receive exclusive offers, and unlock the secrets of fragrance artistry. 
-              Plus, enjoy 10% off your first order.
+              Be the first to discover new creations, receive exclusive offers, and unlock the secrets of fragrance artistry.
             </p>
             
             <form onSubmit={handleNewsletterSubmit} className="space-y-6">
               <div className="flex flex-col sm:flex-row gap-4">
-                <input
-                  type="email"
-                  value={newsletterEmail}
-                  onChange={(e) => setNewsletterEmail(e.target.value)}
-                  placeholder="Your email address"
-                  required
-                  className="flex-1 px-6 py-4 rounded-[var(--radius-full)] bg-[var(--nocturne-porcelain)] text-[var(--nocturne-onyx)] placeholder:text-[var(--nocturne-warm-taupe)] focus:outline-none focus:ring-2 focus:ring-[var(--nocturne-champagne)] text-body"
-                />
+                <div className="flex-1 relative group">
+                  <input
+                    type="email"
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    placeholder="Your email address"
+                    required
+                    className="w-full px-6 py-4 rounded-[var(--radius-full)] bg-[var(--nocturne-porcelain)] text-[var(--nocturne-onyx)] placeholder:text-[var(--nocturne-warm-taupe)] focus:outline-none focus:ring-2 focus:ring-[var(--nocturne-champagne)] text-body transition-all duration-300 group-hover:shadow-lg"
+                  />
+                  <div className="absolute inset-0 rounded-[var(--radius-full)] bg-gradient-to-r from-[var(--nocturne-champagne)]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                </div>
                 <NocturneButton
                   type="submit"
                   disabled={newsletterMutation.isPending || !newsletterConsent}
                   size="lg"
-                  className="bg-[var(--nocturne-champagne)] text-[var(--nocturne-onyx)] hover:bg-[var(--nocturne-porcelain)] disabled:opacity-50 disabled:cursor-not-allowed px-8"
+                  className="bg-[var(--nocturne-champagne)] text-[var(--nocturne-onyx)] hover:bg-[var(--nocturne-porcelain)] disabled:opacity-50 disabled:cursor-not-allowed px-8 transform hover:scale-105 transition-all duration-300"
                 >
-                  {newsletterMutation.isPending ? 'Joining...' : 'Join Atelier'}
+                  {newsletterMutation.isPending ? (
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 border-2 border-[var(--nocturne-onyx)]/30 border-t-[var(--nocturne-onyx)] rounded-full animate-spin mr-2"></div>
+                      Joining...
+                    </div>
+                  ) : (
+                    'Join Atelier'
+                  )}
                 </NocturneButton>
               </div>
               
@@ -507,36 +791,46 @@ const UV_Homepage: React.FC = () => {
                   id="newsletter-consent"
                   checked={newsletterConsent}
                   onChange={(e) => setNewsletterConsent(e.target.checked)}
-                  className="mt-1 rounded border-[var(--nocturne-champagne)] text-[var(--nocturne-champagne)] focus:ring-[var(--nocturne-champagne)] bg-transparent"
+                  className="mt-1 rounded border-[var(--nocturne-champagne)] text-[var(--nocturne-champagne)] focus:ring-[var(--nocturne-champagne)] bg-transparent transition-all duration-300"
                   required
                 />
                 <label htmlFor="newsletter-consent" className="text-caption text-[var(--nocturne-champagne)] leading-relaxed">
                   I agree to receive artisanal updates from Nocturne Atelier. Unsubscribe anytime. 
                   By subscribing, I agree to the{' '}
-                  <Link to="/privacy" className="text-[var(--nocturne-porcelain)] hover:text-[var(--nocturne-champagne)] underline">
+                  <Link to="/privacy" className="text-[var(--nocturne-porcelain)] hover:text-[var(--nocturne-champagne)] underline transition-colors duration-300">
                     Privacy Policy
                   </Link>{' '}
                   and{' '}
-                  <Link to="/terms" className="text-[var(--nocturne-porcelain)] hover:text-[var(--nocturne-champagne)] underline">
+                  <Link to="/terms" className="text-[var(--nocturne-porcelain)] hover:text-[var(--nocturne-champagne)] underline transition-colors duration-300">
                     Terms of Service
                   </Link>.
                 </label>
               </div>
             </form>
             
-            <div className="mt-12 flex flex-wrap justify-center items-center gap-8 text-caption text-[var(--nocturne-champagne)]">
-              <div className="flex items-center">
-                <span className="text-[var(--nocturne-porcelain)] mr-2">✓</span>
-                First access to new releases
+            <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 text-caption text-[var(--nocturne-champagne)]">
+              <div className="flex flex-col items-center p-4 bg-[var(--nocturne-porcelain)]/5 rounded-[var(--radius-lg)] backdrop-blur-sm border border-[var(--nocturne-porcelain)]/10 hover:bg-[var(--nocturne-porcelain)]/10 transition-all duration-300 group">
+                <div className="text-2xl mb-2 group-hover:scale-110 transition-transform duration-300">🚀</div>
+                <span className="text-[var(--nocturne-porcelain)] font-[var(--font-weight-semibold)]">First Access</span>
+                <span className="text-xs mt-1">New releases</span>
               </div>
-              <div className="flex items-center">
-                <span className="text-[var(--nocturne-porcelain)] mr-2">✓</span>
-                Exclusive member pricing
+              <div className="flex flex-col items-center p-4 bg-[var(--nocturne-porcelain)]/5 rounded-[var(--radius-lg)] backdrop-blur-sm border border-[var(--nocturne-porcelain)]/10 hover:bg-[var(--nocturne-porcelain)]/10 transition-all duration-300 group">
+                <div className="text-2xl mb-2 group-hover:scale-110 transition-transform duration-300">💎</div>
+                <span className="text-[var(--nocturne-porcelain)] font-[var(--font-weight-semibold)]">Exclusive Pricing</span>
+                <span className="text-xs mt-1">Member discounts</span>
               </div>
-              <div className="flex items-center">
-                <span className="text-[var(--nocturne-porcelain)] mr-2">✓</span>
-                Fragrance mastery insights
+              <div className="flex flex-col items-center p-4 bg-[var(--nocturne-porcelain)]/5 rounded-[var(--radius-lg)] backdrop-blur-sm border border-[var(--nocturne-porcelain)]/10 hover:bg-[var(--nocturne-porcelain)]/10 transition-all duration-300 group">
+                <div className="text-2xl mb-2 group-hover:scale-110 transition-transform duration-300">🧪</div>
+                <span className="text-[var(--nocturne-porcelain)] font-[var(--font-weight-semibold)]">Fragrance Insights</span>
+                <span className="text-xs mt-1">Mastery tips</span>
               </div>
+            </div>
+
+            {/* Social proof */}
+            <div className="mt-8 text-center">
+              <p className="text-caption text-[var(--nocturne-champagne)]/70">
+                Join 12,000+ fragrance enthusiasts worldwide
+              </p>
             </div>
           </div>
         </div>
