@@ -72,7 +72,7 @@ const GV_TopNavigation: React.FC = () => {
 
 
 
-  const freeShippingThreshold = 75;
+  // const freeShippingThreshold = 75; // Currently unused but kept for future implementation
 
   return (
     <>

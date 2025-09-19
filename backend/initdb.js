@@ -41,17 +41,17 @@ async function initDb() {
 
     // Execute each command individually (no transaction for better error handling)
     for (let cmd of dbInitCommands) {
-      console.dir({ "backend:db:init:command": cmd });
+      // Skip empty commands and comments
+      if (cmd.trim() === '' || cmd.trim().startsWith('--')) {
+        continue;
+      }
+      
       try {
         await client.query(cmd);
       } catch (error) {
         // Skip duplicate key errors for INSERT statements
         if (error.code === '23505' && cmd.trim().startsWith('INSERT')) {
           console.log('Skipping duplicate data insertion:', error.detail);
-          continue;
-        }
-        // Skip empty commands
-        if (cmd.trim() === '' || cmd.trim().startsWith('--')) {
           continue;
         }
         console.error('Error executing command:', error.message);

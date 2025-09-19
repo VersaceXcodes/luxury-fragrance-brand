@@ -127,7 +127,7 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
           )}
         >
           <div className="flex items-center gap-2 mb-2">
-            {Object.entries(price).map(([size, priceValue]) => (
+            {Object.entries(price).map(([size]) => (
               <button
                 key={size}
                 onClick={(e) => {

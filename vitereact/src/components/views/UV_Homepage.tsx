@@ -29,17 +29,18 @@ interface Product {
   updated_at: string;
 }
 
-interface Review {
-  review_id: string;
-  product_id: string;
-  user_id: string;
-  rating: number;
-  title: string | null;
-  review_text: string | null;
-  is_verified_purchase: boolean;
-  is_featured: boolean;
-  created_at: string;
-}
+// Currently unused but kept for future implementation
+// interface Review {
+//   review_id: string;
+//   product_id: string;
+//   user_id: string;
+//   rating: number;
+//   title: string | null;
+//   review_text: string | null;
+//   is_verified_purchase: boolean;
+//   is_featured: boolean;
+//   created_at: string;
+// }
 
 interface NewsletterSubscriptionRequest {
   email: string;
@@ -52,15 +53,15 @@ const UV_Homepage: React.FC = () => {
   // Zustand store selectors (individual to avoid infinite loops)
   const isAuthenticated = useAppStore(state => state.authentication_state.authentication_status.is_authenticated);
   const currentUser = useAppStore(state => state.authentication_state.current_user);
-  const addToCart = useAppStore(state => state.add_to_cart);
+  // const addToCart = useAppStore(state => state.add_to_cart); // Currently unused but kept for future implementation
   const showNotification = useAppStore(state => state.show_notification);
 
   // Newsletter form state
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterConsent, setNewsletterConsent] = useState(false);
 
-  // Hero carousel state
-  const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
+  // Hero carousel state (currently unused but kept for future implementation)
+  // const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
 
   // API Base URL
   const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
@@ -135,35 +136,36 @@ const UV_Homepage: React.FC = () => {
     retry: 1
   });
 
-  const { data: newArrivals = [], isLoading: newArrivalsLoading } = useQuery({
-    queryKey: ['new-arrivals'],
-    queryFn: async () => {
-      const response = await axios.get(`${getApiUrl()}/api/products/new-arrivals?limit=12`);
-      return response.data as Product[];
-    },
-    staleTime: 5 * 60 * 1000,
-    retry: 1
-  });
+  // Currently unused queries but kept for future implementation
+  // const { data: newArrivals = [] } = useQuery({
+  //   queryKey: ['new-arrivals'],
+  //   queryFn: async () => {
+  //     const response = await axios.get(`${getApiUrl()}/api/products/new-arrivals?limit=12`);
+  //     return response.data as Product[];
+  //   },
+  //   staleTime: 5 * 60 * 1000,
+  //   retry: 1
+  // });
 
-  const { data: bestSellers = [], isLoading: bestSellersLoading } = useQuery({
-    queryKey: ['best-sellers'],
-    queryFn: async () => {
-      const response = await axios.get(`${getApiUrl()}/api/products/best-sellers?limit=8`);
-      return response.data as Product[];
-    },
-    staleTime: 5 * 60 * 1000,
-    retry: 1
-  });
+  // const { data: bestSellers = [] } = useQuery({
+  //   queryKey: ['best-sellers'],
+  //   queryFn: async () => {
+  //     const response = await axios.get(`${getApiUrl()}/api/products/best-sellers?limit=8`);
+  //     return response.data as Product[];
+  //   },
+  //   staleTime: 5 * 60 * 1000,
+  //   retry: 1
+  // });
 
-  const { data: testimonials = [], isLoading: testimonialsLoading } = useQuery({
-    queryKey: ['testimonials'],
-    queryFn: async () => {
-      const response = await axios.get(`${getApiUrl()}/api/reviews?is_featured=true&moderation_status=approved&limit=6`);
-      return response.data.data as Review[];
-    },
-    staleTime: 10 * 60 * 1000,
-    retry: 1
-  });
+  // const { data: testimonials = [] } = useQuery({
+  //   queryKey: ['testimonials'],
+  //   queryFn: async () => {
+  //     const response = await axios.get(`${getApiUrl()}/api/reviews?is_featured=true&moderation_status=approved&limit=6`);
+  //     return response.data.data as Review[];
+  //   },
+  //   staleTime: 10 * 60 * 1000,
+  //   retry: 1
+  // });
 
   // Newsletter subscription mutation
   const newsletterMutation = useMutation({
@@ -193,23 +195,23 @@ const UV_Homepage: React.FC = () => {
     }
   });
 
-  // Handlers
-  const handleAddToCart = async (product: Product) => {
-    try {
-      await addToCart({
-        product_id: product.product_id,
-        product_name: product.product_name,
-        brand_name: 'Luxury Brand', // Would come from joined data in real implementation
-        size_ml: 50, // Default size
-        quantity: 1,
-        unit_price: product.sale_price || product.base_price,
-        gift_wrap: false,
-        sample_included: false
-      });
-    } catch (error) {
-      console.error('Failed to add to cart:', error);
-    }
-  };
+  // Handlers (currently unused but kept for future implementation)
+  // const handleAddToCart = async (product: Product) => {
+  //   try {
+  //     await addToCart({
+  //       product_id: product.product_id,
+  //       product_name: product.product_name,
+  //       brand_name: 'Luxury Brand', // Would come from joined data in real implementation
+  //       size_ml: 50, // Default size
+  //       quantity: 1,
+  //       unit_price: product.sale_price || product.base_price,
+  //       gift_wrap: false,
+  //       sample_included: false
+  //     });
+  //   } catch (error) {
+  //     console.error('Failed to add to cart:', error);
+  //   }
+  // };
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -227,33 +229,35 @@ const UV_Homepage: React.FC = () => {
     });
   };
 
-  const nextHeroSlide = () => {
-    setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
-  };
+  // Hero carousel functions (currently unused but kept for future implementation)
+  // const nextHeroSlide = () => {
+  //   setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
+  // };
 
-  const prevHeroSlide = () => {
-    setCurrentHeroSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
-  };
+  // const prevHeroSlide = () => {
+  //   setCurrentHeroSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  // };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-EU', {
-      style: 'currency',
-      currency: 'EUR'
-    }).format(price);
-  };
+  // Utility functions (currently unused but kept for future implementation)
+  // const formatPrice = (price: number) => {
+  //   return new Intl.NumberFormat('en-EU', {
+  //     style: 'currency',
+  //     currency: 'EUR'
+  //   }).format(price);
+  // };
 
-  const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <svg
-        key={i}
-        className={`w-4 h-4 ${i < rating ? 'text-yellow-400' : 'text-gray-300'}`}
-        fill="currentColor"
-        viewBox="0 0 20 20"
-      >
-        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-      </svg>
-    ));
-  };
+  // const renderStars = (rating: number) => {
+  //   return Array.from({ length: 5 }, (_, i) => (
+  //     <svg
+  //       key={i}
+  //       className={`w-4 h-4 ${i < rating ? 'text-yellow-400' : 'text-gray-300'}`}
+  //       fill="currentColor"
+  //       viewBox="0 0 20 20"
+  //     >
+  //       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+  //     </svg>
+  //   ));
+  // };
 
   return (
     <>
@@ -334,7 +338,7 @@ const UV_Homepage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {sampleProducts.map((product, index) => (
+            {sampleProducts.map((product) => (
               <NocturneProductCard
                 key={product.product_id}
                 id={product.product_id}
@@ -354,7 +358,6 @@ const UV_Homepage: React.FC = () => {
                   // Handle navigation to PDP
                 }}
                 className="animate-fade-in"
-                style={{animationDelay: `${index * 100}ms`}}
               />
             ))}
           </div>
@@ -388,7 +391,7 @@ const UV_Homepage: React.FC = () => {
               { family: 'Amber', description: 'Warm, sensual, mysterious', icon: '🔥', color: 'from-amber-400 to-orange-600' },
               { family: 'Woody', description: 'Sophisticated, grounding, rich', icon: '🌳', color: 'from-amber-600 to-brown-600' },
               { family: 'Green', description: 'Natural, crisp, refreshing', icon: '🌿', color: 'from-green-400 to-emerald-500' }
-            ].map((note, index) => (
+            ].map((note) => (
               <Link
                 key={note.family}
                 to={`/products?family=${note.family.toLowerCase()}`}
