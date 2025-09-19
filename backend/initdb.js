@@ -49,9 +49,9 @@ async function initDb() {
       try {
         await client.query(cmd);
       } catch (error) {
-        // Skip duplicate key errors for INSERT statements
+        // Skip duplicate key errors for INSERT statements silently
         if (error.code === '23505' && cmd.trim().startsWith('INSERT')) {
-          console.log('Skipping duplicate data insertion:', error.detail);
+          // Silently skip duplicate insertions - this is expected behavior
           continue;
         }
         console.error('Error executing command:', error.message);
