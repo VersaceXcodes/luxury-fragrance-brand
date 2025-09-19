@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useAppStore } from '@/store/main';
+import { NocturneProductCard } from '@/components/ui/nocturne-product-card';
+import { NocturneButton } from '@/components/ui/nocturne-button';
+import { NocturneBadge } from '@/components/ui/nocturne-badge';
 
 // API Response Types
 interface Product {
@@ -62,34 +65,62 @@ const UV_Homepage: React.FC = () => {
   // API Base URL
   const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
-  // Hero carousel data
-  const heroSlides = [
+  // Sample products data for Nocturne Atelier
+  const sampleProducts = [
     {
-      id: 1,
-      title: "Discover Your Signature Scent",
-      subtitle: "New Luxury Collection",
-      description: "Indulge in our curated selection of premium fragrances from renowned houses worldwide",
-      cta: "Explore Collection",
-      link: "/products?is_featured=true",
-      backgroundImage: "bg-gradient-to-r from-purple-900 via-purple-700 to-pink-600"
+      product_id: '1',
+      product_name: 'Aurora No. 1',
+      family: 'Citrus/Floral',
+      price: { '10ml': 45, '50ml': 85, '100ml': 120 },
+      image: '/api/placeholder/400/400',
+      rating: 4.8,
+      reviewCount: 127,
+      badges: ['bestseller'],
+      notes: { top: ['Bergamot', 'Pink Grapefruit'], heart: ['Rose Petals', 'Jasmine'], base: ['White Musk', 'Cedar'] }
     },
     {
-      id: 2,
-      title: "Winter Elegance",
-      subtitle: "Seasonal Favorites",
-      description: "Warm, sophisticated scents perfect for the season's most memorable moments",
-      cta: "Shop Winter Collection",
-      link: "/products?season_suitability=winter",
-      backgroundImage: "bg-gradient-to-r from-blue-900 via-blue-700 to-indigo-600"
+      product_id: '2',
+      product_name: 'Midnight Saffron',
+      family: 'Amber/Spice',
+      price: { '10ml': 50, '50ml': 90, '100ml': 130 },
+      image: '/api/placeholder/400/400',
+      rating: 4.9,
+      reviewCount: 89,
+      badges: ['new'],
+      notes: { top: ['Saffron', 'Black Pepper'], heart: ['Rose', 'Oud'], base: ['Amber', 'Sandalwood'] }
     },
     {
-      id: 3,
-      title: "Find Your Perfect Match",
-      subtitle: "Personalized Fragrance Quiz",
-      description: "Answer a few questions and discover fragrances tailored to your unique preferences",
-      cta: "Take the Quiz",
-      link: "/fragrance-finder",
-      backgroundImage: "bg-gradient-to-r from-rose-900 via-rose-700 to-pink-600"
+      product_id: '3',
+      product_name: 'Coastal Fig',
+      family: 'Green/Woody',
+      price: { '10ml': 48, '50ml': 88, '100ml': 125 },
+      image: '/api/placeholder/400/400',
+      rating: 4.7,
+      reviewCount: 156,
+      badges: [],
+      notes: { top: ['Fig Leaves', 'Sea Salt'], heart: ['Green Fig', 'Violet'], base: ['Driftwood', 'Ambergris'] }
+    },
+    {
+      product_id: '4',
+      product_name: 'Cinder Oud',
+      family: 'Woody/Smoky',
+      price: { '10ml': 55, '50ml': 95, '100ml': 140 },
+      image: '/api/placeholder/400/400',
+      rating: 4.6,
+      reviewCount: 73,
+      badges: ['limited'],
+      notes: { top: ['Smoke', 'Pink Pepper'], heart: ['Oud', 'Rose'], base: ['Leather', 'Patchouli'] }
+    },
+    {
+      product_id: '5',
+      product_name: 'Citrus Atlas',
+      family: 'Citrus/Aromatic',
+      price: { '10ml': 42, '50ml': 82, '100ml': 115 },
+      image: '/api/placeholder/400/400',
+      rating: 4.5,
+      reviewCount: 201,
+      badges: [],
+      notes: { top: ['Lemon', 'Mint'], heart: ['Lavender', 'Geranium'], base: ['Vetiver', 'Tonka Bean'] }
     }
   ];
 
@@ -205,9 +236,9 @@ const UV_Homepage: React.FC = () => {
   };
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-EU', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'EUR'
     }).format(price);
   };
 
@@ -227,512 +258,244 @@ const UV_Homepage: React.FC = () => {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div className={`absolute inset-0 ${heroSlides[currentHeroSlide].backgroundImage}`} />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[var(--color-bg-primary)]">
+        {/* Background Image */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[var(--nocturne-onyx)] via-[var(--nocturne-warm-taupe)] to-[var(--nocturne-onyx)]" />
+        <div className="absolute inset-0 bg-[url('/api/placeholder/1920/1080')] bg-cover bg-center opacity-20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--nocturne-onyx)]/80 via-transparent to-[var(--nocturne-onyx)]/40" />
         
         {/* Floating elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-          <div className="absolute bottom-32 right-16 w-24 h-24 bg-white/5 rounded-full blur-2xl animate-pulse delay-1000"></div>
-          <div className="absolute top-1/3 right-1/4 w-16 h-16 bg-white/10 rounded-full blur-lg animate-pulse delay-500"></div>
+          <div className="absolute top-20 left-10 w-32 h-32 bg-[var(--nocturne-champagne)]/10 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute bottom-32 right-16 w-24 h-24 bg-[var(--nocturne-porcelain)]/5 rounded-full blur-2xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/3 right-1/4 w-16 h-16 bg-[var(--nocturne-champagne)]/10 rounded-full blur-lg animate-pulse delay-500"></div>
         </div>
         
-        <div className="relative z-10 text-center text-white max-w-5xl mx-auto px-4 animate-fade-in">
-          <h1 className="text-6xl md:text-8xl font-display font-bold mb-6 tracking-tight leading-none">
-            {heroSlides[currentHeroSlide].title}
+        <div className="relative z-10 text-center text-[var(--nocturne-porcelain)] nocturne-container py-32">
+          <h1 className="text-h1 font-[var(--font-heading)] font-[var(--text-h1-weight)] mb-6 tracking-[var(--text-h1-spacing)] leading-[var(--text-h1-line)]">
+            Scent After Dark
           </h1>
-          <p className="text-2xl md:text-3xl mb-4 font-light text-white/90">
-            {heroSlides[currentHeroSlide].subtitle}
+          <p className="text-subtitle mb-4 font-[var(--font-weight-light)] text-[var(--nocturne-champagne)]">
+            Artisanal fragrances, crafted in small batches
           </p>
-          <p className="text-xl mb-10 max-w-3xl mx-auto text-white/80 leading-relaxed">
-            {heroSlides[currentHeroSlide].description}
+          <p className="text-body mb-12 max-w-2xl mx-auto text-[var(--nocturne-porcelain)]/80 leading-relaxed">
+            Discover our collection of sophisticated, sensual fragrances designed for those who appreciate the art of scent
           </p>
-          <Link
-            to={heroSlides[currentHeroSlide].link}
-            className="inline-flex items-center bg-white/95 backdrop-blur-sm text-neutral-900 px-10 py-5 rounded-2xl font-semibold text-lg hover:bg-white hover:shadow-large transition-all duration-300 transform hover:scale-105 active:scale-95 group"
-          >
-            <span>{heroSlides[currentHeroSlide].cta}</span>
-            <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </Link>
           
-          {isAuthenticated && currentUser && (
-            <div className="mt-8 animate-fade-in delay-300">
-              <div className="inline-flex items-center bg-white/10 backdrop-blur-sm px-6 py-3 rounded-2xl border border-white/20">
-                <div className="w-8 h-8 bg-gradient-to-br from-primary-400 to-secondary-400 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3">
-                  {currentUser.first_name?.charAt(0).toUpperCase()}
-                </div>
-                <p className="text-lg text-white/90">Welcome back, {currentUser.first_name}!</p>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Hero Navigation */}
-        <button
-          onClick={prevHeroSlide}
-          className="absolute left-6 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl flex items-center justify-center text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 z-20 group"
-          aria-label="Previous slide"
-        >
-          <svg className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        
-        <button
-          onClick={nextHeroSlide}
-          className="absolute right-6 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl flex items-center justify-center text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 z-20 group"
-          aria-label="Next slide"
-        >
-          <svg className="w-6 h-6 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-
-        {/* Hero Dots */}
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
-          {heroSlides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentHeroSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentHeroSlide 
-                  ? 'bg-white scale-125 shadow-lg' 
-                  : 'bg-white/50 hover:bg-white/70 hover:scale-110'
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* New Arrivals Section */}
-      <section className="py-20 bg-gradient-to-b from-neutral-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 animate-fade-in">
-            <div className="inline-flex items-center bg-gradient-to-r from-primary-100 to-secondary-100 px-4 py-2 rounded-full mb-4">
-              <svg className="w-4 h-4 text-primary-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-              </svg>
-              <span className="text-primary-700 font-semibold text-sm">New Arrivals</span>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-display font-bold text-neutral-900 mb-6">Latest Luxury Fragrances</h2>
-            <p className="text-xl text-neutral-600 max-w-3xl mx-auto leading-relaxed">
-              Discover the latest additions to our curated collection of premium fragrances from renowned houses worldwide
-            </p>
-          </div>
-
-          {newArrivalsLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {Array.from({ length: 8 }, (_, i) => (
-                <div key={i} className="bg-white rounded-lg shadow-md animate-pulse">
-                  <div className="aspect-square bg-gray-300 rounded-t-lg" />
-                  <div className="p-4 space-y-3">
-                    <div className="h-4 bg-gray-300 rounded" />
-                    <div className="h-4 bg-gray-300 rounded w-3/4" />
-                    <div className="h-6 bg-gray-300 rounded w-1/2" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {newArrivals.slice(0, 8).map((product, index) => (
-                <div key={product.product_id} className="bg-white rounded-3xl shadow-soft hover:shadow-large transition-all duration-300 group transform hover:-translate-y-2 animate-fade-in" style={{animationDelay: `${index * 100}ms`}}>
-                  <div className="aspect-square bg-gradient-to-br from-primary-100 via-white to-secondary-100 rounded-t-3xl flex items-center justify-center relative overflow-hidden">
-                    <div className="text-5xl group-hover:scale-110 transition-transform duration-300">🌸</div>
-                    <div className="absolute top-4 right-4 bg-gradient-to-r from-accent-500 to-accent-600 text-white text-xs px-3 py-1.5 rounded-full font-semibold shadow-medium">
-                      NEW
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="font-semibold text-neutral-900 mb-2 group-hover:text-primary-600 transition-colors text-lg">
-                      {product.product_name}
-                    </h3>
-                    <p className="text-sm text-neutral-500 mb-4 font-medium">{product.concentration}</p>
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex flex-col">
-                        {product.sale_price ? (
-                          <>
-                            <span className="text-xl font-bold text-accent-600">
-                              {formatPrice(product.sale_price)}
-                            </span>
-                            <span className="text-sm text-neutral-400 line-through">
-                              {formatPrice(product.base_price)}
-                            </span>
-                          </>
-                        ) : (
-                          <span className="text-xl font-bold text-neutral-900">
-                            {formatPrice(product.base_price)}
-                          </span>
-                        )}
-                      </div>
-                      <button
-                        onClick={() => handleAddToCart(product)}
-                        className="bg-gradient-to-r from-primary-600 to-secondary-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:from-primary-700 hover:to-secondary-700 hover:shadow-medium transition-all duration-200 transform hover:scale-105 active:scale-95"
-                      >
-                        Add to Cart
-                      </button>
-                    </div>
-                    <Link
-                      to={`/products/${product.product_id}`}
-                      className="block text-center text-primary-600 hover:text-primary-700 text-sm font-semibold py-2 px-4 rounded-xl hover:bg-primary-50 transition-all duration-200 group"
-                    >
-                      <span>View Details</span>
-                      <svg className="w-4 h-4 inline-block ml-1 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div className="text-center mt-12">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
-              to="/products?is_new_arrival=true"
-              className="inline-flex items-center bg-gradient-to-r from-primary-600 to-secondary-600 text-white px-10 py-4 rounded-2xl font-semibold text-lg hover:from-primary-700 hover:to-secondary-700 hover:shadow-large transition-all duration-200 transform hover:scale-105 active:scale-95 group"
+              to="/products"
+              className="inline-flex items-center bg-[var(--color-interactive-primary)] text-[var(--color-fg-inverse)] px-8 py-4 rounded-[var(--radius-full)] font-[var(--font-weight-semibold)] text-body hover:bg-[var(--color-interactive-primary-hover)] transition-all duration-[var(--duration-normal)] transform hover:scale-105 active:scale-95 group"
             >
-              <span>View All New Arrivals</span>
-              <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <span>Explore Collection</span>
+              <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-[var(--duration-normal)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Best Sellers Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Best Sellers</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Our most loved fragrances, chosen by our community
-            </p>
-          </div>
-
-          {bestSellersLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {Array.from({ length: 8 }, (_, i) => (
-                <div key={i} className="bg-gray-50 rounded-lg shadow-md animate-pulse">
-                  <div className="aspect-square bg-gray-300 rounded-t-lg" />
-                  <div className="p-4 space-y-3">
-                    <div className="h-4 bg-gray-300 rounded" />
-                    <div className="h-4 bg-gray-300 rounded w-3/4" />
-                    <div className="h-6 bg-gray-300 rounded w-1/2" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {bestSellers.map((product, index) => (
-                <div key={product.product_id} className="bg-gray-50 rounded-lg shadow-md hover:shadow-lg transition-shadow group">
-                  <div className="aspect-square bg-gradient-to-br from-amber-100 to-orange-100 rounded-t-lg flex items-center justify-center relative overflow-hidden">
-                    <div className="text-4xl">🏆</div>
-                    <div className="absolute top-2 left-2 bg-amber-500 text-white text-xs px-2 py-1 rounded-full">
-                      #{index + 1}
-                    </div>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-purple-600 transition-colors">
-                      {product.product_name}
-                    </h3>
-                    <p className="text-sm text-gray-600 mb-2">{product.concentration}</p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex flex-col">
-                        {product.sale_price ? (
-                          <>
-                            <span className="text-lg font-bold text-red-600">
-                              {formatPrice(product.sale_price)}
-                            </span>
-                            <span className="text-sm text-gray-500 line-through">
-                              {formatPrice(product.base_price)}
-                            </span>
-                          </>
-                        ) : (
-                          <span className="text-lg font-bold text-gray-900">
-                            {formatPrice(product.base_price)}
-                          </span>
-                        )}
-                      </div>
-                      <button
-                        onClick={() => handleAddToCart(product)}
-                        className="bg-amber-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-amber-600 transition-colors"
-                      >
-                        Add to Cart
-                      </button>
-                    </div>
-                    <Link
-                      to={`/products/${product.product_id}`}
-                      className="block mt-3 text-center text-purple-600 hover:text-purple-800 text-sm font-medium"
-                    >
-                      View Details →
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div className="text-center mt-10">
+            
             <Link
-              to="/products?sort_by=best_selling"
-              className="inline-block bg-amber-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-amber-600 transition-colors"
+              to="/samples"
+              className="inline-flex items-center bg-transparent border border-[var(--nocturne-champagne)] text-[var(--nocturne-champagne)] px-8 py-4 rounded-[var(--radius-full)] font-[var(--font-weight-semibold)] text-body hover:bg-[var(--nocturne-champagne)] hover:text-[var(--nocturne-onyx)] transition-all duration-[var(--duration-normal)] transform hover:scale-105 active:scale-95"
             >
-              View All Best Sellers
+              Try 10ml First
             </Link>
           </div>
+          
+          {isAuthenticated && currentUser && (
+            <div className="mt-8">
+              <div className="inline-flex items-center bg-[var(--nocturne-porcelain)]/10 backdrop-blur-sm px-6 py-3 rounded-[var(--radius-full)] border border-[var(--nocturne-porcelain)]/20">
+                <div className="w-8 h-8 bg-[var(--nocturne-champagne)] rounded-full flex items-center justify-center text-[var(--nocturne-onyx)] font-[var(--font-weight-semibold)] text-caption mr-3">
+                  {currentUser.first_name?.charAt(0).toUpperCase()}
+                </div>
+                <p className="text-body text-[var(--nocturne-porcelain)]/90">Welcome back, {currentUser.first_name}</p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <svg className="w-6 h-6 text-[var(--nocturne-champagne)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
         </div>
       </section>
 
-      {/* Featured Collections Section */}
-      <section className="py-16 bg-gray-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Featured Collections</h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Curated selections for every occasion and preference
+      {/* Bestsellers Section */}
+      <section className="py-24 bg-[var(--color-bg-primary)]">
+        <div className="nocturne-container">
+          <div className="text-center mb-16">
+            <h2 className="text-h2 font-[var(--font-heading)] font-[var(--text-h2-weight)] text-[var(--color-fg-primary)] mb-6 tracking-[var(--text-h2-spacing)]">
+              Bestsellers
+            </h2>
+            <p className="text-subtitle text-[var(--color-fg-secondary)] max-w-2xl mx-auto leading-relaxed">
+              Our most coveted fragrances, chosen by connoisseurs worldwide
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg p-8 text-center">
-              <div className="text-5xl mb-4">🌹</div>
-              <h3 className="text-2xl font-bold mb-3">Romantic Collection</h3>
-              <p className="text-purple-100 mb-6">
-                Enchanting floral and oriental fragrances for your most memorable moments
-              </p>
-              <Link
-                to="/products?fragrance_families=floral,oriental"
-                className="inline-block bg-white text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-              >
-                Explore Romantic
-              </Link>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {sampleProducts.map((product, index) => (
+              <NocturneProductCard
+                key={product.product_id}
+                id={product.product_id}
+                name={product.product_name}
+                family={product.family}
+                price={product.price}
+                image={product.image}
+                rating={product.rating}
+                reviewCount={product.reviewCount}
+                badges={product.badges as Array<'new' | 'bestseller' | 'limited'>}
+                onQuickAdd={(id, size) => {
+                  console.log(`Quick add ${id} in ${size}`);
+                  // Handle quick add to cart
+                }}
+                onClick={(id) => {
+                  console.log(`Navigate to product ${id}`);
+                  // Handle navigation to PDP
+                }}
+                className="animate-fade-in"
+                style={{animationDelay: `${index * 100}ms`}}
+              />
+            ))}
+          </div>
 
-            <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg p-8 text-center">
-              <div className="text-5xl mb-4">🌿</div>
-              <h3 className="text-2xl font-bold mb-3">Fresh & Clean</h3>
-              <p className="text-blue-100 mb-6">
-                Crisp, energizing scents perfect for everyday wear and active lifestyles
-              </p>
-              <Link
-                to="/products?fragrance_families=fresh,citrus"
-                className="inline-block bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-              >
-                Explore Fresh
+          <div className="text-center mt-16">
+            <NocturneButton size="lg" asChild>
+              <Link to="/products">
+                View All Fragrances
               </Link>
-            </div>
-
-            <div className="bg-gradient-to-br from-amber-600 to-orange-600 rounded-lg p-8 text-center">
-              <div className="text-5xl mb-4">🔥</div>
-              <h3 className="text-2xl font-bold mb-3">Bold & Mysterious</h3>
-              <p className="text-amber-100 mb-6">
-                Rich, complex fragrances that make a statement and leave an impression
-              </p>
-              <Link
-                to="/products?fragrance_families=woody,spicy"
-                className="inline-block bg-white text-amber-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-              >
-                Explore Bold
-              </Link>
-            </div>
+            </NocturneButton>
           </div>
         </div>
       </section>
+
+      {/* Notes Explorer Section */}
+      <section className="py-24 bg-[var(--color-bg-secondary)]">
+        <div className="nocturne-container">
+          <div className="text-center mb-16">
+            <h2 className="text-h2 font-[var(--font-heading)] font-[var(--text-h2-weight)] text-[var(--color-fg-primary)] mb-6 tracking-[var(--text-h2-spacing)]">
+              Explore by Notes
+            </h2>
+            <p className="text-subtitle text-[var(--color-fg-secondary)] max-w-2xl mx-auto leading-relaxed">
+              Discover fragrances through their olfactory families and signature notes
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+            {[
+              { family: 'Citrus', description: 'Fresh, energizing, bright', icon: '🍋', color: 'from-yellow-400 to-orange-400' },
+              { family: 'Floral', description: 'Romantic, elegant, feminine', icon: '🌸', color: 'from-pink-400 to-rose-400' },
+              { family: 'Amber', description: 'Warm, sensual, mysterious', icon: '🔥', color: 'from-amber-400 to-orange-600' },
+              { family: 'Woody', description: 'Sophisticated, grounding, rich', icon: '🌳', color: 'from-amber-600 to-brown-600' },
+              { family: 'Green', description: 'Natural, crisp, refreshing', icon: '🌿', color: 'from-green-400 to-emerald-500' }
+            ].map((note, index) => (
+              <Link
+                key={note.family}
+                to={`/products?family=${note.family.toLowerCase()}`}
+                className="group relative overflow-hidden rounded-[var(--radius-lg)] bg-gradient-to-br bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] hover:shadow-[var(--shadow-elevated)] transition-all duration-[var(--duration-normal)] transform hover:-translate-y-2"
+              >
+                <div className={`absolute inset-0 bg-gradient-to-br ${note.color} opacity-10 group-hover:opacity-20 transition-opacity duration-[var(--duration-normal)]`} />
+                <div className="relative p-8 text-center">
+                  <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-[var(--duration-normal)]">
+                    {note.icon}
+                  </div>
+                  <h3 className="text-h3 font-[var(--font-heading)] font-[var(--text-h3-weight)] text-[var(--color-fg-primary)] mb-2">
+                    {note.family}
+                  </h3>
+                  <p className="text-caption text-[var(--color-fg-secondary)] leading-relaxed">
+                    {note.description}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
 
       {/* Brand Story Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section className="py-24 bg-[var(--color-bg-primary)]">
+        <div className="nocturne-container">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                The Art of Fragrance
+              <h2 className="text-h2 font-[var(--font-heading)] font-[var(--text-h2-weight)] text-[var(--color-fg-primary)] mb-8 tracking-[var(--text-h2-spacing)]">
+                Crafted in Darkness, Born in Light
               </h2>
-              <p className="text-lg text-gray-600 mb-6">
-                At LuxeScent, we believe that fragrance is more than just a scent—it's a personal signature, 
-                a memory maker, and an invisible accessory that completes your style. Our journey began with 
-                a simple mission: to make luxury fragrances accessible to everyone who appreciates the finer things in life.
+              <p className="text-body text-[var(--color-fg-secondary)] mb-6 leading-relaxed">
+                At Nocturne Atelier, we believe fragrance is an intimate art form—a whispered secret between 
+                skin and soul. Each creation in our collection is meticulously crafted in small batches, 
+                using only the finest raw materials sourced from the world's most prestigious suppliers.
               </p>
-              <p className="text-lg text-gray-600 mb-8">
-                Every fragrance in our collection is carefully selected for its exceptional quality, unique character, 
-                and the story it tells. From the prestigious houses of France to innovative niche creators around the world, 
-                we curate only the finest offerings for our discerning customers.
+              <p className="text-body text-[var(--color-fg-secondary)] mb-8 leading-relaxed">
+                Our master perfumers work under the cover of night, when the senses are most acute and 
+                creativity flows freely. Every bottle tells a story of passion, precision, and the 
+                relentless pursuit of olfactory perfection.
               </p>
-              <Link
-                to="/about"
-                className="inline-block bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
-              >
-                Learn Our Story
-              </Link>
+              <NocturneButton variant="outline" size="lg" asChild>
+                <Link to="/about">
+                  Discover Our Story
+                </Link>
+              </NocturneButton>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg p-8 text-center">
-                <div className="text-4xl mb-3">🧪</div>
-                <h3 className="font-semibold text-gray-900 mb-2">Master Crafted</h3>
-                <p className="text-sm text-gray-600">Expert perfumers with decades of experience</p>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] p-6 text-center hover:shadow-[var(--shadow-subtle)] transition-shadow duration-[var(--duration-normal)]">
+                <div className="text-3xl mb-4">🌙</div>
+                <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-2">Nocturnal Craft</h3>
+                <p className="text-caption text-[var(--color-fg-secondary)]">Created when senses are most acute</p>
               </div>
-              <div className="bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg p-8 text-center">
-                <div className="text-4xl mb-3">🌍</div>
-                <h3 className="font-semibold text-gray-900 mb-2">Global Selection</h3>
-                <p className="text-sm text-gray-600">Fragrances from renowned houses worldwide</p>
+              <div className="bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] p-6 text-center hover:shadow-[var(--shadow-subtle)] transition-shadow duration-[var(--duration-normal)]">
+                <div className="text-3xl mb-4">🧪</div>
+                <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-2">Small Batches</h3>
+                <p className="text-caption text-[var(--color-fg-secondary)]">Artisanal quality in every bottle</p>
               </div>
-              <div className="bg-gradient-to-br from-green-100 to-emerald-100 rounded-lg p-8 text-center">
-                <div className="text-4xl mb-3">✨</div>
-                <h3 className="font-semibold text-gray-900 mb-2">Premium Quality</h3>
-                <p className="text-sm text-gray-600">Only authentic, high-quality ingredients</p>
+              <div className="bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] p-6 text-center hover:shadow-[var(--shadow-subtle)] transition-shadow duration-[var(--duration-normal)]">
+                <div className="text-3xl mb-4">🌿</div>
+                <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-2">Pure Ingredients</h3>
+                <p className="text-caption text-[var(--color-fg-secondary)]">Ethically sourced, naturally derived</p>
               </div>
-              <div className="bg-gradient-to-br from-amber-100 to-orange-100 rounded-lg p-8 text-center">
-                <div className="text-4xl mb-3">💎</div>
-                <h3 className="font-semibold text-gray-900 mb-2">Luxury Experience</h3>
-                <p className="text-sm text-gray-600">White-glove service from order to delivery</p>
+              <div className="bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] p-6 text-center hover:shadow-[var(--shadow-subtle)] transition-shadow duration-[var(--duration-normal)]">
+                <div className="text-3xl mb-4">♻️</div>
+                <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-2">Sustainable</h3>
+                <p className="text-caption text-[var(--color-fg-secondary)]">Recyclable packaging, cruelty-free</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Customer Testimonials Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Our Customers Say</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Real reviews from verified purchases
-            </p>
-          </div>
 
-          {testimonialsLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {Array.from({ length: 3 }, (_, i) => (
-                <div key={i} className="bg-white rounded-lg shadow-md p-6 animate-pulse">
-                  <div className="flex space-x-1 mb-4">
-                    {Array.from({ length: 5 }, (_, j) => (
-                      <div key={j} className="w-4 h-4 bg-gray-300 rounded" />
-                    ))}
-                  </div>
-                  <div className="space-y-3">
-                    <div className="h-4 bg-gray-300 rounded" />
-                    <div className="h-4 bg-gray-300 rounded w-3/4" />
-                    <div className="h-4 bg-gray-300 rounded w-1/2" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : testimonials.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {testimonials.slice(0, 3).map((review) => (
-                <div key={review.review_id} className="bg-white rounded-lg shadow-md p-6">
-                  <div className="flex items-center mb-4">
-                    <div className="flex space-x-1 mr-2">
-                      {renderStars(review.rating)}
-                    </div>
-                    {review.is_verified_purchase && (
-                      <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                        Verified Purchase
-                      </span>
-                    )}
-                  </div>
-                  {review.title && (
-                    <h4 className="font-semibold text-gray-900 mb-2">{review.title}</h4>
-                  )}
-                  <p className="text-gray-600 mb-4">{review.review_text}</p>
-                  <div className="flex items-center">
-                    <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-purple-600 font-semibold text-sm">
-                        {review.user_id.charAt(0).toUpperCase()}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">Verified Customer</p>
-                      <p className="text-xs text-gray-500">
-                        {new Date(review.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center text-gray-500">
-              <p>No testimonials available at the moment.</p>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Fragrance Discovery Tools Section */}
-      <section className="py-16 bg-purple-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="max-w-3xl mx-auto">
-            <div className="text-6xl mb-6">🔍</div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Find Your Perfect Fragrance
-            </h2>
-            <p className="text-xl text-purple-100 mb-8">
-              Not sure which scent is right for you? Take our personalized fragrance quiz and 
-              discover your signature scent based on your preferences, lifestyle, and personality.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="text-center">
-                <div className="text-3xl mb-2">📝</div>
-                <h3 className="font-semibold mb-1">Quick Quiz</h3>
-                <p className="text-purple-100 text-sm">Answer a few simple questions</p>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl mb-2">🎯</div>
-                <h3 className="font-semibold mb-1">Personalized Results</h3>
-                <p className="text-purple-100 text-sm">Get tailored recommendations</p>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl mb-2">💝</div>
-                <h3 className="font-semibold mb-1">Sample First</h3>
-                <p className="text-purple-100 text-sm">Try before you buy</p>
-              </div>
-            </div>
-            <Link
-              to="/fragrance-finder"
-              className="inline-block bg-white text-purple-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors shadow-lg"
-            >
-              Start Your Fragrance Journey
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* Newsletter Section */}
-      <section className="py-16 bg-gray-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-24 bg-[var(--nocturne-onyx)] text-[var(--nocturne-porcelain)]">
+        <div className="nocturne-container">
           <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Stay in the Know</h2>
-            <p className="text-xl text-gray-300 mb-8">
-              Get exclusive access to new arrivals, special offers, and fragrance tips. 
-              Plus, enjoy 10% off your first order when you subscribe!
+            <h2 className="text-h2 font-[var(--font-heading)] font-[var(--text-h2-weight)] text-[var(--nocturne-porcelain)] mb-6 tracking-[var(--text-h2-spacing)]">
+              Join the Atelier
+            </h2>
+            <p className="text-subtitle text-[var(--nocturne-champagne)] mb-12 leading-relaxed">
+              Be the first to discover new creations, receive exclusive offers, and unlock the secrets of fragrance artistry. 
+              Plus, enjoy 10% off your first order.
             </p>
             
-            <form onSubmit={handleNewsletterSubmit} className="space-y-4">
+            <form onSubmit={handleNewsletterSubmit} className="space-y-6">
               <div className="flex flex-col sm:flex-row gap-4">
                 <input
                   type="email"
                   value={newsletterEmail}
                   onChange={(e) => setNewsletterEmail(e.target.value)}
-                  placeholder="Enter your email address"
+                  placeholder="Your email address"
                   required
-                  className="flex-1 px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="flex-1 px-6 py-4 rounded-[var(--radius-full)] bg-[var(--nocturne-porcelain)] text-[var(--nocturne-onyx)] placeholder:text-[var(--nocturne-warm-taupe)] focus:outline-none focus:ring-2 focus:ring-[var(--nocturne-champagne)] text-body"
                 />
-                <button
+                <NocturneButton
                   type="submit"
                   disabled={newsletterMutation.isPending || !newsletterConsent}
-                  className="bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  size="lg"
+                  className="bg-[var(--nocturne-champagne)] text-[var(--nocturne-onyx)] hover:bg-[var(--nocturne-porcelain)] disabled:opacity-50 disabled:cursor-not-allowed px-8"
                 >
-                  {newsletterMutation.isPending ? 'Subscribing...' : 'Get 10% Off'}
-                </button>
+                  {newsletterMutation.isPending ? 'Joining...' : 'Join Atelier'}
+                </NocturneButton>
               </div>
               
               <div className="flex items-start space-x-3 text-left">
@@ -741,35 +504,35 @@ const UV_Homepage: React.FC = () => {
                   id="newsletter-consent"
                   checked={newsletterConsent}
                   onChange={(e) => setNewsletterConsent(e.target.checked)}
-                  className="mt-1 rounded border-gray-600 text-purple-600 focus:ring-purple-500"
+                  className="mt-1 rounded border-[var(--nocturne-champagne)] text-[var(--nocturne-champagne)] focus:ring-[var(--nocturne-champagne)] bg-transparent"
                   required
                 />
-                <label htmlFor="newsletter-consent" className="text-sm text-gray-300 leading-5">
-                  I agree to receive marketing emails from LuxeScent. I can unsubscribe at any time. 
+                <label htmlFor="newsletter-consent" className="text-caption text-[var(--nocturne-champagne)] leading-relaxed">
+                  I agree to receive artisanal updates from Nocturne Atelier. Unsubscribe anytime. 
                   By subscribing, I agree to the{' '}
-                  <Link to="/privacy" className="text-purple-400 hover:text-purple-300 underline">
+                  <Link to="/privacy" className="text-[var(--nocturne-porcelain)] hover:text-[var(--nocturne-champagne)] underline">
                     Privacy Policy
                   </Link>{' '}
                   and{' '}
-                  <Link to="/terms" className="text-purple-400 hover:text-purple-300 underline">
+                  <Link to="/terms" className="text-[var(--nocturne-porcelain)] hover:text-[var(--nocturne-champagne)] underline">
                     Terms of Service
                   </Link>.
                 </label>
               </div>
             </form>
             
-            <div className="mt-8 flex flex-wrap justify-center items-center gap-6 text-sm text-gray-400">
+            <div className="mt-12 flex flex-wrap justify-center items-center gap-8 text-caption text-[var(--nocturne-champagne)]">
               <div className="flex items-center">
-                <span className="text-green-400 mr-2">✓</span>
-                Exclusive early access
+                <span className="text-[var(--nocturne-porcelain)] mr-2">✓</span>
+                First access to new releases
               </div>
               <div className="flex items-center">
-                <span className="text-green-400 mr-2">✓</span>
-                Members-only discounts
+                <span className="text-[var(--nocturne-porcelain)] mr-2">✓</span>
+                Exclusive member pricing
               </div>
               <div className="flex items-center">
-                <span className="text-green-400 mr-2">✓</span>
-                Fragrance tips & guides
+                <span className="text-[var(--nocturne-porcelain)] mr-2">✓</span>
+                Fragrance mastery insights
               </div>
             </div>
           </div>
@@ -777,28 +540,36 @@ const UV_Homepage: React.FC = () => {
       </section>
 
       {/* Trust Indicators Section */}
-      <section className="py-12 bg-white border-t border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <section className="py-16 bg-[var(--color-bg-primary)] border-t border-[var(--color-border-primary)]">
+        <div className="nocturne-container">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             <div className="flex flex-col items-center">
-              <div className="text-3xl mb-2">🛡️</div>
-              <h3 className="font-semibold text-gray-900 mb-1">100% Authentic</h3>
-              <p className="text-sm text-gray-600">Guaranteed genuine products from authorized distributors</p>
+              <NocturneBadge variant="secondary" className="mb-4 text-lg px-4 py-2">
+                🐰
+              </NocturneBadge>
+              <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-2">Cruelty-Free</h3>
+              <p className="text-caption text-[var(--color-fg-secondary)]">Never tested on animals, always ethical</p>
             </div>
             <div className="flex flex-col items-center">
-              <div className="text-3xl mb-2">🚚</div>
-              <h3 className="font-semibold text-gray-900 mb-1">Free Shipping</h3>
-              <p className="text-sm text-gray-600">Complimentary shipping on orders over $75</p>
+              <NocturneBadge variant="secondary" className="mb-4 text-lg px-4 py-2">
+                🚚
+              </NocturneBadge>
+              <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-2">Free EU Shipping</h3>
+              <p className="text-caption text-[var(--color-fg-secondary)]">Complimentary shipping on orders over €120</p>
             </div>
             <div className="flex flex-col items-center">
-              <div className="text-3xl mb-2">🔄</div>
-              <h3 className="font-semibold text-gray-900 mb-1">Easy Returns</h3>
-              <p className="text-sm text-gray-600">30-day return policy with full satisfaction guarantee</p>
+              <NocturneBadge variant="secondary" className="mb-4 text-lg px-4 py-2">
+                ♻️
+              </NocturneBadge>
+              <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-2">Recyclable Packaging</h3>
+              <p className="text-caption text-[var(--color-fg-secondary)]">Sustainable materials, minimal waste</p>
             </div>
             <div className="flex flex-col items-center">
-              <div className="text-3xl mb-2">💬</div>
-              <h3 className="font-semibold text-gray-900 mb-1">Expert Support</h3>
-              <p className="text-sm text-gray-600">Fragrance consultants available 7 days a week</p>
+              <NocturneBadge variant="secondary" className="mb-4 text-lg px-4 py-2">
+                ✓
+              </NocturneBadge>
+              <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-2">IFRA Compliant</h3>
+              <p className="text-caption text-[var(--color-fg-secondary)]">International safety standards certified</p>
             </div>
           </div>
         </div>

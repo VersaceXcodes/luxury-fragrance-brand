@@ -77,74 +77,78 @@ const GV_TopNavigation: React.FC = () => {
   return (
     <>
       {/* Free Shipping Banner */}
-      <div className="bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-center py-3 text-sm relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative z-10 flex items-center justify-center space-x-2">
+      <div className="bg-[var(--nocturne-onyx)] text-[var(--nocturne-porcelain)] text-center py-3 text-caption relative overflow-hidden">
+        <div className="nocturne-container flex items-center justify-center space-x-2">
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
             <path d="M3 4a1 1 0 00-1 1v1a1 1 0 001 1h1l1.68 5.39A3 3 0 008.62 15h5.76a3 3 0 002.94-2.61L18 7H6.41l-.77-3H3z"/>
           </svg>
-          <span className="font-semibold">Free shipping on orders over ${freeShippingThreshold} • Free returns within 30 days</span>
+          <span className="font-[var(--font-weight-medium)]">Free EU shipping on orders over €120 • 30-day returns on unopened items</span>
         </div>
       </div>
 
       {/* Main Navigation */}
-      <nav className="bg-white/95 backdrop-blur-md shadow-soft border-b border-neutral-200/50 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-18">
+      <nav className="bg-[var(--color-surface-primary)]/95 backdrop-blur-md shadow-[var(--shadow-subtle)] border-b border-[var(--color-border-primary)] sticky top-0 z-[var(--z-sticky)]">
+        <div className="nocturne-container">
+          <div className="flex items-center justify-between h-[var(--nav-height)]">
             
             {/* Left: Logo */}
             <div className="flex-shrink-0">
-              <Link to="/" className="flex items-center space-x-2 group">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center shadow-medium group-hover:shadow-large transition-all duration-300">
-                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              <Link to="/" className="flex items-center space-x-3 group">
+                <div className="w-8 h-8 bg-[var(--nocturne-onyx)] rounded-full flex items-center justify-center group-hover:bg-[var(--nocturne-warm-taupe)] transition-all duration-[var(--duration-normal)]">
+                  <svg className="w-4 h-4 text-[var(--nocturne-porcelain)]" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
                   </svg>
                 </div>
-                <span className="text-2xl font-display font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">LuxeScent</span>
+                <div className="flex flex-col">
+                  <span className="text-h3 font-[var(--font-heading)] font-[var(--font-weight-bold)] text-[var(--color-fg-primary)] leading-none tracking-[var(--text-h3-spacing)]">Nocturne</span>
+                  <span className="text-caption text-[var(--color-fg-secondary)] font-[var(--font-weight-light)] tracking-widest uppercase">Atelier</span>
+                </div>
               </Link>
             </div>
 
             {/* Center: Desktop Navigation Menu */}
-            <div className="hidden lg:flex lg:items-center lg:space-x-1">
+            <div className="hidden lg:flex lg:items-center lg:space-x-8">
               
-              {/* Men's Fragrances */}
+              {/* Shop */}
               <div className="relative">
                 <button
-                  className="text-neutral-700 hover:text-primary-600 px-4 py-3 text-sm font-medium transition-all duration-200 rounded-xl hover:bg-neutral-50 flex items-center space-x-1"
+                  className="text-[var(--color-fg-primary)] hover:text-[var(--color-fg-secondary)] px-4 py-3 text-body font-[var(--font-weight-medium)] transition-all duration-[var(--duration-normal)] flex items-center space-x-1"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setActiveDropdown(activeDropdown === 'men' ? null : 'men');
+                    setActiveDropdown(activeDropdown === 'shop' ? null : 'shop');
                   }}
                 >
-                  <span>Men's Fragrances</span>
-                  <svg className={`w-4 h-4 transition-transform duration-200 ${activeDropdown === 'men' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <span>Shop</span>
+                  <svg className={`w-4 h-4 transition-transform duration-[var(--duration-normal)] ${activeDropdown === 'shop' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
                 
-                {activeDropdown === 'men' && (
-                  <div className="absolute top-full left-0 mt-2 w-88 bg-white/95 backdrop-blur-md shadow-large rounded-2xl border border-neutral-200/50 py-6 z-50 animate-scale-in">
+                {activeDropdown === 'shop' && (
+                  <div className="absolute top-full left-0 mt-2 w-96 bg-[var(--color-surface-primary)]/95 backdrop-blur-md shadow-[var(--shadow-elevated)] rounded-[var(--radius-lg)] border border-[var(--color-border-primary)] py-6 z-[var(--z-dropdown)]">
                     <div className="grid grid-cols-2 gap-6 px-6">
                       <div>
-                        <h3 className="text-sm font-semibold text-neutral-900 mb-3 flex items-center">
-                          <div className="w-2 h-2 bg-primary-500 rounded-full mr-2"></div>
-                          By Notes
+                        <h3 className="text-caption font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-3 uppercase tracking-wider">
+                          By Family
                         </h3>
                         <div className="space-y-2">
-                          <Link to="/products?gender_category=Men&fragrance_families=fresh,citrus" className="block text-sm text-neutral-600 hover:text-primary-600 py-2 px-3 rounded-lg hover:bg-primary-50 transition-all duration-200">Fresh & Citrus</Link>
-                          <Link to="/products?gender_category=Men&fragrance_families=woody,spicy" className="block text-sm text-neutral-600 hover:text-primary-600 py-2 px-3 rounded-lg hover:bg-primary-50 transition-all duration-200">Woody & Spicy</Link>
-                          <Link to="/products?gender_category=Men&fragrance_families=oriental,amber" className="block text-sm text-neutral-600 hover:text-primary-600 py-2 px-3 rounded-lg hover:bg-primary-50 transition-all duration-200">Oriental & Amber</Link>
+                          <Link to="/products?family=citrus" className="block text-body text-[var(--color-fg-secondary)] hover:text-[var(--color-fg-primary)] py-2 px-3 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-muted)] transition-all duration-[var(--duration-normal)]">Citrus</Link>
+                          <Link to="/products?family=floral" className="block text-body text-[var(--color-fg-secondary)] hover:text-[var(--color-fg-primary)] py-2 px-3 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-muted)] transition-all duration-[var(--duration-normal)]">Floral</Link>
+                          <Link to="/products?family=amber" className="block text-body text-[var(--color-fg-secondary)] hover:text-[var(--color-fg-primary)] py-2 px-3 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-muted)] transition-all duration-[var(--duration-normal)]">Amber</Link>
+                          <Link to="/products?family=woody" className="block text-body text-[var(--color-fg-secondary)] hover:text-[var(--color-fg-primary)] py-2 px-3 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-muted)] transition-all duration-[var(--duration-normal)]">Woody</Link>
+                          <Link to="/products?family=green" className="block text-body text-[var(--color-fg-secondary)] hover:text-[var(--color-fg-primary)] py-2 px-3 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-muted)] transition-all duration-[var(--duration-normal)]">Green</Link>
                         </div>
                       </div>
                       <div>
-                        <h3 className="text-sm font-semibold text-neutral-900 mb-3 flex items-center">
-                          <div className="w-2 h-2 bg-secondary-500 rounded-full mr-2"></div>
-                          By Brand Type
+                        <h3 className="text-caption font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-3 uppercase tracking-wider">
+                          Collections
                         </h3>
                         <div className="space-y-2">
-                          <Link to="/products?gender_category=Men" className="block text-sm text-neutral-600 hover:text-primary-600 py-2 px-3 rounded-lg hover:bg-primary-50 transition-all duration-200">Designer Brands</Link>
-                          <Link to="/products?gender_category=Men" className="block text-sm text-neutral-600 hover:text-primary-600 py-2 px-3 rounded-lg hover:bg-primary-50 transition-all duration-200">Niche Brands</Link>
+                          <Link to="/products?collection=bestsellers" className="block text-body text-[var(--color-fg-secondary)] hover:text-[var(--color-fg-primary)] py-2 px-3 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-muted)] transition-all duration-[var(--duration-normal)]">Bestsellers</Link>
+                          <Link to="/products?collection=new" className="block text-body text-[var(--color-fg-secondary)] hover:text-[var(--color-fg-primary)] py-2 px-3 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-muted)] transition-all duration-[var(--duration-normal)]">New Arrivals</Link>
+                          <Link to="/products?collection=limited" className="block text-body text-[var(--color-fg-secondary)] hover:text-[var(--color-fg-primary)] py-2 px-3 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-muted)] transition-all duration-[var(--duration-normal)]">Limited Edition</Link>
+                          <Link to="/samples" className="block text-body text-[var(--color-fg-secondary)] hover:text-[var(--color-fg-primary)] py-2 px-3 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-muted)] transition-all duration-[var(--duration-normal)]">Sample Sets</Link>
                         </div>
                       </div>
                     </div>
@@ -152,89 +156,38 @@ const GV_TopNavigation: React.FC = () => {
                 )}
               </div>
 
-              {/* Women's Fragrances */}
-              <div className="relative">
-                <button
-                  className="text-neutral-700 hover:text-primary-600 px-4 py-3 text-sm font-medium transition-all duration-200 rounded-xl hover:bg-neutral-50 flex items-center space-x-1"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActiveDropdown(activeDropdown === 'women' ? null : 'women');
-                  }}
-                >
-                  <span>Women's Fragrances</span>
-                  <svg className={`w-4 h-4 transition-transform duration-200 ${activeDropdown === 'women' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                
-                {activeDropdown === 'women' && (
-                  <div className="absolute top-full left-0 mt-2 w-88 bg-white/95 backdrop-blur-md shadow-large rounded-2xl border border-neutral-200/50 py-6 z-50 animate-scale-in">
-                    <div className="grid grid-cols-2 gap-6 px-6">
-                      <div>
-                        <h3 className="text-sm font-semibold text-neutral-900 mb-3 flex items-center">
-                          <div className="w-2 h-2 bg-primary-500 rounded-full mr-2"></div>
-                          By Notes
-                        </h3>
-                        <div className="space-y-2">
-                          <Link to="/products?gender_category=Women&fragrance_families=floral" className="block text-sm text-neutral-600 hover:text-primary-600 py-2 px-3 rounded-lg hover:bg-primary-50 transition-all duration-200">Floral & Romantic</Link>
-                          <Link to="/products?gender_category=Women&fragrance_families=fresh,clean" className="block text-sm text-neutral-600 hover:text-primary-600 py-2 px-3 rounded-lg hover:bg-primary-50 transition-all duration-200">Fresh & Clean</Link>
-                          <Link to="/products?gender_category=Women&fragrance_families=oriental" className="block text-sm text-neutral-600 hover:text-primary-600 py-2 px-3 rounded-lg hover:bg-primary-50 transition-all duration-200">Oriental & Exotic</Link>
-                          <Link to="/products?gender_category=Women&fragrance_families=fruity,sweet" className="block text-sm text-neutral-600 hover:text-primary-600 py-2 px-3 rounded-lg hover:bg-primary-50 transition-all duration-200">Fruity & Sweet</Link>
-                        </div>
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-semibold text-neutral-900 mb-3 flex items-center">
-                          <div className="w-2 h-2 bg-secondary-500 rounded-full mr-2"></div>
-                          By Brand Type
-                        </h3>
-                        <div className="space-y-2">
-                          <Link to="/products?gender_category=Women" className="block text-sm text-neutral-600 hover:text-primary-600 py-2 px-3 rounded-lg hover:bg-primary-50 transition-all duration-200">Designer Brands</Link>
-                          <Link to="/products?gender_category=Women" className="block text-sm text-neutral-600 hover:text-primary-600 py-2 px-3 rounded-lg hover:bg-primary-50 transition-all duration-200">Niche Brands</Link>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Unisex */}
-              <Link to="/products?gender_category=Unisex" className="text-neutral-700 hover:text-primary-600 px-4 py-3 text-sm font-medium transition-all duration-200 rounded-xl hover:bg-neutral-50">
-                Unisex
+              {/* About */}
+              <Link to="/about" className="text-[var(--color-fg-primary)] hover:text-[var(--color-fg-secondary)] px-4 py-3 text-body font-[var(--font-weight-medium)] transition-all duration-[var(--duration-normal)]">
+                About
               </Link>
 
-              {/* Collections */}
-              <Link to="/products?is_featured=true" className="text-neutral-700 hover:text-primary-600 px-4 py-3 text-sm font-medium transition-all duration-200 rounded-xl hover:bg-neutral-50">
-                Collections
+              {/* Journal */}
+              <Link to="/journal" className="text-[var(--color-fg-primary)] hover:text-[var(--color-fg-secondary)] px-4 py-3 text-body font-[var(--font-weight-medium)] transition-all duration-[var(--duration-normal)]">
+                Journal
               </Link>
 
-              {/* New Arrivals */}
-              <Link to="/products?is_new_arrival=true" className="text-neutral-700 hover:text-primary-600 px-4 py-3 text-sm font-medium transition-all duration-200 rounded-xl hover:bg-neutral-50 relative">
-                New Arrivals
-                <span className="absolute -top-1 -right-1 bg-gradient-to-r from-accent-500 to-accent-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center shadow-medium animate-pulse">
-                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                  </svg>
-                </span>
+              {/* FAQ */}
+              <Link to="/faq" className="text-[var(--color-fg-primary)] hover:text-[var(--color-fg-secondary)] px-4 py-3 text-body font-[var(--font-weight-medium)] transition-all duration-[var(--duration-normal)]">
+                FAQ
               </Link>
 
-              {/* Sale */}
-              <Link to="/products?sale_price=true" className="text-accent-600 hover:text-accent-700 px-4 py-3 text-sm font-bold transition-all duration-200 rounded-xl hover:bg-accent-50 relative">
-                Sale
-                <span className="absolute inset-0 bg-gradient-to-r from-accent-500/10 to-accent-600/10 rounded-xl animate-pulse"></span>
+              {/* Contact */}
+              <Link to="/contact" className="text-[var(--color-fg-primary)] hover:text-[var(--color-fg-secondary)] px-4 py-3 text-body font-[var(--font-weight-medium)] transition-all duration-[var(--duration-normal)]">
+                Contact
               </Link>
             </div>
 
-            {/* Center: Search Bar */}
-            <div className="flex-1 max-w-lg mx-8 hidden md:block">
+            {/* Right: Search Bar */}
+            <div className="flex-1 max-w-sm ml-8 hidden md:block">
               <form onSubmit={handleSearchSubmit} className="relative group">
                 <input
                   type="text"
-                  placeholder="Search luxury fragrances..."
+                  placeholder="Search notes, fragrances..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-neutral-50 border border-neutral-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 focus:bg-white transition-all duration-200 placeholder-neutral-400"
+                  className="w-full pl-12 pr-4 py-3 bg-[var(--color-bg-muted)] border border-[var(--color-border-primary)] rounded-[var(--radius-full)] focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] focus:border-[var(--color-border-focus)] focus:bg-[var(--color-surface-primary)] transition-all duration-[var(--duration-normal)] placeholder:text-[var(--color-fg-muted)] text-body"
                 />
-                <button type="submit" className="absolute left-4 top-1/2 transform -translate-y-1/2 text-neutral-400 group-hover:text-primary-500 transition-colors duration-200">
+                <button type="submit" className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-primary)] transition-colors duration-[var(--duration-normal)]">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
