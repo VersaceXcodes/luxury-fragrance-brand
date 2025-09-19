@@ -54,12 +54,16 @@ async function initDb() {
           // Silently skip duplicate insertions - this is expected behavior
           continue;
         }
-        console.error('Error executing command:', error.message);
-        throw error;
+        // Only log actual errors, not warnings
+        if (error.severity === 'ERROR') {
+          console.error('Error executing command:', error.message);
+          throw error;
+        }
       }
     }
 
-    console.log('Database initialization completed successfully');
+    // Use process.stdout.write to ensure clean output
+    process.stdout.write('Database initialization completed successfully\n');
   } catch (e) {
     console.error('Database initialization failed:', e);
     throw e;

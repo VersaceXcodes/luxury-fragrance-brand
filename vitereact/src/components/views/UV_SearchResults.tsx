@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -76,8 +76,8 @@ const UV_SearchResults: React.FC = () => {
   const searchQuery = searchParams.get('query') || '';
   const priceMin = searchParams.get('price_min') ? Number(searchParams.get('price_min')) : null;
   const priceMax = searchParams.get('price_max') ? Number(searchParams.get('price_max')) : null;
-  const brandIds = searchParams.get('brand_ids')?.split(',').filter(Boolean) || [];
-  const fragranceFamilies = searchParams.get('fragrance_families')?.split(',').filter(Boolean) || [];
+  const brandIds = useMemo(() => searchParams.get('brand_ids')?.split(',').filter(Boolean) || [], [searchParams]);
+  const fragranceFamilies = useMemo(() => searchParams.get('fragrance_families')?.split(',').filter(Boolean) || [], [searchParams]);
   const sortBy = searchParams.get('sort_by') || 'best_selling';
   const currentPage = Number(searchParams.get('page')) || 1;
 
@@ -145,7 +145,7 @@ const UV_SearchResults: React.FC = () => {
     if (searchQuery !== globalSearchQuery) {
       updateSearchQuery(searchQuery);
     }
-  }, [searchQuery, globalSearchQuery]);
+  }, [searchQuery, globalSearchQuery, updateSearchQuery]);
 
   useEffect(() => {
     const filters = {
@@ -159,7 +159,7 @@ const UV_SearchResults: React.FC = () => {
       availability_status: [],
     };
     updateSearchFilters(filters);
-  }, [priceMin, priceMax, brandIds, fragranceFamilies]);
+  }, [priceMin, priceMax, brandIds, fragranceFamilies, updateSearchFilters]);
 
   // Update URL parameters
   const updateUrlParams = useCallback((newParams: Record<string, string | null>) => {

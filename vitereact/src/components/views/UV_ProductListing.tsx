@@ -108,7 +108,7 @@ const UV_ProductListing: React.FC = () => {
     if (page !== currentPage) {
       setCurrentPage(page);
     }
-  }, [searchParams]);
+  }, [searchParams, currentPage, currentQuery, activeFilters, sortBy, updateSearchQuery, updateSearchFilters, updateSortOption]);
 
   // Update URL when store state changes
   useEffect(() => {
@@ -129,7 +129,7 @@ const UV_ProductListing: React.FC = () => {
     if (activeFilters.availability_status.length > 0) newParams.set('availability_status', activeFilters.availability_status.join(','));
 
     setSearchParams(newParams, { replace: true });
-  }, [currentQuery, activeFilters, sortBy, currentPage]);
+  }, [currentQuery, activeFilters, sortBy, currentPage, setSearchParams]);
 
   // API queries
   const productsQuery = useQuery({

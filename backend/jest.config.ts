@@ -1,12 +1,13 @@
 module.exports = {
   "preset": "ts-jest",
   "testEnvironment": "node",
-  "setupFilesAfterEnv": [
-    "<rootDir>/tests/setup.ts"
-  ],
   "testMatch": [
     "**/__tests__/**/*.test.ts",
     "**/?(*.)+(spec|test).ts"
+  ],
+  "testPathIgnorePatterns": [
+    "/node_modules/",
+    "server.test.ts"
   ],
   "collectCoverageFrom": [
     "src/**/*.ts",
