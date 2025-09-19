@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { Pool } from 'pg';
 import jwt from 'jsonwebtoken';
-import { app, pool } from './server.js';
+import { app, pool } from './server';
 // Test database setup
 const testDbConfig = {
     host: process.env.TEST_DB_HOST || 'localhost',
