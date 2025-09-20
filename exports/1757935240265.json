@@ -1,0 +1,19 @@
+{
+  "timestamp": 1757935240265,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "GV_SearchOverlay",
+      "version": "1757935147497"
+    }
+  },
+  "projectId": "luxury-fragrance-brand",
+  "files": [
+    {
+      "path": "/mnt/data/luxury-fragrance-brand/vitereact/src/components/views/GV_SearchOverlay.tsx",
+      "type": "text",
+      "size": 20245,
+      "dependencies": false
+    }
+  ]
+}

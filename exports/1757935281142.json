@@ -1,0 +1,19 @@
+{
+  "timestamp": 1757935281142,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_ProductListing",
+      "version": "latest"
+    }
+  },
+  "projectId": "luxury-fragrance-brand",
+  "files": [
+    {
+      "path": "/mnt/data/luxury-fragrance-brand/vitereact/src/components/views/UV_ProductListing.tsx",
+      "type": "text",
+      "size": 40481,
+      "dependencies": false
+    }
+  ]
+}

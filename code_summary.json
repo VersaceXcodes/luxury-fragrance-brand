@@ -1,0 +1,223 @@
+{
+  "generated_at": "2025-01-15T12:40:00Z",
+  "project_name": "Luxury Fragrance E-commerce Platform",
+  "description": "A comprehensive luxury fragrance e-commerce platform with advanced features for fragrance discovery, personalization, and premium shopping experience",
+  "tech_stack": [
+    "React 18.3.1",
+    "TypeScript 5.5.3", 
+    "Vite 5.4.0",
+    "Node.js",
+    "Express 4.19.2",
+    "PostgreSQL",
+    "Zustand (State Management)",
+    "TanStack React Query",
+    "Tailwind CSS 3.4.8",
+    "Radix UI Components",
+    "Framer Motion",
+    "Axios",
+    "JWT Authentication",
+    "Zod Validation"
+  ],
+  "architecture": {
+    "frontend": {
+      "framework": "React with Vite",
+      "state_management": "Zustand with persistence",
+      "routing": "React Router DOM",
+      "styling": "Tailwind CSS with Radix UI components",
+      "api_client": "Axios with React Query"
+    },
+    "backend": {
+      "framework": "Express.js with TypeScript",
+      "database": "PostgreSQL with direct queries",
+      "authentication": "JWT tokens",
+      "validation": "Zod schemas",
+      "file_serving": "Static file serving"
+    }
+  },
+  "features": [
+    {
+      "name": "User Authentication & Authorization",
+      "description": "Complete user registration, login, logout, and profile management with JWT tokens",
+      "files": [
+        "backend/server.ts (lines 186-441)",
+        "vitereact/src/store/main.tsx (lines 267-492)",
+        "vitereact/src/components/views/UV_LoginRegistration.tsx"
+      ],
+      "endpoints": ["/api/auth/register", "/api/auth/login", "/api/auth/logout", "/api/users/profile"]
+    },
+    {
+      "name": "Product Catalog & Search",
+      "description": "Advanced product search with filtering by fragrance families, brands, categories, price, and availability",
+      "files": [
+        "backend/server.ts (lines 446-921)",
+        "vitereact/src/components/views/UV_ProductListing.tsx",
+        "vitereact/src/components/views/UV_ProductDetail.tsx",
+        "vitereact/src/components/views/UV_SearchResults.tsx"
+      ],
+      "endpoints": ["/api/products", "/api/products/:id", "/api/products/featured", "/api/products/new-arrivals", "/api/products/best-sellers"]
+    },
+    {
+      "name": "Shopping Cart & Checkout",
+      "description": "Full shopping cart functionality with guest and authenticated user support, gift options, and sample inclusions",
+      "files": [
+        "backend/server.ts (lines 1217-1603)",
+        "vitereact/src/store/main.tsx (lines 494-736)",
+        "vitereact/src/components/views/UV_ShoppingCart.tsx",
+        "vitereact/src/components/views/UV_Checkout.tsx"
+      ],
+      "endpoints": ["/api/cart", "/api/cart/items", "/api/orders"]
+    },
+    {
+      "name": "Brand & Category Management",
+      "description": "Hierarchical brand and category system with detailed brand stories and heritage information",
+      "files": [
+        "backend/server.ts (lines 923-1213)",
+        "vitereact/src/components/views/UV_ProductListing.tsx"
+      ],
+      "endpoints": ["/api/brands", "/api/brands/:id/products", "/api/categories", "/api/categories/:id/products"]
+    },
+    {
+      "name": "User Addresses & Shipping",
+      "description": "Address management for shipping and billing with multiple shipping method options",
+      "files": [
+        "backend/server.ts (lines 1605-1862)",
+        "vitereact/src/components/views/UV_ProfileSettings.tsx"
+      ],
+      "endpoints": ["/api/addresses", "/api/shipping-methods"]
+    },
+    {
+      "name": "Order Management",
+      "description": "Complete order processing with status tracking, payment integration, and order history",
+      "files": [
+        "backend/server.ts (lines 1864-2100)",
+        "vitereact/src/components/views/UV_OrderHistory.tsx",
+        "vitereact/src/components/views/UV_OrderTracking.tsx"
+      ],
+      "endpoints": ["/api/orders", "/api/orders/:id", "/api/orders/track"]
+    },
+    {
+      "name": "Wishlist System",
+      "description": "Personal wishlist management with sharing capabilities and product organization",
+      "files": [
+        "backend/server.ts (lines 2300-2600)",
+        "vitereact/src/components/views/UV_Wishlist.tsx"
+      ],
+      "endpoints": ["/api/wishlists", "/api/wishlists/:id/items"]
+    },
+    {
+      "name": "Fragrance Discovery & Quiz",
+      "description": "Interactive fragrance finder quiz and personalized recommendations based on preferences",
+      "files": [
+        "backend/server.ts (lines 2600-2800)",
+        "vitereact/src/components/views/UV_FragranceFinder.tsx"
+      ],
+      "endpoints": ["/api/fragrance-quiz/questions", "/api/fragrance-quiz/submit"]
+    },
+    {
+      "name": "Sample Program",
+      "description": "Fragrance sample ordering system with individual and curated sample sets",
+      "files": [
+        "backend/server.ts (lines 2800-3000)",
+        "vitereact/src/components/views/UV_SampleProgram.tsx"
+      ],
+      "endpoints": ["/api/samples", "/api/sample-orders"]
+    },
+    {
+      "name": "Gift Services",
+      "description": "Gift card system, gift wrapping options, and curated gift sets",
+      "files": [
+        "backend/server.ts (lines 3000-3200)",
+        "vitereact/src/components/views/UV_GiftServices.tsx"
+      ],
+      "endpoints": ["/api/gift-cards", "/api/gifts/guides", "/api/gifts/sets"]
+    },
+    {
+      "name": "Customer Service",
+      "description": "Support ticket system, FAQ management, and customer service integration",
+      "files": [
+        "backend/server.ts (lines 3200-3400)",
+        "vitereact/src/components/views/UV_CustomerService.tsx"
+      ],
+      "endpoints": ["/api/support/tickets", "/api/support/faq"]
+    },
+    {
+      "name": "Newsletter & Marketing",
+      "description": "Newsletter subscription management with preference controls",
+      "files": [
+        "backend/server.ts (lines 3400-3500)",
+        "vitereact/src/components/views/GV_Footer.tsx"
+      ],
+      "endpoints": ["/api/newsletter/subscribe", "/api/newsletter/preferences"]
+    }
+  ],
+  "database_tables": [
+    "users", "brands", "categories", "products", "product_sizes", "product_images",
+    "addresses", "payment_methods", "carts", "cart_items", "orders", "order_items",
+    "wishlists", "wishlist_items", "reviews", "shipping_methods", "promotions",
+    "gift_cards", "sample_orders", "quiz_results", "customer_service_tickets",
+    "newsletter_subscriptions", "inventory_tracking", "product_views"
+  ],
+  "api_endpoints": [
+    "/api/auth/register", "/api/auth/login", "/api/auth/logout", "/api/auth/refresh",
+    "/api/users/profile", "/api/users/:user_id",
+    "/api/products", "/api/products/:product_id", "/api/products/:product_id/sizes",
+    "/api/products/:product_id/recommendations", "/api/products/featured",
+    "/api/products/new-arrivals", "/api/products/best-sellers",
+    "/api/brands", "/api/brands/:brand_id", "/api/brands/:brand_id/products",
+    "/api/categories", "/api/categories/:category_id", "/api/categories/:category_id/products",
+    "/api/cart", "/api/cart/items", "/api/cart/clear",
+    "/api/addresses", "/api/shipping-methods",
+    "/api/orders", "/api/orders/track",
+    "/api/reviews", "/api/wishlists", "/api/fragrance-quiz/questions",
+    "/api/samples", "/api/gift-cards", "/api/support/tickets",
+    "/api/newsletter/subscribe", "/api/search/suggestions", "/api/analytics/product-views",
+    "/api/health", "/api/config/frontend"
+  ],
+  "key_components": {
+    "global_views": [
+      "GV_TopNavigation.tsx - Main navigation header",
+      "GV_Footer.tsx - Site footer with links and newsletter",
+      "GV_MobileNavigation.tsx - Mobile responsive navigation",
+      "GV_SearchOverlay.tsx - Search interface overlay",
+      "GV_CartDropdown.tsx - Shopping cart dropdown",
+      "GV_AccountDropdown.tsx - User account menu"
+    ],
+    "user_views": [
+      "UV_Homepage.tsx - Landing page with featured products",
+      "UV_ProductListing.tsx - Product catalog with filtering",
+      "UV_ProductDetail.tsx - Individual product pages",
+      "UV_ShoppingCart.tsx - Shopping cart management",
+      "UV_Checkout.tsx - Order checkout process",
+      "UV_LoginRegistration.tsx - Authentication forms",
+      "UV_AccountDashboard.tsx - User account overview",
+      "UV_Wishlist.tsx - Wishlist management",
+      "UV_FragranceFinder.tsx - Fragrance discovery quiz",
+      "UV_SampleProgram.tsx - Sample ordering system",
+      "UV_GiftServices.tsx - Gift options and cards",
+      "UV_CustomerService.tsx - Support and help",
+      "UV_OrderTracking.tsx - Order status tracking",
+      "UV_ProfileSettings.tsx - User profile management",
+      "UV_OrderHistory.tsx - Past orders view"
+    ]
+  },
+  "development_setup": {
+    "frontend_port": 5174,
+    "backend_port": 3001,
+    "database": "PostgreSQL (Neon cloud database)",
+    "start_command": "npm run dev (runs both frontend and backend concurrently)"
+  },
+  "special_features": [
+    "Luxury fragrance-focused e-commerce platform",
+    "Advanced fragrance filtering by families, notes, occasions, seasons",
+    "Personalized fragrance recommendations",
+    "Interactive fragrance discovery quiz",
+    "Sample program for trying fragrances",
+    "Gift services with wrapping and cards",
+    "Loyalty tier system (Bronze, Silver, Gold, Platinum)",
+    "Comprehensive product information including longevity and sillage ratings",
+    "Guest checkout and authenticated user experiences",
+    "Mobile-responsive design with Tailwind CSS",
+    "Real-time cart synchronization",
+    "Persistent state management with Zustand"
+  ]
+}

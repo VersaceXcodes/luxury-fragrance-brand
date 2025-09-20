@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import './styles/nocturne-tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	font-family: var(--font-body);
+	line-height: 1.5;
+	font-weight: 400;
+	color: var(--color-fg-primary);
+	background-color: var(--color-bg-primary);
+
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+*::selection {
+	background-color: var(--nocturne-champagne);
+	color: var(--nocturne-onyx);
+}
+
+::-webkit-scrollbar {
+	width: 5px;
+	/* Super thin scrollbar */
+	height: 5px;
+	/* Super thin horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+	background: var(--color-bg-muted);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--nocturne-champagne);
+	border-radius: var(--radius-full);
+	height: 50px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--nocturne-warm-taupe);
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+	height: 5px;
+	/* Horizontal scrollbar thumb height */
+}
+
+@layer base {
+	:root {
+		--radius: 0.5rem;
+	}
+}

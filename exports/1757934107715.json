@@ -1,0 +1,15 @@
+{
+  "timestamp": 1757934107715,
+  "operation": {
+    "id": "backend:specifications:asyncapi"
+  },
+  "projectId": "luxury-fragrance-brand",
+  "files": [
+    {
+      "path": "/mnt/data/luxury-fragrance-brand/backend/asyncapi.yaml",
+      "type": "text",
+      "size": 45877,
+      "dependencies": false
+    }
+  ]
+}
