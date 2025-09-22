@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { Pool } from 'pg';
 import jwt from 'jsonwebtoken';
-import { app, pool } from './server';
+import { app, pool } from './server.js';
 
 // Test database setup
 const testDbConfig = {

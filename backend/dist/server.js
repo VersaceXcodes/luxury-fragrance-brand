@@ -3639,8 +3639,43 @@ app.use('/api/*', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.status(404).json(createErrorResponse(`API endpoint not found: ${req.method} ${req.path}`, null, 'ENDPOINT_NOT_FOUND'));
 });
+// Placeholder image endpoints
+app.get('/api/placeholder/:width/:height', (req, res) => {
+    const { width, height } = req.params;
+    const w = parseInt(width) || 400;
+    const h = parseInt(height) || 400;
+    // Generate a simple SVG placeholder
+    const svg = `<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100%" height="100%" fill="#f3f4f6"/>
+    <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="16" fill="#9ca3af" text-anchor="middle" dy=".3em">
+      ${w} × ${h}
+    </text>
+  </svg>`;
+    res.setHeader('Content-Type', 'image/svg+xml');
+    res.setHeader('Cache-Control', 'public, max-age=31536000');
+    res.send(svg);
+});
+// Favicon endpoint
+app.get('/favicon.png', (req, res) => {
+    // Generate a simple SVG favicon
+    const svg = `<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100%" height="100%" fill="#0E0E0E"/>
+    <circle cx="16" cy="16" r="8" fill="#F8F6F2"/>
+  </svg>`;
+    res.setHeader('Content-Type', 'image/svg+xml');
+    res.setHeader('Cache-Control', 'public, max-age=31536000');
+    res.send(svg);
+});
 // Catch-all route for SPA routing (excluding API routes)
-app.get(/^(?!\/api).*/, (req, res) => {
+// Only serve index.html for navigations (no file extension). If a file-like path
+// is requested and doesn't exist, return 404 instead of HTML to avoid MIME issues.
+app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api'))
+        return next();
+    const hasExtension = path.extname(req.path) !== '';
+    if (hasExtension) {
+        return res.status(404).send('Not Found');
+    }
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 // Export app and pool for testing

@@ -99,18 +99,18 @@ const App: React.FC = () => {
             </div>
           )}
           {cartDropdownOpen && (
-            <div className="fixed top-16 right-4 z-40">
+            <div className="fixed top-[var(--nav-height)] right-4 z-40">
               <GV_CartDropdown />
             </div>
           )}
           {accountDropdownOpen && (
-            <div className="fixed top-16 right-4 z-40">
+            <div className="fixed top-[var(--nav-height)] right-4 z-40">
               <GV_AccountDropdown />
             </div>
           )}
           
           {/* Main Content Area */}
-          <main className="flex-1 pt-16"> {/* pt-16 accounts for fixed navigation height */}
+          <main className="flex-1" style={{ paddingTop: 'var(--nav-height)' }}>
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<UV_Homepage />} />
