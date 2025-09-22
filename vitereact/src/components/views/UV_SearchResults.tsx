@@ -89,7 +89,7 @@ const UV_SearchResults: React.FC = () => {
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   // API base URL
-  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai';
 
   // Main search query
   const searchProductsQuery = useQuery({

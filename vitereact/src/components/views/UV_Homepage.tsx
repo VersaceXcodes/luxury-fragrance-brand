@@ -69,7 +69,7 @@ const UV_Homepage: React.FC = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   // API Base URL
-  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai';
 
   // Interactive effects
   useEffect(() => {

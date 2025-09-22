@@ -1,6 +1,6 @@
 // Centralized API configuration
 export const getApiUrl = (): string => {
-  return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+  return import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai';
 };
 
 // API endpoints

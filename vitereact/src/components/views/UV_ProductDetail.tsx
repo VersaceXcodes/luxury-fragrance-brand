@@ -131,36 +131,36 @@ const UV_ProductDetail: React.FC = () => {
 
   // API functions
   const fetchProduct = async (productId: string): Promise<Product> => {
-    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/products/${productId}`);
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/products/${productId}`);
     return response.data;
   };
 
   const fetchProductSizes = async (productId: string): Promise<ProductSize[]> => {
-    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/products/${productId}/sizes`);
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/products/${productId}/sizes`);
     return response.data;
   };
 
   const fetchProductImages = async (productId: string): Promise<ProductImage[]> => {
-    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/products/${productId}/images`);
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/products/${productId}/images`);
     return response.data || [];
   };
 
   const fetchProductReviews = async (productId: string): Promise<Review[]> => {
-    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/reviews`, {
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/reviews`, {
       params: { product_id: productId, moderation_status: 'approved', per_page: 20 }
     });
     return response.data?.data || [];
   };
 
   const fetchProductRecommendations = async (productId: string): Promise<Product[]> => {
-    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/products/${productId}/recommendations`, {
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/products/${productId}/recommendations`, {
       params: { type: 'similar', limit: 8 }
     });
     return response.data || [];
   };
 
   const fetchBrand = async (brandId: string): Promise<Brand> => {
-    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/brands/${brandId}`);
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/brands/${brandId}`);
     return response.data;
   };
 
@@ -265,7 +265,7 @@ const UV_ProductDetail: React.FC = () => {
       if (!isAuthenticated || !product) throw new Error('Authentication required');
       
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/wishlists/${currentUser?.user_id}/items`,
+        `${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/wishlists/${currentUser?.user_id}/items`,
         {
           product_id: product.product_id,
           size_ml: selectedSize?.size_ml || null,
@@ -302,7 +302,7 @@ const UV_ProductDetail: React.FC = () => {
       if (!isAuthenticated || !product) throw new Error('Authentication required');
       
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/reviews`,
+        `${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/reviews`,
         {
           product_id: product.product_id,
           rating: reviewForm.rating,

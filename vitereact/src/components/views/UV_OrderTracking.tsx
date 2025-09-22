@@ -62,7 +62,7 @@ const UV_OrderTracking: React.FC = () => {
   const isAuthenticated = useAppStore(state => state.authentication_state.authentication_status.is_authenticated);
 
   // API base URL
-  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai';
 
   // API function for authenticated order tracking
   const fetchOrderDetails = async (orderId: string): Promise<OrderDetails> => {

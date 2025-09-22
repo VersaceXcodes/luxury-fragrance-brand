@@ -151,7 +151,7 @@ const UV_Checkout: React.FC = () => {
   }, [cartItemCount, navigate]);
 
   // API base URL
-  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai';
 
   // Fetch user addresses (authenticated users only)
   const { data: userAddresses = [] } = useQuery({

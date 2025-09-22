@@ -93,7 +93,7 @@ const UV_OrderConfirmation: React.FC = () => {
       if (!orderId) throw new Error('Order ID is required');
       
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/orders/${orderId}`
+        `${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/orders/${orderId}`
       );
       return response.data;
     },
@@ -109,7 +109,7 @@ const UV_OrderConfirmation: React.FC = () => {
       if (!orderData?.shipping_address_id) throw new Error('Shipping address ID is required');
       
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/addresses/${orderData.shipping_address_id}`
+        `${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/addresses/${orderData.shipping_address_id}`
       );
       return response.data;
     },

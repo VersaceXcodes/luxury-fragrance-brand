@@ -81,7 +81,7 @@ const UV_Wishlist: React.FC = () => {
   const queryClient = useQueryClient();
 
   // API base URL
-  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai';
 
   // Headers for authenticated requests
   const getAuthHeaders = () => ({

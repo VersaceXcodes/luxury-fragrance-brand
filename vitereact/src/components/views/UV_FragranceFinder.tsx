@@ -102,7 +102,7 @@ const UV_FragranceFinder: React.FC = () => {
 
   // API Functions
   const fetchQuizQuestions = async (): Promise<QuizQuestion[]> => {
-    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/fragrance-quiz/questions`);
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/fragrance-quiz/questions`);
     return response.data.map((q: any) => ({
       question_id: q.question_id,
       question_text: q.question_text,
@@ -120,7 +120,7 @@ const UV_FragranceFinder: React.FC = () => {
 
   const submitQuizForResults = async (submissionData: QuizSubmissionData): Promise<QuizSubmissionResponse> => {
     const response = await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/fragrance-quiz/submit`,
+      `${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/fragrance-quiz/submit`,
       submissionData,
       { headers: { 'Content-Type': 'application/json' } }
     );
@@ -131,7 +131,7 @@ const UV_FragranceFinder: React.FC = () => {
     if (!authToken || !currentUser) throw new Error('Authentication required');
     
     await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/quiz/results/save`,
+      `${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/quiz/results/save`,
       {
         quiz_result_id: quizResultId,
         user_id: currentUser.user_id

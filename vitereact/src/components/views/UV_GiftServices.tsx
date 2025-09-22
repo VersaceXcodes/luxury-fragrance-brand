@@ -81,7 +81,7 @@ const UV_GiftServices: React.FC = () => {
   const showNotification = useAppStore(state => state.show_notification);
 
   // API base URL
-  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai';
 
   // React Query for gift guides
   const {

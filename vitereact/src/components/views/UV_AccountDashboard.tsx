@@ -67,7 +67,7 @@ const UV_AccountDashboard: React.FC = () => {
   const queryClient = useQueryClient();
 
   // Helper function to get API base URL
-  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai';
 
   // Helper function to get auth headers
   const getAuthHeaders = () => ({

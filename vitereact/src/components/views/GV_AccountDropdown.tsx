@@ -24,7 +24,7 @@ interface RecentOrder {
 // API Functions
 const getUserProfile = async (authToken: string): Promise<UserProfile> => {
   const response = await axios.get(
-    `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/users/profile`,
+    `${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/users/profile`,
     {
       headers: {
         'Authorization': `Bearer ${authToken}`,
@@ -37,7 +37,7 @@ const getUserProfile = async (authToken: string): Promise<UserProfile> => {
 
 const getRecentOrders = async (authToken: string): Promise<RecentOrder[]> => {
   const response = await axios.get(
-    `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/orders`,
+    `${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/orders`,
     {
       headers: {
         'Authorization': `Bearer ${authToken}`,

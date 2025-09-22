@@ -33,7 +33,7 @@ const GV_Footer: React.FC = () => {
   const newsletterMutation = useMutation({
     mutationFn: async (data: NewsletterSubscriptionRequest): Promise<NewsletterSubscriptionResponse> => {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/newsletter/subscribe`,
+        `${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/newsletter/subscribe`,
         data,
         {
           headers: {

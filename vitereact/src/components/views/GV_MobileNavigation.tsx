@@ -42,7 +42,7 @@ const GV_MobileNavigation: React.FC = () => {
     queryKey: ['mobile-navigation-categories'],
     queryFn: async (): Promise<CategoryResponse[]> => {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/categories`,
+        `${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/categories`,
         {
           params: {
             is_active: true,

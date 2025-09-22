@@ -105,7 +105,7 @@ const UV_OrderHistory: React.FC = () => {
 
   // API base URL
   const getApiUrl = () => {
-    return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+    return import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai';
   };
 
   // Query function for loading orders

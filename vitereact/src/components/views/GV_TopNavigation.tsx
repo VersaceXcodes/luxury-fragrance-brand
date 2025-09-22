@@ -32,7 +32,7 @@ const GV_TopNavigation: React.FC = () => {
   const updateSearchQuery = useAppStore(state => state.update_search_query);
 
   // API base URL
-  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai';
 
   // Wishlist count query (only for authenticated users)
   const { data: wishlistCount = 0 } = useQuery<number>({

@@ -57,7 +57,7 @@ const UV_ShoppingCart: React.FC = () => {
       if (!zipCode) return [];
       
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/shipping-methods`,
+        `${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/shipping-methods`,
         {
           params: {
             is_active: true,

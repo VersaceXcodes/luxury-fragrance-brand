@@ -48,7 +48,7 @@ const GV_SearchOverlay: React.FC = () => {
   const navigate = useNavigate();
 
   // API base URL
-  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai';
 
   // Debounced search query for API calls
   const [debouncedQuery, setDebouncedQuery] = useState(localQuery);

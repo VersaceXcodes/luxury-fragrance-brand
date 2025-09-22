@@ -151,7 +151,7 @@ const UV_ProductListing: React.FC = () => {
       if (activeFilters.season_suitability.length > 0) params.season_suitability = activeFilters.season_suitability.join(',');
       if (activeFilters.availability_status.length > 0) params.availability_status = activeFilters.availability_status.join(',');
 
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/products`, { params });
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/products`, { params });
       return response.data;
     },
     staleTime: 60000,
@@ -161,7 +161,7 @@ const UV_ProductListing: React.FC = () => {
   const brandsQuery = useQuery({
     queryKey: ['brands'],
     queryFn: async (): Promise<Brand[]> => {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/brands`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/brands`, {
         params: { is_active: true, sort_by: 'brand_name' }
       });
       return response.data;

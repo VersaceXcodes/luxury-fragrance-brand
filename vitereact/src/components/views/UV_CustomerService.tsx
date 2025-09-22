@@ -99,7 +99,7 @@ const UV_CustomerService: React.FC = () => {
     if (searchQuery) params.append('query', searchQuery);
 
     const response = await axios.get(
-      `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/support/faq?${params}`,
+      `${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/support/faq?${params}`,
       { headers: { 'Content-Type': 'application/json' } }
     );
     return response.data;
@@ -112,7 +112,7 @@ const UV_CustomerService: React.FC = () => {
     }
 
     const response = await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/support/tickets`,
+      `${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/support/tickets`,
       {
         customer_email: ticketData.customer_email,
         customer_name: ticketData.customer_name,

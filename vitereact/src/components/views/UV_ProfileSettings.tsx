@@ -99,7 +99,7 @@ const UV_ProfileSettings: React.FC = () => {
   });
 
   // API base URL
-  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+  const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai';
 
   // Load user profile
   const { data: userProfile, isLoading: profileLoading } = useQuery({
