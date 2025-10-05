@@ -7,6 +7,8 @@ import { Pool } from 'pg';
 import jwt from 'jsonwebtoken';
 import morgan from 'morgan';
 import { v4 as uuidv4 } from 'uuid';
+import { WebSocketServer, WebSocket } from 'ws';
+import http from 'http';
 // Import Zod schemas
 import { createUserInputSchema, updateUserInputSchema, createCartItemInputSchema, updateCartItemInputSchema, createAddressInputSchema, createOrderInputSchema, createReviewInputSchema, createWishlistItemInputSchema } from './schema.js';
 // Load environment variables
@@ -53,9 +55,19 @@ pool.on('error', (err) => {
         console.error('Failed to connect to database:', err);
     }
 })();
-// Initialize Express app
+// Initialize Express app and HTTP server
 const app = express();
+const server = http.createServer(app);
 const port = parseInt(process.env.PORT || '3000', 10);
+// Initialize WebSocket server
+const wss = new WebSocketServer({
+    server,
+    path: '/ws'
+});
+// Store active chat sessions and connections
+const chatSessions = new Map();
+const activeConnections = new Map();
+const sessionConnections = new Map();
 // Middleware
 app.use(cors({
     origin: [
@@ -3666,6 +3678,308 @@ app.get('/favicon.png', (req, res) => {
     res.setHeader('Cache-Control', 'public, max-age=31536000');
     res.send(svg);
 });
+// ============================================================================
+// LIVE CHAT ROUTES
+// ============================================================================
+/*
+Start chat session - creates new chat session for user
+*/
+app.post('/api/chat/start', optionalAuth, async (req, res) => {
+    try {
+        const { topic, message } = req.body;
+        const client = await pool.connect();
+        const sessionId = uuidv4();
+        const now = new Date().toISOString();
+        // Create chat session
+        await client.query(`INSERT INTO chat_sessions (session_id, user_id, status, topic, created_at, updated_at) 
+       VALUES ($1, $2, $3, $4, $5, $6)`, [sessionId, req.user?.user_id || null, 'waiting', topic || 'general', now, now]);
+        // Add initial message if provided
+        if (message) {
+            const messageId = uuidv4();
+            await client.query(`INSERT INTO chat_messages (message_id, session_id, sender_id, sender_type, message, created_at) 
+         VALUES ($1, $2, $3, $4, $5, $6)`, [messageId, sessionId, req.user?.user_id || 'guest', 'user', message, now]);
+        }
+        // Store session in memory
+        const session = {
+            session_id: sessionId,
+            user_id: req.user?.user_id,
+            status: 'waiting',
+            created_at: now,
+            updated_at: now
+        };
+        chatSessions.set(sessionId, session);
+        client.release();
+        res.status(201).json({
+            session_id: sessionId,
+            status: 'waiting',
+            message: 'Chat session started. Connecting you to an agent...'
+        });
+    }
+    catch (error) {
+        console.error('Start chat session error:', error);
+        res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
+    }
+});
+/*
+Get chat session - retrieves chat session details
+*/
+app.get('/api/chat/:session_id', optionalAuth, async (req, res) => {
+    try {
+        const { session_id } = req.params;
+        const client = await pool.connect();
+        const sessionResult = await client.query('SELECT * FROM chat_sessions WHERE session_id = $1', [session_id]);
+        if (sessionResult.rows.length === 0) {
+            client.release();
+            return res.status(404).json(createErrorResponse('Chat session not found', null, 'CHAT_SESSION_NOT_FOUND'));
+        }
+        const session = sessionResult.rows[0];
+        // Check if user has access to this session
+        if (req.user && session.user_id && session.user_id !== req.user.user_id) {
+            client.release();
+            return res.status(403).json(createErrorResponse('Access denied', null, 'ACCESS_DENIED'));
+        }
+        // Get messages for this session
+        const messagesResult = await client.query(`SELECT cm.*, u.first_name, u.last_name 
+       FROM chat_messages cm
+       LEFT JOIN users u ON cm.sender_id = u.user_id AND cm.sender_type = 'user'
+       WHERE cm.session_id = $1 
+       ORDER BY cm.created_at ASC`, [session_id]);
+        client.release();
+        res.json({
+            session: session,
+            messages: messagesResult.rows
+        });
+    }
+    catch (error) {
+        console.error('Get chat session error:', error);
+        res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
+    }
+});
+/*
+End chat session - marks chat session as ended
+*/
+app.post('/api/chat/:session_id/end', optionalAuth, async (req, res) => {
+    try {
+        const { session_id } = req.params;
+        const client = await pool.connect();
+        const result = await client.query('UPDATE chat_sessions SET status = $1, updated_at = $2 WHERE session_id = $3 RETURNING *', ['ended', new Date().toISOString(), session_id]);
+        if (result.rows.length === 0) {
+            client.release();
+            return res.status(404).json(createErrorResponse('Chat session not found', null, 'CHAT_SESSION_NOT_FOUND'));
+        }
+        // Update memory store
+        if (chatSessions.has(session_id)) {
+            const session = chatSessions.get(session_id);
+            session.status = 'ended';
+            session.updated_at = new Date().toISOString();
+        }
+        // Notify connected clients
+        const sessionConns = sessionConnections.get(session_id);
+        if (sessionConns) {
+            const endMessage = {
+                type: 'session_ended',
+                session_id: session_id,
+                timestamp: new Date().toISOString()
+            };
+            sessionConns.forEach(ws => {
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify(endMessage));
+                }
+            });
+        }
+        client.release();
+        res.json({ message: 'Chat session ended successfully' });
+    }
+    catch (error) {
+        console.error('End chat session error:', error);
+        res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
+    }
+});
+// ============================================================================
+// WEBSOCKET HANDLING
+// ============================================================================
+wss.on('connection', (ws, req) => {
+    console.log('New WebSocket connection');
+    // Handle authentication via query parameters or headers
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const token = url.searchParams.get('token');
+    const sessionId = url.searchParams.get('session_id');
+    let user = null;
+    // Authenticate user if token provided
+    if (token) {
+        try {
+            const decoded = jwt.verify(token, JWT_SECRET);
+            // In a real app, you'd fetch user details from DB here
+            user = { user_id: decoded.user_id, email: decoded.email };
+            ws.userId = user.user_id;
+        }
+        catch (error) {
+            console.error('WebSocket auth error:', error);
+            ws.close(4001, 'Authentication failed');
+            return;
+        }
+    }
+    if (sessionId) {
+        ws.sessionId = sessionId;
+        ws.userType = 'user';
+        // Add to session connections
+        if (!sessionConnections.has(sessionId)) {
+            sessionConnections.set(sessionId, new Set());
+        }
+        sessionConnections.get(sessionId).add(ws);
+        // Send connection acknowledgment
+        ws.send(JSON.stringify({
+            type: 'connected',
+            session_id: sessionId,
+            timestamp: new Date().toISOString()
+        }));
+        // Auto-connect to agent (simulate agent availability)
+        setTimeout(() => {
+            if (ws.readyState === WebSocket.OPEN) {
+                const session = chatSessions.get(sessionId);
+                if (session && session.status === 'waiting') {
+                    session.status = 'active';
+                    session.agent_id = 'agent-1'; // Mock agent ID
+                    session.updated_at = new Date().toISOString();
+                    // Notify user that agent connected
+                    ws.send(JSON.stringify({
+                        type: 'agent_connected',
+                        session_id: sessionId,
+                        agent_name: 'Sarah from Customer Service',
+                        timestamp: new Date().toISOString()
+                    }));
+                    // Send welcome message from agent
+                    const welcomeMessage = {
+                        type: 'message',
+                        message_id: uuidv4(),
+                        session_id: sessionId,
+                        sender_type: 'agent',
+                        sender_name: 'Sarah',
+                        message: 'Hi! I\'m Sarah from customer service. How can I help you with your fragrance needs today?',
+                        timestamp: new Date().toISOString()
+                    };
+                    ws.send(JSON.stringify(welcomeMessage));
+                    // Store message in database
+                    pool.connect().then(client => {
+                        client.query(`INSERT INTO chat_messages (message_id, session_id, sender_id, sender_type, message, created_at) 
+               VALUES ($1, $2, $3, $4, $5, $6)`, [welcomeMessage.message_id, sessionId, 'agent-1', 'agent', welcomeMessage.message, welcomeMessage.timestamp]).catch(console.error).finally(() => client.release());
+                    }).catch(console.error);
+                }
+            }
+        }, 2000); // 2 second delay to simulate agent connection
+    }
+    // Handle incoming messages
+    ws.on('message', async (data) => {
+        try {
+            const message = JSON.parse(data.toString());
+            if (message.type === 'chat_message' && ws.sessionId) {
+                const messageId = uuidv4();
+                const timestamp = new Date().toISOString();
+                // Store message in database
+                const client = await pool.connect();
+                await client.query(`INSERT INTO chat_messages (message_id, session_id, sender_id, sender_type, message, created_at) 
+           VALUES ($1, $2, $3, $4, $5, $6)`, [messageId, ws.sessionId, ws.userId || 'guest', 'user', message.message, timestamp]);
+                client.release();
+                // Broadcast to all connections in this session
+                const sessionConns = sessionConnections.get(ws.sessionId);
+                if (sessionConns) {
+                    const broadcastMessage = {
+                        type: 'message',
+                        message_id: messageId,
+                        session_id: ws.sessionId,
+                        sender_type: 'user',
+                        sender_name: user ? `${user.first_name} ${user.last_name}` : 'Guest',
+                        message: message.message,
+                        timestamp: timestamp
+                    };
+                    sessionConns.forEach(conn => {
+                        if (conn.readyState === WebSocket.OPEN) {
+                            conn.send(JSON.stringify(broadcastMessage));
+                        }
+                    });
+                }
+                // Simulate agent response after a delay
+                setTimeout(async () => {
+                    if (ws.readyState === WebSocket.OPEN && sessionConns) {
+                        const responses = [
+                            "I understand your concern. Let me help you with that.",
+                            "That's a great question! Here's what I recommend...",
+                            "I can definitely assist you with that. Let me check our options.",
+                            "Thank you for reaching out. I'll be happy to help you find the perfect fragrance.",
+                            "That's one of our popular products! Here are some details..."
+                        ];
+                        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                        const agentMessageId = uuidv4();
+                        const agentTimestamp = new Date().toISOString();
+                        // Store agent response
+                        try {
+                            const client = await pool.connect();
+                            await client.query(`INSERT INTO chat_messages (message_id, session_id, sender_id, sender_type, message, created_at) 
+                 VALUES ($1, $2, $3, $4, $5, $6)`, [agentMessageId, ws.sessionId, 'agent-1', 'agent', randomResponse, agentTimestamp]);
+                            client.release();
+                            const agentMessage = {
+                                type: 'message',
+                                message_id: agentMessageId,
+                                session_id: ws.sessionId,
+                                sender_type: 'agent',
+                                sender_name: 'Sarah',
+                                message: randomResponse,
+                                timestamp: agentTimestamp
+                            };
+                            sessionConns.forEach(conn => {
+                                if (conn.readyState === WebSocket.OPEN) {
+                                    conn.send(JSON.stringify(agentMessage));
+                                }
+                            });
+                        }
+                        catch (error) {
+                            console.error('Agent response error:', error);
+                        }
+                    }
+                }, 1500 + Math.random() * 2000); // Random delay between 1.5-3.5 seconds
+            }
+            if (message.type === 'typing' && ws.sessionId) {
+                // Broadcast typing indicator
+                const sessionConns = sessionConnections.get(ws.sessionId);
+                if (sessionConns) {
+                    const typingMessage = {
+                        type: 'typing',
+                        session_id: ws.sessionId,
+                        sender_type: 'user',
+                        is_typing: message.is_typing,
+                        timestamp: new Date().toISOString()
+                    };
+                    sessionConns.forEach(conn => {
+                        if (conn !== ws && conn.readyState === WebSocket.OPEN) {
+                            conn.send(JSON.stringify(typingMessage));
+                        }
+                    });
+                }
+            }
+        }
+        catch (error) {
+            console.error('WebSocket message error:', error);
+        }
+    });
+    // Handle connection close
+    ws.on('close', () => {
+        console.log('WebSocket connection closed');
+        // Remove from session connections
+        if (ws.sessionId && sessionConnections.has(ws.sessionId)) {
+            sessionConnections.get(ws.sessionId).delete(ws);
+            if (sessionConnections.get(ws.sessionId).size === 0) {
+                sessionConnections.delete(ws.sessionId);
+            }
+        }
+        // Remove from active connections
+        if (ws.userId) {
+            activeConnections.delete(ws.userId);
+        }
+    });
+    ws.on('error', (error) => {
+        console.error('WebSocket error:', error);
+    });
+});
 // Catch-all route for SPA routing (excluding API routes)
 // Only serve index.html for navigations (no file extension). If a file-like path
 // is requested and doesn't exist, return 404 instead of HTML to avoid MIME issues.
@@ -3681,7 +3995,8 @@ app.get('*', (req, res, next) => {
 // Export app and pool for testing
 export { app, pool };
 // Start the server
-app.listen(port, '0.0.0.0', () => {
+server.listen(port, '0.0.0.0', () => {
     console.log(`Server running on port ${port} and listening on 0.0.0.0`);
+    console.log(`WebSocket server running on ws://localhost:${port}/ws`);
 });
 //# sourceMappingURL=server.js.map
