@@ -699,3 +699,39 @@ INSERT INTO product_views (view_id, product_id, user_id, session_id, ip_address,
 ('view_006', 'prod_001', NULL, 'sess_67890', '192.168.1.105', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'https://youtube.com', '2024-01-20T16:00:00Z'),
 ('view_007', 'prod_002', 'user_001', NULL, '192.168.1.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'https://fragranceshop.com/brands/tom-ford', '2024-01-20T17:30:00Z'),
 ('view_008', 'prod_003', 'user_003', NULL, '192.168.1.106', 'Mozilla/5.0 (iPad; CPU OS 17_0 like Mac OS X) AppleWebKit/605.1.15', 'https://fragranceshop.com', '2024-01-20T18:45:00Z');
+
+-- Chat Tables
+CREATE TABLE IF NOT EXISTS chat_sessions (
+    session_id VARCHAR(255) PRIMARY KEY,
+    user_id VARCHAR(255) REFERENCES users(user_id),
+    agent_id VARCHAR(255),
+    status VARCHAR(255) NOT NULL DEFAULT 'waiting',
+    topic VARCHAR(255),
+    created_at VARCHAR(255) NOT NULL,
+    updated_at VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS chat_messages (
+    message_id VARCHAR(255) PRIMARY KEY,
+    session_id VARCHAR(255) NOT NULL REFERENCES chat_sessions(session_id),
+    sender_id VARCHAR(255) NOT NULL,
+    sender_type VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    message_type VARCHAR(255) NOT NULL DEFAULT 'text',
+    created_at VARCHAR(255) NOT NULL
+);
+
+-- Chat seed data
+INSERT INTO chat_sessions (session_id, user_id, agent_id, status, topic, created_at, updated_at) VALUES 
+('chat_001', 'user_001', 'agent-1', 'ended', 'product_inquiry', '2024-01-15T10:00:00Z', '2024-01-15T10:15:00Z'),
+('chat_002', 'user_002', 'agent-1', 'ended', 'order_status', '2024-01-18T14:30:00Z', '2024-01-18T14:45:00Z')
+ON CONFLICT (session_id) DO NOTHING;
+
+INSERT INTO chat_messages (message_id, session_id, sender_id, sender_type, message, message_type, created_at) VALUES 
+('msg_chat_001', 'chat_001', 'user_001', 'user', 'Hi, I have a question about Chanel No. 5', 'text', '2024-01-15T10:00:00Z'),
+('msg_chat_002', 'chat_001', 'agent-1', 'agent', 'Hello! I\'d be happy to help you with questions about Chanel No. 5. What would you like to know?', 'text', '2024-01-15T10:01:00Z'),
+('msg_chat_003', 'chat_001', 'user_001', 'user', 'What are the main notes and how long does it last?', 'text', '2024-01-15T10:02:00Z'),
+('msg_chat_004', 'chat_001', 'agent-1', 'agent', 'Chanel No. 5 is an aldehyde floral fragrance with top notes of aldehydes, ylang-ylang, and neroli. The heart features jasmine, rose, and lily of the valley, while the base has sandalwood, vanilla, and amber. It typically lasts 8+ hours on skin.', 'text', '2024-01-15T10:03:00Z'),
+('msg_chat_005', 'chat_002', 'user_002', 'user', 'I wanted to check on my recent order status', 'text', '2024-01-18T14:30:00Z'),
+('msg_chat_006', 'chat_002', 'agent-1', 'agent', 'Of course! Can you please provide your order number so I can look that up for you?', 'text', '2024-01-18T14:31:00Z')
+ON CONFLICT (message_id) DO NOTHING;
