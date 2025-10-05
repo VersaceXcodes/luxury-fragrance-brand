@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
@@ -71,36 +71,6 @@ const UV_Homepage: React.FC = () => {
   // API Base URL
   const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai';
 
-  // Interactive effects
-  useEffect(() => {
-    // Simulate visitor counter
-    const count = Math.floor(Math.random() * 50) + 150;
-    setVisitorCount(count);
-
-    // Auto-rotate hero slides
-    const heroInterval = setInterval(() => {
-      setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 6000);
-
-    // Auto-rotate testimonials
-    const testimonialInterval = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 4000);
-
-    // Mouse tracking for interactive effects
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-
-    return () => {
-      clearInterval(heroInterval);
-      clearInterval(testimonialInterval);
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, []);
-
   // Hero slides data
   const heroSlides = [
     {
@@ -150,6 +120,36 @@ const UV_Homepage: React.FC = () => {
       rating: 5
     }
   ];
+
+  // Interactive effects
+  useEffect(() => {
+    // Simulate visitor counter
+    const count = Math.floor(Math.random() * 50) + 150;
+    setVisitorCount(count);
+
+    // Auto-rotate hero slides
+    const heroInterval = setInterval(() => {
+      setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 6000);
+
+    // Auto-rotate testimonials
+    const testimonialInterval = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 4000);
+
+    // Mouse tracking for interactive effects
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      clearInterval(heroInterval);
+      clearInterval(testimonialInterval);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [heroSlides.length, testimonials.length]);
 
   // Sample products data for Nocturne Atelier
   const sampleProducts = [

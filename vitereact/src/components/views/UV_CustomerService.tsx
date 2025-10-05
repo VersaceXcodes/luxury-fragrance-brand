@@ -289,7 +289,7 @@ const UV_CustomerService: React.FC = () => {
             } : null);
             break;
             
-          case 'message':
+          case 'message': {
             const newMessage: ChatMessage = {
               id: data.message_id,
               message_id: data.message_id,
@@ -302,6 +302,7 @@ const UV_CustomerService: React.FC = () => {
             setChatMessages(prev => [...prev, newMessage]);
             setAgentTyping(false);
             break;
+          }
             
           case 'typing':
             if (data.sender_type === 'agent') {

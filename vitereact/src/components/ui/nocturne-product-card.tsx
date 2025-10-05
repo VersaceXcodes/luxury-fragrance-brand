@@ -23,6 +23,7 @@ interface ProductCardProps {
   onQuickAdd?: (id: string, size: '10ml' | '50ml' | '100ml') => void;
   onClick?: (id: string) => void;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 const NocturneProductCard: React.FC<ProductCardProps> = ({
@@ -38,7 +39,8 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
   onWishlistToggle,
   onQuickAdd,
   onClick,
-  className
+  className,
+  style
 }) => {
   const [selectedSize, setSelectedSize] = useState<'10ml' | '50ml' | '100ml'>('50ml');
   const [isHovered, setIsHovered] = useState(false);
@@ -72,6 +74,7 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
         "group cursor-pointer transition-all duration-[var(--duration-normal)] hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1",
         className
       )}
+      style={style}
       onClick={handleCardClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
