@@ -1,0 +1,56 @@
+BACKEND STARTUP FAILURE - Immediate Fix Required
+
+The backend server failed to start due to a critical error. You need to fix this NOW.
+
+## Error Type: Backend unhealthy or critical errors present
+
+## Backend Error Output (stderr):
+node:internal/modules/cjs/loader:1140
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'unpipe'
+Require stack:
+- /app/backend/node_modules/finalhandler/index.js
+- /app/backend/node_modules/express/lib/application.js
+- /app/backend/node_modules/express/lib/express.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+    at nextResolveSimple (/app/backend/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /app/backend/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /app/backend/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/app/backend/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /app/backend/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///app/backend/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at Module._load (node:internal/modules/cjs/loader:981:27)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+    at require (node:internal/modules/helpers:177:18) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/app/backend/node_modules/finalhandler/index.js',
+    '/app/backend/node_modules/express/lib/application.js',
+    '/app/backend/node_modules/express/lib/express.js'
+  ]
+}
+
+Node.js v18.20.8
+
+
+## Backend Console Output (stdout):
+
+up to date, audited 480 packages in 1s
+
+60 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+
+## Working Directory: /app/vitereact
+
+## Your Task:
+1. **Analyze the Error**: Identify the exact TypeScript/JavaScript syntax error or compilation issue
+2. **Locate the Problem**: Find which file has the error (check stack trace and error messages)
+3. **Apply the Fix**: Use available tools to fix the specific syntax/compilation issue
+4. **Focus on Root Cause**: Fix the underlying code problem, not infrastructure
+
+IMPORTANT: This is a CODE error, not an infrastructure error. Fix the syntax/compilation issue in the backend code.

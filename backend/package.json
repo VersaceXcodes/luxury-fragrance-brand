@@ -6,10 +6,10 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "tsx server.ts",
+    "start": "node ./node_modules/.bin/tsx server.ts",
     "build": "tsc",
     "postbuild": "mkdir -p dist/public && cp -R public/* dist/public/ || true",
-    "dev": "nodemon --exec \"tsx\" server.ts",
+    "dev": "nodemon --exec \"node ./node_modules/.bin/tsx\" server.ts",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
