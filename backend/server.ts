@@ -733,6 +733,108 @@ app.get('/api/products', async (req, res) => {
 });
 
 /*
+Get featured products - retrieves featured products for homepage display
+*/
+app.get('/api/products/featured', async (req, res) => {
+  try {
+    const { limit = 12 } = req.query as any;
+    
+    const client = await pool.connect();
+    
+    const result = await client.query(`
+      SELECT p.*, b.brand_name,
+             (SELECT image_url FROM product_images WHERE product_id = p.product_id AND is_primary = true LIMIT 1) as primary_image
+      FROM products p
+      LEFT JOIN brands b ON p.brand_id = b.brand_id
+      WHERE p.is_featured = true AND p.availability_status = 'in_stock'
+      ORDER BY p.sort_order ASC
+      LIMIT $1
+    `, [parseInt(limit)]);
+
+    client.release();
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Get featured products error:', error);
+    res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
+  }
+});
+
+/*
+Get new arrival products - retrieves recently launched products
+*/
+app.get('/api/products/new-arrivals', async (req, res) => {
+  try {
+    const { limit = 12 } = req.query as any;
+    
+    const client = await pool.connect();
+    
+    const result = await client.query(`
+      SELECT p.*, b.brand_name,
+             (SELECT image_url FROM product_images WHERE product_id = p.product_id AND is_primary = true LIMIT 1) as primary_image
+      FROM products p
+      LEFT JOIN brands b ON p.brand_id = b.brand_id
+      WHERE p.is_new_arrival = true AND p.availability_status = 'in_stock'
+      ORDER BY p.created_at DESC
+      LIMIT $1
+    `, [parseInt(limit)]);
+
+    client.release();
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Get new arrivals error:', error);
+    res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
+  }
+});
+
+/*
+Get best-selling products - retrieves top-performing products by sales volume
+@@need:external-api: Sales analytics service to determine best-selling products based on order volume and revenue metrics
+*/
+app.get('/api/products/best-sellers', async (req, res) => {
+  try {
+    const { limit = 12, category } = req.query as any;
+    
+    const client = await pool.connect();
+    
+    let whereClause = "p.availability_status = 'in_stock'";
+    const params: any[] = [parseInt(limit)];
+    
+    if (category) {
+      whereClause += " AND c.category_name ILIKE $2";
+      params.push(`%${category}%`);
+    }
+    
+    const result = await client.query(`
+      SELECT p.*, b.brand_name,
+             (SELECT image_url FROM product_images WHERE product_id = p.product_id AND is_primary = true LIMIT 1) as primary_image,
+             COALESCE(sales.order_count, 0) as order_count
+      FROM products p
+      LEFT JOIN brands b ON p.brand_id = b.brand_id
+      LEFT JOIN categories c ON p.category_id = c.category_id
+      LEFT JOIN (
+        SELECT product_id, COUNT(*) as order_count
+        FROM order_items oi
+        JOIN orders o ON oi.order_id = o.order_id
+        WHERE o.order_status NOT IN ('cancelled', 'refunded')
+        GROUP BY product_id
+      ) sales ON p.product_id = sales.product_id
+      WHERE ${whereClause}
+      ORDER BY sales.order_count DESC NULLS LAST, p.is_featured DESC, RANDOM()
+      LIMIT $1
+    `, params);
+
+    client.release();
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Get best sellers error:', error);
+    res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
+  }
+});
+
+/*
 Get product details - retrieves comprehensive product information including fragrance notes,
 performance metrics, care instructions, and related product data for detailed product pages
 */
@@ -927,109 +1029,6 @@ app.get('/api/products/:product_id/recommendations', optionalAuth, async (req: A
     res.json(result.rows);
   } catch (error) {
     console.error('Get recommendations error:', error);
-    res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
-  }
-});
-
-/*
-Get featured products - retrieves featured products for homepage display
-*/
-app.get('/api/products/featured', async (req, res) => {
-  try {
-    const { limit = 12 } = req.query as any;
-    
-    const client = await pool.connect();
-    
-    const result = await client.query(`
-      SELECT p.*, b.brand_name,
-             (SELECT image_url FROM product_images WHERE product_id = p.product_id AND is_primary = true LIMIT 1) as primary_image
-      FROM products p
-      LEFT JOIN brands b ON p.brand_id = b.brand_id
-      WHERE p.is_featured = true AND p.availability_status = 'in_stock'
-      ORDER BY p.sort_order ASC
-      LIMIT $1
-    `, [parseInt(limit)]);
-
-    client.release();
-
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Get featured products error:', error);
-    res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
-  }
-});
-
-/*
-Get new arrival products - retrieves recently launched products
-*/
-app.get('/api/products/new-arrivals', async (req, res) => {
-  try {
-    const { limit = 12 } = req.query as any;
-    
-    const client = await pool.connect();
-    
-    const result = await client.query(`
-      SELECT p.*, b.brand_name,
-             (SELECT image_url FROM product_images WHERE product_id = p.product_id AND is_primary = true LIMIT 1) as primary_image
-      FROM products p
-      LEFT JOIN brands b ON p.brand_id = b.brand_id
-      WHERE p.is_new_arrival = true AND p.availability_status = 'in_stock'
-      ORDER BY p.created_at DESC
-      LIMIT $1
-    `, [parseInt(limit)]);
-
-    client.release();
-
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Get new arrivals error:', error);
-    res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
-  }
-});
-
-/*
-Get best-selling products - retrieves top-performing products by sales volume
-@@need:external-api: Sales analytics service to determine best-selling products based on order volume and revenue metrics
-*/
-app.get('/api/products/best-sellers', async (req, res) => {
-  try {
-    const { limit = 12, category } = req.query as any;
-    
-    const client = await pool.connect();
-    
-    let whereClause = "p.availability_status = 'in_stock'";
-    const params: any[] = [parseInt(limit)];
-    
-    if (category) {
-      whereClause += " AND c.category_name ILIKE $2";
-      params.push(`%${category}%`);
-    }
-    
-    // Mock best sellers by using featured products and order item counts
-    const result = await client.query(`
-      SELECT p.*, b.brand_name,
-             (SELECT image_url FROM product_images WHERE product_id = p.product_id AND is_primary = true LIMIT 1) as primary_image,
-             COALESCE(sales.order_count, 0) as order_count
-      FROM products p
-      LEFT JOIN brands b ON p.brand_id = b.brand_id
-      LEFT JOIN categories c ON p.category_id = c.category_id
-      LEFT JOIN (
-        SELECT product_id, COUNT(*) as order_count
-        FROM order_items oi
-        JOIN orders o ON oi.order_id = o.order_id
-        WHERE o.order_status NOT IN ('cancelled', 'refunded')
-        GROUP BY product_id
-      ) sales ON p.product_id = sales.product_id
-      WHERE ${whereClause}
-      ORDER BY sales.order_count DESC NULLS LAST, p.is_featured DESC, RANDOM()
-      LIMIT $1
-    `, params);
-
-    client.release();
-
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Get best sellers error:', error);
     res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
   }
 });
@@ -4424,16 +4423,6 @@ app.get('/api/config/frontend', async (req, res) => {
   }
 });
 
-// Handle 404 for API routes
-app.use('/api/*', (req: Request, res: Response) => {
-  res.setHeader('Content-Type', 'application/json');
-  res.status(404).json(createErrorResponse(
-    `API endpoint not found: ${req.method} ${req.path}`,
-    null,
-    'ENDPOINT_NOT_FOUND'
-  ));
-});
-
 // Placeholder image endpoints
 app.get('/api/placeholder/:width/:height', (req, res) => {
   const { width, height } = req.params;
@@ -4464,6 +4453,16 @@ app.get('/favicon.png', (req, res) => {
   res.setHeader('Content-Type', 'image/svg+xml');
   res.setHeader('Cache-Control', 'public, max-age=31536000');
   res.send(svg);
+});
+
+// Handle 404 for API routes
+app.use('/api/*', (req: Request, res: Response) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.status(404).json(createErrorResponse(
+    `API endpoint not found: ${req.method} ${req.path}`,
+    null,
+    'ENDPOINT_NOT_FOUND'
+  ));
 });
 
 // ============================================================================

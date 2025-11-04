@@ -464,7 +464,7 @@ const GV_SearchOverlay: React.FC = () => {
                         <div className="text-sm text-gray-500">{product.brand_name}</div>
                       </div>
                       <div className="text-sm font-medium text-gray-900">
-                        ${product.base_price.toFixed(2)}
+                        ${Number(product.base_price).toFixed(2)}
                       </div>
                     </Link>
                   ))}

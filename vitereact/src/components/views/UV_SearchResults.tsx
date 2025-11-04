@@ -581,15 +581,15 @@ const UV_SearchResults: React.FC = () => {
                               {product.sale_price ? (
                                 <>
                                   <span className="text-lg font-bold text-purple-600">
-                                    ${product.sale_price.toFixed(2)}
+                                    ${Number(product.sale_price).toFixed(2)}
                                   </span>
                                   <span className="text-sm text-gray-500 line-through">
-                                    ${product.base_price.toFixed(2)}
+                                    ${Number(product.base_price).toFixed(2)}
                                   </span>
                                 </>
                               ) : (
                                 <span className="text-lg font-bold text-gray-900">
-                                  ${product.base_price.toFixed(2)}
+                                  ${Number(product.base_price).toFixed(2)}
                                 </span>
                               )}
                             </div>
