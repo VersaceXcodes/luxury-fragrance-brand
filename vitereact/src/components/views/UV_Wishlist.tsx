@@ -37,7 +37,13 @@ interface WishlistWithItems extends Wishlist {
     size_ml: number | null;
     notes: string | null;
     added_at: string;
-    product: {
+    product_name?: string;
+    brand_name?: string;
+    base_price?: string;
+    sale_price?: string | null;
+    availability_status?: string;
+    product_image?: string;
+    product?: {
       product_id: string;
       product_name: string;
       brand_id: string;
@@ -130,20 +136,23 @@ const UV_Wishlist: React.FC = () => {
   });
 
   // Transform wishlist items for display
-  const wishlistItems: WishlistItem[] = currentWishlist?.items?.map(item => ({
-    wishlist_item_id: item.wishlist_item_id,
-    product_id: item.product_id,
-    product_name: item.product.product_name,
-    brand_name: item.product.brand_name,
-    current_price: Number(item.product.base_price || 0),
-    original_price: item.product.sale_price ? Number(item.product.sale_price) : null,
-    size_ml: item.size_ml,
-    stock_status: item.product.availability_status,
-    price_change: null, // Would need historical data to calculate
-    added_at: item.added_at,
-    notes: item.notes,
-    product_image_url: item.product.image_url || 'https://picsum.photos/300/300'
-  })) || [];
+  const wishlistItems: WishlistItem[] = currentWishlist?.items?.map(item => {
+    const productData = item.product || item;
+    return {
+      wishlist_item_id: item.wishlist_item_id,
+      product_id: item.product_id,
+      product_name: productData.product_name,
+      brand_name: productData.brand_name,
+      current_price: Number(productData.base_price || 0),
+      original_price: productData.sale_price ? Number(productData.sale_price) : null,
+      size_ml: item.size_ml,
+      stock_status: productData.availability_status || 'in_stock',
+      price_change: null,
+      added_at: item.added_at,
+      notes: item.notes,
+      product_image_url: productData.image_url || productData.product_image || 'https://picsum.photos/300/300'
+    };
+  }) || [];
 
   // Remove item from wishlist mutation
   const removeItemMutation = useMutation({
