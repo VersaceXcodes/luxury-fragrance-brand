@@ -1182,9 +1182,11 @@ app.get('/api/cart', optionalAuth, async (req, res) => {
     `, [cart.cart_id]);
         // Calculate totals
         let subtotal = 0;
+        let totalQuantity = 0;
         const items = itemsResult.rows.map(item => {
             const itemTotal = item.quantity * item.unit_price;
             subtotal += itemTotal;
+            totalQuantity += item.quantity;
             return {
                 ...item,
                 line_total: itemTotal,
@@ -1196,7 +1198,7 @@ app.get('/api/cart', optionalAuth, async (req, res) => {
             ...cart,
             items,
             subtotal,
-            item_count: items.length
+            item_count: totalQuantity
         });
     }
     catch (error) {
