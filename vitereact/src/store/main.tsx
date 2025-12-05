@@ -101,6 +101,7 @@ interface CartState {
   free_shipping_threshold: number;
   is_loading: boolean;
   session_id: string | null;
+  cart_id: string | null;
 }
 
 interface SearchState {
@@ -194,6 +195,19 @@ const generateId = (): string => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };
 
+// Utility function to generate or get session ID for guest users
+const getOrCreateSessionId = (): string => {
+  const storageKey = 'guest-session-id';
+  let sessionId = localStorage.getItem(storageKey);
+  
+  if (!sessionId) {
+    sessionId = `guest-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem(storageKey, sessionId);
+  }
+  
+  return sessionId;
+};
+
 // API base URL
 const getApiUrl = (): string => {
   return import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai';
@@ -225,6 +239,7 @@ export const useAppStore = create<AppState>()(
         free_shipping_threshold: 75,
         is_loading: false,
         session_id: null,
+        cart_id: null,
       },
 
       search_state: {
@@ -332,6 +347,9 @@ export const useAppStore = create<AppState>()(
           });
         }
 
+        // Clear guest session ID from localStorage
+        localStorage.removeItem('guest-session-id');
+
         set((state) => ({
           authentication_state: {
             current_user: null,
@@ -349,6 +367,8 @@ export const useAppStore = create<AppState>()(
             subtotal: 0,
             total: 0,
             applied_promotions: [],
+            cart_id: null,
+            session_id: null,
           },
           user_preferences: {
             fragrance_profile: null,
@@ -502,7 +522,18 @@ export const useAppStore = create<AppState>()(
 
         try {
           const { auth_token } = get().authentication_state;
-          const { session_id } = get().cart_state;
+          let { session_id, cart_id } = get().cart_state;
+
+          // Generate session_id for guest users if not exists
+          if (!auth_token && !session_id) {
+            session_id = getOrCreateSessionId();
+            set((state) => ({
+              cart_state: {
+                ...state.cart_state,
+                session_id,
+              },
+            }));
+          }
 
           const headers: any = { 'Content-Type': 'application/json' };
           if (auth_token) headers.Authorization = `Bearer ${auth_token}`;
@@ -518,8 +549,9 @@ export const useAppStore = create<AppState>()(
 
           const params: any = {};
           if (!auth_token && session_id) params.session_id = session_id;
+          if (cart_id) params.cart_id = cart_id;
 
-          await axios.post(
+          const response = await axios.post(
             `${getApiUrl()}/api/cart/items`,
             requestBody,
             { 
@@ -527,6 +559,16 @@ export const useAppStore = create<AppState>()(
               params,
             }
           );
+
+          // Store cart_id from response for future requests
+          if (response.data && response.data.cart_id) {
+            set((state) => ({
+              cart_state: {
+                ...state.cart_state,
+                cart_id: response.data.cart_id,
+              },
+            }));
+          }
 
           // Reload cart to get updated state
           await get().load_cart();
@@ -675,6 +717,7 @@ export const useAppStore = create<AppState>()(
             shipping_cost: 0,
             total: 0,
             applied_promotions: [],
+            cart_id: null,
           },
         }));
       },
@@ -682,13 +725,25 @@ export const useAppStore = create<AppState>()(
       load_cart: async () => {
         try {
           const { auth_token } = get().authentication_state;
-          const { session_id } = get().cart_state;
+          let { session_id, cart_id } = get().cart_state;
+
+          // Generate session_id for guest users if not exists
+          if (!auth_token && !session_id) {
+            session_id = getOrCreateSessionId();
+            set((state) => ({
+              cart_state: {
+                ...state.cart_state,
+                session_id,
+              },
+            }));
+          }
 
           const headers: any = {};
           if (auth_token) headers.Authorization = `Bearer ${auth_token}`;
 
           const params: any = {};
           if (!auth_token && session_id) params.session_id = session_id;
+          if (cart_id) params.cart_id = cart_id;
 
           const response = await axios.get(
             `${getApiUrl()}/api/cart`,
@@ -722,6 +777,7 @@ export const useAppStore = create<AppState>()(
               total: subtotal + state.cart_state.tax_amount + state.cart_state.shipping_cost,
               is_loading: false,
               session_id: cart.session_id || state.cart_state.session_id,
+              cart_id: cart.cart_id || state.cart_state.cart_id,
             },
           }));
         } catch {
@@ -922,6 +978,7 @@ export const useAppStore = create<AppState>()(
           free_shipping_threshold: state.cart_state.free_shipping_threshold,
           is_loading: false, // Never persist loading state
           session_id: state.cart_state.session_id,
+          cart_id: state.cart_state.cart_id,
         },
         search_state: {
           current_query: state.search_state.current_query,
