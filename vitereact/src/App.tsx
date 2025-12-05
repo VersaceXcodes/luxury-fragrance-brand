@@ -27,6 +27,10 @@ import UV_SearchResults from '@/components/views/UV_SearchResults.tsx';
 import UV_OrderConfirmation from '@/components/views/UV_OrderConfirmation.tsx';
 import UV_ProfileSettings from '@/components/views/UV_ProfileSettings.tsx';
 import UV_OrderHistory from '@/components/views/UV_OrderHistory.tsx';
+import UV_About from '@/components/views/UV_About.tsx';
+import UV_Journal from '@/components/views/UV_Journal.tsx';
+import UV_FAQ from '@/components/views/UV_FAQ.tsx';
+import UV_Contact from '@/components/views/UV_Contact.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -125,6 +129,11 @@ const App: React.FC = () => {
               <Route path="/gifts" element={<UV_GiftServices />} />
               <Route path="/support" element={<UV_CustomerService />} />
               <Route path="/track-order" element={<UV_OrderTracking />} />
+              <Route path="/about" element={<UV_About />} />
+              <Route path="/journal" element={<UV_Journal />} />
+              <Route path="/journal/:article_id" element={<UV_Journal />} />
+              <Route path="/faq" element={<UV_FAQ />} />
+              <Route path="/contact" element={<UV_Contact />} />
               
               {/* Protected Routes */}
               <Route 

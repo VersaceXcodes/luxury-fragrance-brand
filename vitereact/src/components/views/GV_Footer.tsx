@@ -253,12 +253,12 @@ const GV_Footer: React.FC = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/products?is_new_arrival=true" className="text-gray-300 hover:text-white transition-colors">
+                  <Link to="/products?collection=new" className="text-gray-300 hover:text-white transition-colors">
                     New Arrivals
                   </Link>
                 </li>
                 <li>
-                  <Link to="/products?sale=true" className="text-gray-300 hover:text-white transition-colors">
+                  <Link to="/products?sale_price=true" className="text-gray-300 hover:text-white transition-colors">
                     Sale
                   </Link>
                 </li>

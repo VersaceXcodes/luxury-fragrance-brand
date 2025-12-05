@@ -428,9 +428,19 @@ app.get('/api/products', async (req, res) => {
         let whereConditions = ['1=1'];
         let queryParams = [];
         let paramCount = 1;
-        // Text search
+        // Text search - search in product name, description, brand name, fragrance families, and notes
         if (query) {
-            whereConditions.push(`(p.product_name ILIKE $${paramCount} OR p.description ILIKE $${paramCount} OR b.brand_name ILIKE $${paramCount})`);
+            whereConditions.push(`(
+        p.product_name ILIKE $${paramCount} 
+        OR p.description ILIKE $${paramCount} 
+        OR p.short_description ILIKE $${paramCount}
+        OR b.brand_name ILIKE $${paramCount}
+        OR p.fragrance_families::text ILIKE $${paramCount}
+        OR p.top_notes ILIKE $${paramCount}
+        OR p.middle_notes ILIKE $${paramCount}
+        OR p.base_notes ILIKE $${paramCount}
+        OR p.complete_notes_list ILIKE $${paramCount}
+      )`);
             queryParams.push(`%${query}%`);
             paramCount++;
         }
