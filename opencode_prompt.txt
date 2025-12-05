@@ -5,16 +5,6 @@ The backend server failed to start due to a critical error. You need to fix this
 ## Error Type: Backend unhealthy or critical errors present
 
 ## Backend Error Output (stderr):
-ache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
-npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
-npm warn deprecated superagent@8.1.2: Please upgrade to superagent v10.2.2+, see release notes at https://github.com/forwardemail/superagent/releases/tag/v10.2.2 - maintenance is supported by Forward Email @ https://forwardemail.net
-npm error code ENOTEMPTY
-npm error syscall rmdir
-npm error path /app/backend/node_modules/zod/v4/core
-npm error errno -39
-npm error ENOTEMPTY: directory not empty, rmdir '/app/backend/node_modules/zod/v4/core'
-npm error A complete log of this run can be found in: /root/.npm/_logs/2025-12-05T19_24_41_839Z-debug-0.log
-npm warn exec The following package was not found and will be installed: tsx@4.21.0
 
 node:internal/process/esm_loader:40
       internalBinding('errors').triggerUncaughtException(
@@ -26,10 +16,10 @@ Error [ERR_MODULE_NOT_FOUND]: Cannot find package '/app/backend/node_modules/exp
     at moduleResolve (node:internal/modules/esm/resolve:973:20)
     at defaultResolve (node:internal/modules/esm/resolve:1206:11)
     at nextResolve (node:internal/modules/esm/hooks:864:28)
-    at resolveBase (file:///root/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1764962706444:2:3744)
-    at resolveDirectory (file:///root/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1764962706444:2:4243)
-    at resolveTsPaths (file:///root/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1764962706444:2:4984)
-    at resolve (file:///root/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1764962706444:2:5361) {
+    at resolveBase (file:///root/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1764962804565:2:3744)
+    at resolveDirectory (file:///root/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1764962804565:2:4243)
+    at resolveTsPaths (file:///root/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1764962804565:2:4984)
+    at resolve (file:///root/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1764962804565:2:5361) {
   code: 'ERR_MODULE_NOT_FOUND'
 }
 
