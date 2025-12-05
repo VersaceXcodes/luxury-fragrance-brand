@@ -428,21 +428,47 @@ app.get('/api/products', async (req, res) => {
         let whereConditions = ['1=1'];
         let queryParams = [];
         let paramCount = 1;
-        // Text search - search in product name, description, brand name, fragrance families, and notes
+        // Text search - search in product name, description, brand name, fragrance families, notes, and categories
         if (query) {
-            whereConditions.push(`(
-        p.product_name ILIKE $${paramCount} 
-        OR p.description ILIKE $${paramCount} 
-        OR p.short_description ILIKE $${paramCount}
-        OR b.brand_name ILIKE $${paramCount}
-        OR p.fragrance_families::text ILIKE $${paramCount}
-        OR p.top_notes ILIKE $${paramCount}
-        OR p.middle_notes ILIKE $${paramCount}
-        OR p.base_notes ILIKE $${paramCount}
-        OR p.complete_notes_list ILIKE $${paramCount}
-      )`);
+            // Enhanced search: Map common fragrance family searches to their note equivalents
+            const fragranceFamilyKeywords = {
+                'citrus': ['bergamot', 'lemon', 'orange', 'grapefruit', 'mandarin', 'lime', 'yuzu'],
+                'floral': ['rose', 'jasmine', 'lily', 'peony', 'iris', 'tuberose', 'magnolia', 'gardenia'],
+                'woody': ['sandalwood', 'cedarwood', 'cedar', 'vetiver', 'patchouli', 'agarwood', 'oud'],
+                'oriental': ['vanilla', 'amber', 'musk', 'incense', 'spice'],
+                'fresh': ['aquatic', 'marine', 'ozonic', 'clean'],
+                'fruity': ['apple', 'pear', 'peach', 'berry', 'blackcurrant', 'pineapple', 'plum']
+            };
+            const lowerQuery = query.toLowerCase();
+            const matchingKeywords = fragranceFamilyKeywords[lowerQuery];
+            // Start with base search parameter
             queryParams.push(`%${query}%`);
+            const baseParamIndex = paramCount;
             paramCount++;
+            let searchConditions = `(
+        p.product_name ILIKE $${baseParamIndex} 
+        OR p.description ILIKE $${baseParamIndex} 
+        OR p.short_description ILIKE $${baseParamIndex}
+        OR b.brand_name ILIKE $${baseParamIndex}
+        OR p.fragrance_families::text ILIKE $${baseParamIndex}
+        OR p.top_notes ILIKE $${baseParamIndex}
+        OR p.middle_notes ILIKE $${baseParamIndex}
+        OR p.base_notes ILIKE $${baseParamIndex}
+        OR p.complete_notes_list ILIKE $${baseParamIndex}
+        OR c.category_name ILIKE $${baseParamIndex}
+      `;
+            // If the search matches a fragrance family, also search for related notes
+            if (matchingKeywords && matchingKeywords.length > 0) {
+                const keywordConditions = matchingKeywords.map((keyword) => {
+                    queryParams.push(`%${keyword}%`);
+                    const keywordParamIndex = paramCount;
+                    paramCount++;
+                    return `(p.complete_notes_list ILIKE $${keywordParamIndex} OR p.top_notes ILIKE $${keywordParamIndex} OR p.middle_notes ILIKE $${keywordParamIndex} OR p.base_notes ILIKE $${keywordParamIndex})`;
+                });
+                searchConditions += ` OR ${keywordConditions.join(' OR ')}`;
+            }
+            searchConditions += `)`;
+            whereConditions.push(searchConditions);
         }
         // Brand filtering
         if (brand_ids) {
@@ -546,6 +572,7 @@ app.get('/api/products', async (req, res) => {
       SELECT COUNT(*) as total
       FROM products p
       LEFT JOIN brands b ON p.brand_id = b.brand_id
+      LEFT JOIN categories c ON p.category_id = c.category_id
       WHERE ${whereConditions.join(' AND ')}
     `;
         const [results, countResult] = await Promise.all([
