@@ -264,16 +264,22 @@ const UV_Checkout: React.FC = () => {
   const validateShippingForm = (): boolean => {
     const errors: Record<string, string> = {};
 
+    // Always validate email
     if (!shippingForm.email) errors.email = 'Email is required';
-    if (!shippingForm.first_name) errors.first_name = 'First name is required';
-    if (!shippingForm.last_name) errors.last_name = 'Last name is required';
-    if (!shippingForm.address_line_1) errors.address_line_1 = 'Address is required';
-    if (!shippingForm.city) errors.city = 'City is required';
-    if (!shippingForm.state_province) errors.state_province = 'State/Province is required';
-    if (!shippingForm.postal_code) errors.postal_code = 'Postal code is required';
-    if (!shippingForm.country) errors.country = 'Country is required';
 
-    if (!shippingForm.use_as_billing) {
+    // Only validate shipping address fields if not using a saved address
+    if (!selectedShippingAddress) {
+      if (!shippingForm.first_name) errors.first_name = 'First name is required';
+      if (!shippingForm.last_name) errors.last_name = 'Last name is required';
+      if (!shippingForm.address_line_1) errors.address_line_1 = 'Address is required';
+      if (!shippingForm.city) errors.city = 'City is required';
+      if (!shippingForm.state_province) errors.state_province = 'State/Province is required';
+      if (!shippingForm.postal_code) errors.postal_code = 'Postal code is required';
+      if (!shippingForm.country) errors.country = 'Country is required';
+    }
+
+    // Only validate billing address if not using shipping as billing and not using saved billing address
+    if (!shippingForm.use_as_billing && !selectedBillingAddress) {
       if (!billingForm.first_name) errors.billing_first_name = 'Billing first name is required';
       if (!billingForm.last_name) errors.billing_last_name = 'Billing last name is required';
       if (!billingForm.address_line_1) errors.billing_address_line_1 = 'Billing address is required';
@@ -307,13 +313,22 @@ const UV_Checkout: React.FC = () => {
 
   // Handle form submissions
   const handleShippingSubmit = async () => {
-    if (!validateShippingForm()) return;
+    if (!validateShippingForm()) {
+      showNotification({
+        type: 'error',
+        message: 'Please fill in all required fields',
+        auto_dismiss: true,
+        duration: 5000
+      });
+      return;
+    }
 
     // Create addresses if needed
     try {
       let shippingAddressId = selectedShippingAddress;
       let billingAddressId = selectedBillingAddress;
 
+      // Create shipping address if not using a saved one
       if (!shippingAddressId) {
         const shippingAddress = await createAddressMutation.mutateAsync({
           address_type: 'shipping',
@@ -332,6 +347,7 @@ const UV_Checkout: React.FC = () => {
         shippingAddressId = shippingAddress.address_id;
       }
 
+      // Handle billing address
       if (!billingAddressId) {
         if (shippingForm.use_as_billing) {
           billingAddressId = shippingAddressId;
@@ -353,11 +369,16 @@ const UV_Checkout: React.FC = () => {
         }
       }
 
+      // Update state and move to next step
       setSelectedShippingAddress(shippingAddressId);
       setSelectedBillingAddress(billingAddressId);
       setCurrentStep('payment');
-    } catch {
-      // Error handling is done in mutation
+      
+      // Clear any form errors
+      setFormErrors({});
+    } catch (error) {
+      // Error handling is done in mutation callbacks
+      console.error('Error submitting shipping information:', error);
     }
   };
 
@@ -1006,6 +1027,7 @@ const UV_Checkout: React.FC = () => {
                     {/* Continue Button */}
                     <div className="mt-8 pt-6 border-t border-gray-200">
                       <button
+                        type="button"
                         onClick={handleShippingSubmit}
                         disabled={createAddressMutation.isPending}
                         className="w-full bg-purple-600 text-white py-3 px-4 rounded-md font-medium hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
@@ -1263,6 +1285,7 @@ const UV_Checkout: React.FC = () => {
                     {/* Continue Button */}
                     <div className="mt-8">
                       <button
+                        type="button"
                         onClick={handlePaymentSubmit}
                         className="w-full bg-purple-600 text-white py-3 px-4 rounded-md font-medium hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors"
                       >
