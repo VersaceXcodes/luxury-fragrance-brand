@@ -76,5 +76,31 @@ To test the fix:
 5. Refresh the page - cart should still contain the item
 6. Close and reopen the browser - cart should persist
 
+## Additional Fix (December 2025)
+
+### Issue: Validation Error on Add to Cart
+After the initial fix, cart items were still not being added due to a validation error. The backend was rejecting cart item requests with:
+```json
+{"success":false,"message":"Invalid input data","error_code":"VALIDATION_ERROR"}
+```
+
+### Root Cause
+The backend Zod schema expected `unit_price` to be a **number**, but PostgreSQL's `DECIMAL(10,2)` column type returns values as **strings** in JSON responses. When the frontend passed these string prices back to the cart API, validation failed.
+
+### Solution
+Added price conversion in all product API endpoints:
+
+1. Created helper function `convertProductPrices()` to convert decimal strings to numbers
+2. Updated all product endpoints to apply this conversion:
+   - `/api/products` (search/listing)
+   - `/api/products/featured`
+   - `/api/products/new-arrivals`
+   - `/api/products/best-sellers`
+   - `/api/products/:product_id` (detail)
+   - `/api/products/:product_id/sizes`
+
+Now all price fields (`base_price`, `sale_price`, `price`, `sample_price`) are properly converted to numbers before being sent to the frontend, ensuring they pass validation when sent back to the cart API.
+
 ## Files Modified
 - `/app/vitereact/src/store/main.tsx` - Main state management file
+- `/app/backend/server.ts` - Added price conversion helper and updated all product endpoints

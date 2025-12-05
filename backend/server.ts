@@ -293,6 +293,15 @@ function generateGiftCardCode() {
   return result;
 }
 
+// Helper function to convert decimal prices to numbers in product objects
+function convertProductPrices(product: any): any {
+  return {
+    ...product,
+    base_price: typeof product.base_price === 'string' ? parseFloat(product.base_price) : product.base_price,
+    sale_price: product.sale_price ? (typeof product.sale_price === 'string' ? parseFloat(product.sale_price) : product.sale_price) : null,
+  };
+}
+
 // ============================================================================
 // AUTHENTICATION ROUTES
 // ============================================================================
@@ -715,8 +724,11 @@ app.get('/api/products', async (req, res) => {
     const total = parseInt(countResult.rows[0].total);
     const totalPages = Math.ceil(total / limit);
 
+    // Convert decimal prices to numbers
+    const products = results.rows.map(convertProductPrices);
+
     res.json({
-      data: results.rows,
+      data: products,
       pagination: {
         total,
         page: parseInt(page),
@@ -753,7 +765,10 @@ app.get('/api/products/featured', async (req, res) => {
 
     client.release();
 
-    res.json(result.rows);
+    // Convert decimal prices to numbers
+    const products = result.rows.map(convertProductPrices);
+
+    res.json(products);
   } catch (error) {
     console.error('Get featured products error:', error);
     res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
@@ -781,7 +796,10 @@ app.get('/api/products/new-arrivals', async (req, res) => {
 
     client.release();
 
-    res.json(result.rows);
+    // Convert decimal prices to numbers
+    const products = result.rows.map(convertProductPrices);
+
+    res.json(products);
   } catch (error) {
     console.error('Get new arrivals error:', error);
     res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
@@ -827,7 +845,10 @@ app.get('/api/products/best-sellers', async (req, res) => {
 
     client.release();
 
-    res.json(result.rows);
+    // Convert decimal prices to numbers
+    const products = result.rows.map(convertProductPrices);
+
+    res.json(products);
   } catch (error) {
     console.error('Get best sellers error:', error);
     res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
@@ -867,7 +888,10 @@ app.get('/api/products/:product_id', async (req, res) => {
       return res.status(404).json(createErrorResponse('Product not found', null, 'PRODUCT_NOT_FOUND'));
     }
 
-    res.json(result.rows[0]);
+    // Convert decimal prices to numbers
+    const product = convertProductPrices(result.rows[0]);
+
+    res.json(product);
   } catch (error) {
     console.error('Get product error:', error);
     res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
@@ -895,7 +919,15 @@ app.get('/api/products/:product_id/sizes', async (req, res) => {
 
     client.release();
 
-    res.json(result.rows);
+    // Convert decimal prices to numbers
+    const sizes = result.rows.map(row => ({
+      ...row,
+      price: parseFloat(row.price),
+      sale_price: row.sale_price ? parseFloat(row.sale_price) : null,
+      sample_price: row.sample_price ? parseFloat(row.sample_price) : null,
+    }));
+
+    res.json(sizes);
   } catch (error) {
     console.error('Get product sizes error:', error);
     res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
