@@ -40,6 +40,7 @@ const UV_Contact: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">Contact Us</h1>
+            <h2 className="sr-only">Contact Form and Information</h2>
             <p className="text-xl md:text-2xl text-purple-100 max-w-3xl mx-auto">
               We're here to help with any questions or concerns
             </p>
@@ -52,7 +53,7 @@ const UV_Contact: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Form */}
           <div className="bg-white rounded-lg shadow-md p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a message</h2>
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">Send us a message</h3>
             
             {submitStatus === 'success' && (
               <div className="mb-6 p-4 bg-green-100 text-green-800 rounded-lg">
@@ -62,48 +63,51 @@ const UV_Contact: React.FC = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="contact-name" className="block text-sm font-medium text-gray-700 mb-2">
                   Your Name *
                 </label>
                 <input
                   type="text"
-                  id="name"
+                  id="contact-name"
                   name="name"
                   required
                   value={formData.name}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="John Doe"
+                  aria-label="Your Name"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-2">
                   Email Address *
                 </label>
                 <input
                   type="email"
-                  id="email"
+                  id="contact-email"
                   name="email"
                   required
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="john@example.com"
+                  aria-label="Email Address"
                 />
               </div>
 
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="contact-subject" className="block text-sm font-medium text-gray-700 mb-2">
                   Subject *
                 </label>
                 <select
-                  id="subject"
+                  id="contact-subject"
                   name="subject"
                   required
                   value={formData.subject}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  aria-label="Subject"
                 >
                   <option value="">Select a subject</option>
                   <option value="order">Order Inquiry</option>
@@ -116,11 +120,11 @@ const UV_Contact: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="contact-message" className="block text-sm font-medium text-gray-700 mb-2">
                   Message *
                 </label>
                 <textarea
-                  id="message"
+                  id="contact-message"
                   name="message"
                   required
                   value={formData.message}
@@ -128,6 +132,7 @@ const UV_Contact: React.FC = () => {
                   rows={6}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="How can we help you?"
+                  aria-label="Message"
                 />
               </div>
 
@@ -144,7 +149,7 @@ const UV_Contact: React.FC = () => {
           {/* Contact Information */}
           <div className="space-y-8">
             <div className="bg-white rounded-lg shadow-md p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Get in Touch</h2>
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">Get in Touch</h3>
               
               <div className="space-y-6">
                 <div className="flex items-start">
@@ -154,7 +159,7 @@ const UV_Contact: React.FC = () => {
                     </svg>
                   </div>
                   <div className="ml-4">
-                    <h3 className="font-semibold text-gray-900 mb-1">Phone</h3>
+                    <p className="font-semibold text-gray-900 mb-1">Phone</p>
                     <a href="tel:+1-800-LUXE-SCENT" className="text-purple-600 hover:text-purple-700">
                       1-800-LUXE-SCENT
                     </a>
@@ -169,7 +174,7 @@ const UV_Contact: React.FC = () => {
                     </svg>
                   </div>
                   <div className="ml-4">
-                    <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
+                    <p className="font-semibold text-gray-900 mb-1">Email</p>
                     <a href="mailto:hello@nocturne-atelier.com" className="text-purple-600 hover:text-purple-700">
                       hello@nocturne-atelier.com
                     </a>
@@ -185,7 +190,7 @@ const UV_Contact: React.FC = () => {
                     </svg>
                   </div>
                   <div className="ml-4">
-                    <h3 className="font-semibold text-gray-900 mb-1">Address</h3>
+                    <p className="font-semibold text-gray-900 mb-1">Address</p>
                     <p className="text-gray-600">
                       123 Fragrance Boulevard<br />
                       New York, NY 10001<br />
@@ -201,7 +206,7 @@ const UV_Contact: React.FC = () => {
                     </svg>
                   </div>
                   <div className="ml-4">
-                    <h3 className="font-semibold text-gray-900 mb-1">Live Chat</h3>
+                    <p className="font-semibold text-gray-900 mb-1">Live Chat</p>
                     <button className="text-purple-600 hover:text-purple-700">
                       Start a conversation
                     </button>
@@ -215,7 +220,7 @@ const UV_Contact: React.FC = () => {
 
             {/* Quick Links */}
             <div className="bg-white rounded-lg shadow-md p-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Quick Links</h3>
+              <h4 className="text-xl font-bold text-gray-900 mb-4">Quick Links</h4>
               <div className="space-y-3">
                 <Link to="/support" className="block text-purple-600 hover:text-purple-700">
                   → Visit our Help Center

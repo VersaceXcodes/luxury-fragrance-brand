@@ -504,7 +504,7 @@ const UV_Homepage: React.FC = () => {
         <div className="nocturne-container">
           <div className="text-center mb-16">
             <h2 className="text-h2 font-[var(--font-heading)] font-[var(--text-h2-weight)] text-[var(--color-fg-primary)] mb-6 tracking-[var(--text-h2-spacing)]">
-              Bestsellers
+              Featured Collections
             </h2>
             <p className="text-subtitle text-[var(--color-fg-secondary)] max-w-2xl mx-auto leading-relaxed">
               Our most coveted fragrances, chosen by connoisseurs worldwide
@@ -615,7 +615,7 @@ const UV_Homepage: React.FC = () => {
                   }`}>
                     {note.icon}
                   </div>
-                  <h3 className="text-h3 font-[var(--font-heading)] font-[var(--text-h3-weight)] text-[var(--color-fg-primary)] mb-2">
+                  <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-2">
                     {note.family}
                   </h3>
                   <p className="text-caption text-[var(--color-fg-secondary)] leading-relaxed mb-2">
@@ -661,7 +661,7 @@ const UV_Homepage: React.FC = () => {
                   ))}
                 </div>
                 
-                <blockquote className="text-h3 font-[var(--font-weight-light)] text-[var(--color-fg-primary)] mb-8 leading-relaxed italic">
+                <blockquote className="text-subtitle font-[var(--font-weight-light)] text-[var(--color-fg-primary)] mb-8 leading-relaxed italic">
                   "{testimonials[currentTestimonial].text}"
                 </blockquote>
                 
@@ -702,11 +702,16 @@ const UV_Homepage: React.FC = () => {
       {/* Brand Story Section */}
       <section className="py-24 bg-[var(--color-bg-primary)]">
         <div className="nocturne-container">
+          <div className="text-center mb-16">
+            <h2 className="text-h2 font-[var(--font-heading)] font-[var(--text-h2-weight)] text-[var(--color-fg-primary)] mb-6 tracking-[var(--text-h2-spacing)]">
+              Our Story
+            </h2>
+          </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-h2 font-[var(--font-heading)] font-[var(--text-h2-weight)] text-[var(--color-fg-primary)] mb-8 tracking-[var(--text-h2-spacing)]">
+              <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-8">
                 Crafted in Darkness, Born in Light
-              </h2>
+              </h3>
               <p className="text-body text-[var(--color-fg-secondary)] mb-6 leading-relaxed">
                 At Nocturne Atelier, we believe fragrance is an intimate art form—a whispered secret between 
                 skin and soul. Each creation in our collection is meticulously crafted in small batches, 
@@ -861,6 +866,9 @@ const UV_Homepage: React.FC = () => {
       {/* Trust Indicators Section */}
       <section className="py-16 bg-[var(--color-bg-primary)] border-t border-[var(--color-border-primary)]">
         <div className="nocturne-container">
+          <h2 className="text-h2 font-[var(--font-heading)] font-[var(--text-h2-weight)] text-[var(--color-fg-primary)] mb-12 text-center tracking-[var(--text-h2-spacing)]">
+            Our Commitments
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             <div className="flex flex-col items-center">
               <NocturneBadge variant="secondary" className="mb-4 text-lg px-4 py-2">
