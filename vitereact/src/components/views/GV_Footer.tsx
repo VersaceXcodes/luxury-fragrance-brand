@@ -72,10 +72,23 @@ const GV_Footer: React.FC = () => {
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validate email is provided
     if (!newsletterEmail || !newsletterConsent) {
       showNotification({
         type: 'warning',
         message: 'Please enter your email and accept marketing emails to subscribe.',
+        auto_dismiss: true,
+        duration: 4000,
+      });
+      return;
+    }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newsletterEmail.trim())) {
+      showNotification({
+        type: 'error',
+        message: 'Please enter a valid email address',
         auto_dismiss: true,
         duration: 4000,
       });
@@ -89,7 +102,7 @@ const GV_Footer: React.FC = () => {
     });
 
     newsletterMutation.mutate({
-      email: newsletterEmail,
+      email: newsletterEmail.trim(),
       subscription_source: 'footer_signup',
       preferences,
     });

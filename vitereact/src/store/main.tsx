@@ -329,6 +329,15 @@ export const useAppStore = create<AppState>()(
               error_message: errorMessage,
             },
           }));
+          
+          // Show notification to ensure user sees the error
+          get().show_notification({
+            type: 'error',
+            message: errorMessage,
+            auto_dismiss: true,
+            duration: 5000,
+          });
+          
           throw new Error(errorMessage);
         }
       },
@@ -432,6 +441,15 @@ export const useAppStore = create<AppState>()(
               error_message: errorMessage,
             },
           }));
+          
+          // Show notification to ensure user sees the error
+          get().show_notification({
+            type: 'error',
+            message: errorMessage,
+            auto_dismiss: true,
+            duration: 5000,
+          });
+          
           throw new Error(errorMessage);
         }
       },

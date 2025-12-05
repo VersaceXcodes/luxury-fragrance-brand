@@ -300,7 +300,29 @@ const UV_Homepage: React.FC = () => {
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newsletterEmail.trim()) return;
+    
+    // Validate email is not empty
+    if (!newsletterEmail.trim()) {
+      showNotification({
+        type: 'warning',
+        message: 'Please enter your email address',
+        auto_dismiss: true,
+        duration: 3000,
+      });
+      return;
+    }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newsletterEmail.trim())) {
+      showNotification({
+        type: 'error',
+        message: 'Please enter a valid email address',
+        auto_dismiss: true,
+        duration: 3000,
+      });
+      return;
+    }
     
     newsletterMutation.mutate({
       email: newsletterEmail.trim(),
