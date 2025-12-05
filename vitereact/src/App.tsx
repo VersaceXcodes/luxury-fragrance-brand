@@ -10,6 +10,7 @@ import GV_MobileNavigation from '@/components/views/GV_MobileNavigation.tsx';
 import GV_SearchOverlay from '@/components/views/GV_SearchOverlay.tsx';
 import GV_CartDropdown from '@/components/views/GV_CartDropdown.tsx';
 import GV_AccountDropdown from '@/components/views/GV_AccountDropdown.tsx';
+import GV_NotificationToast from '@/components/views/GV_NotificationToast.tsx';
 import UV_Homepage from '@/components/views/UV_Homepage.tsx';
 import UV_ProductListing from '@/components/views/UV_ProductListing.tsx';
 import UV_ProductDetail from '@/components/views/UV_ProductDetail.tsx';
@@ -112,6 +113,9 @@ const App: React.FC = () => {
               <GV_AccountDropdown />
             </div>
           )}
+          
+          {/* Global Notification Toasts */}
+          <GV_NotificationToast />
           
           {/* Main Content Area */}
           <main className="flex-1" style={{ paddingTop: 'var(--nav-height)' }}>

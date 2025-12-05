@@ -59,6 +59,7 @@ const UV_Homepage: React.FC = () => {
   // Newsletter form state
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterConsent, setNewsletterConsent] = useState(false);
+  const [newsletterError, setNewsletterError] = useState<string | null>(null);
 
   // Interactive elements state
   const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
@@ -259,6 +260,7 @@ const UV_Homepage: React.FC = () => {
       return response.data;
     },
     onSuccess: () => {
+      setNewsletterError(null);
       showNotification({
         type: 'success',
         message: 'Welcome! Check your email for your 10% off code.',
@@ -270,9 +272,11 @@ const UV_Homepage: React.FC = () => {
       setNewsletterConsent(false);
     },
     onError: (error: any) => {
+      const errorMsg = error.response?.data?.message || 'Failed to subscribe. Please try again.';
+      setNewsletterError(errorMsg);
       showNotification({
         type: 'error',
-        message: error.response?.data?.message || 'Failed to subscribe. Please try again.',
+        message: errorMsg,
         title: 'Subscription Failed',
         auto_dismiss: true,
         duration: 5000
@@ -300,12 +304,15 @@ const UV_Homepage: React.FC = () => {
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setNewsletterError(null);
     
     // Validate email is not empty
     if (!newsletterEmail.trim()) {
+      const errorMsg = 'Please enter your email address';
+      setNewsletterError(errorMsg);
       showNotification({
         type: 'warning',
-        message: 'Please enter your email address',
+        message: errorMsg,
         auto_dismiss: true,
         duration: 3000,
       });
@@ -315,9 +322,11 @@ const UV_Homepage: React.FC = () => {
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(newsletterEmail.trim())) {
+      const errorMsg = 'Please enter a valid email address';
+      setNewsletterError(errorMsg);
       showNotification({
         type: 'error',
-        message: 'Please enter a valid email address',
+        message: errorMsg,
         auto_dismiss: true,
         duration: 3000,
       });
@@ -783,15 +792,32 @@ const UV_Homepage: React.FC = () => {
             </p>
             
             <form onSubmit={handleNewsletterSubmit} className="space-y-6">
+              {newsletterError && (
+                <div className="bg-red-50 border border-red-400 text-red-800 px-4 py-3 rounded-md shadow-sm" role="alert">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm font-medium">{newsletterError}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
               <div className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1 relative group">
                   <input
                     type="email"
                     value={newsletterEmail}
-                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    onChange={(e) => {
+                      setNewsletterEmail(e.target.value);
+                      setNewsletterError(null);
+                    }}
                     placeholder="Your email address"
                     required
-                    className="w-full px-6 py-4 rounded-[var(--radius-full)] bg-[var(--nocturne-porcelain)] text-[var(--nocturne-onyx)] placeholder:text-[var(--nocturne-warm-taupe)] focus:outline-none focus:ring-2 focus:ring-[var(--nocturne-champagne)] text-body transition-all duration-300 group-hover:shadow-lg"
+                    className={`w-full px-6 py-4 rounded-[var(--radius-full)] bg-[var(--nocturne-porcelain)] text-[var(--nocturne-onyx)] placeholder:text-[var(--nocturne-warm-taupe)] focus:outline-none focus:ring-2 ${newsletterError ? 'focus:ring-red-400 border border-red-400' : 'focus:ring-[var(--nocturne-champagne)]'} text-body transition-all duration-300 group-hover:shadow-lg`}
                   />
                   <div className="absolute inset-0 rounded-[var(--radius-full)] bg-gradient-to-r from-[var(--nocturne-champagne)]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                 </div>
