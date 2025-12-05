@@ -1107,6 +1107,117 @@ app.get('/api/products/:product_id/recommendations', optionalAuth, async (req: A
   }
 });
 
+/*
+Get product recommendations based on user preferences - generates personalized product recommendations
+based on purchase history, browsing behavior, or general preferences without requiring a specific product
+*/
+app.get('/api/products/recommendations', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { based_on = 'general', limit = 8 } = req.query as any;
+    
+    const client = await pool.connect();
+    
+    let query;
+    let params;
+
+    switch (based_on) {
+      case 'purchase_history':
+        // Recommendations based on user's purchase history
+        if (req.user) {
+          query = `
+            SELECT DISTINCT p.*, b.brand_name,
+                   (SELECT image_url FROM product_images WHERE product_id = p.product_id AND is_primary = true LIMIT 1) as primary_image
+            FROM products p
+            LEFT JOIN brands b ON p.brand_id = b.brand_id
+            WHERE p.availability_status = 'in_stock'
+              AND p.product_id IN (
+                SELECT DISTINCT product_id 
+                FROM order_items oi
+                JOIN orders o ON oi.order_id = o.order_id
+                WHERE o.user_id = $1 
+                  AND o.order_status NOT IN ('cancelled', 'refunded')
+                LIMIT 20
+              )
+            ORDER BY p.is_featured DESC, RANDOM()
+            LIMIT $2
+          `;
+          params = [req.user.user_id, parseInt(limit)];
+        } else {
+          // Fallback to featured products for non-authenticated users
+          query = `
+            SELECT p.*, b.brand_name,
+                   (SELECT image_url FROM product_images WHERE product_id = p.product_id AND is_primary = true LIMIT 1) as primary_image
+            FROM products p
+            LEFT JOIN brands b ON p.brand_id = b.brand_id
+            WHERE p.is_featured = true 
+              AND p.availability_status = 'in_stock'
+            ORDER BY p.sort_order ASC
+            LIMIT $1
+          `;
+          params = [parseInt(limit)];
+        }
+        break;
+
+      case 'browsing_history':
+        // Recommendations based on browsing history
+        if (req.user) {
+          query = `
+            SELECT DISTINCT p.*, b.brand_name,
+                   (SELECT image_url FROM product_images WHERE product_id = p.product_id AND is_primary = true LIMIT 1) as primary_image
+            FROM products p
+            LEFT JOIN brands b ON p.brand_id = b.brand_id
+            LEFT JOIN product_views pv ON p.product_id = pv.product_id
+            WHERE pv.user_id = $1
+              AND p.availability_status = 'in_stock'
+            ORDER BY pv.viewed_at DESC
+            LIMIT $2
+          `;
+          params = [req.user.user_id, parseInt(limit)];
+        } else {
+          // Fallback to new arrivals
+          query = `
+            SELECT p.*, b.brand_name,
+                   (SELECT image_url FROM product_images WHERE product_id = p.product_id AND is_primary = true LIMIT 1) as primary_image
+            FROM products p
+            LEFT JOIN brands b ON p.brand_id = b.brand_id
+            WHERE p.is_new_arrival = true 
+              AND p.availability_status = 'in_stock'
+            ORDER BY p.created_at DESC
+            LIMIT $1
+          `;
+          params = [parseInt(limit)];
+        }
+        break;
+
+      case 'general':
+      default:
+        // General recommendations - mix of featured and best sellers
+        query = `
+          SELECT p.*, b.brand_name,
+                 (SELECT image_url FROM product_images WHERE product_id = p.product_id AND is_primary = true LIMIT 1) as primary_image
+          FROM products p
+          LEFT JOIN brands b ON p.brand_id = b.brand_id
+          WHERE p.availability_status = 'in_stock'
+            AND (p.is_featured = true OR p.is_new_arrival = true)
+          ORDER BY p.is_featured DESC, p.sort_order ASC, RANDOM()
+          LIMIT $1
+        `;
+        params = [parseInt(limit)];
+    }
+
+    const result = await client.query(query, params);
+    client.release();
+
+    // Convert decimal prices to numbers
+    const products = result.rows.map(convertProductPrices);
+
+    res.json(products);
+  } catch (error) {
+    console.error('Get recommendations error:', error);
+    res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
+  }
+});
+
 // ============================================================================
 // BRAND ROUTES
 // ============================================================================
