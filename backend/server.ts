@@ -1451,9 +1451,11 @@ app.get('/api/cart', optionalAuth, async (req: AuthenticatedRequest, res: Respon
 
     // Calculate totals
     let subtotal = 0;
+    let totalQuantity = 0;
     const items = itemsResult.rows.map(item => {
       const itemTotal = item.quantity * item.unit_price;
       subtotal += itemTotal;
+      totalQuantity += item.quantity;
       return {
         ...item,
         line_total: itemTotal,
@@ -1467,7 +1469,7 @@ app.get('/api/cart', optionalAuth, async (req: AuthenticatedRequest, res: Respon
       ...cart,
       items,
       subtotal,
-      item_count: items.length
+      item_count: totalQuantity
     });
   } catch (error) {
     console.error('Get cart error:', error);
