@@ -140,10 +140,7 @@ const UV_ProductDetail: React.FC = () => {
     return response.data;
   };
 
-  const fetchProductImages = async (productId: string): Promise<ProductImage[]> => {
-    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/products/${productId}/images`);
-    return response.data || [];
-  };
+  // Images are already fetched with product details, no separate API call needed
 
   const fetchProductReviews = async (productId: string): Promise<Review[]> => {
     const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/reviews`, {
@@ -202,13 +199,8 @@ const UV_ProductDetail: React.FC = () => {
     refetchOnWindowFocus: false,
   });
 
-  const { data: images = [] } = useQuery({
-    queryKey: ['productImages', product_id],
-    queryFn: () => fetchProductImages(product_id!),
-    enabled: !!product_id,
-    staleTime: 300000,
-    refetchOnWindowFocus: false,
-  });
+  // Get images from product data directly
+  const images = product?.images || [];
 
   const { data: reviews = [] } = useQuery({
     queryKey: ['productReviews', product_id],
@@ -222,6 +214,11 @@ const UV_ProductDetail: React.FC = () => {
     queryKey: ['productRecommendations', product_id],
     queryFn: () => fetchProductRecommendations(product_id!),
     enabled: !!product_id,
+    select: (data) => data.map(item => ({
+      ...item,
+      base_price: Number(item.base_price || 0),
+      sale_price: item.sale_price ? Number(item.sale_price) : null,
+    })),
     staleTime: 300000,
     refetchOnWindowFocus: false,
   });
@@ -1145,11 +1142,11 @@ const UV_ProductDetail: React.FC = () => {
                         className="w-full h-full object-center object-cover"
                       />
                     </div>
-                    <h3 className="mt-4 text-sm text-gray-700 group-hover:text-purple-600">
+                     <h3 className="mt-4 text-sm text-gray-700 group-hover:text-purple-600">
                       {rec.product_name}
                     </h3>
                     <p className="mt-1 text-lg font-medium text-gray-900">
-                      ${(rec.sale_price || rec.base_price).toFixed(2)}
+                      ${(Number(rec.sale_price) || Number(rec.base_price)).toFixed(2)}
                     </p>
                   </Link>
                 ))}
