@@ -179,7 +179,12 @@ const UV_Checkout: React.FC = () => {
           order_total: cartSubtotal
         }
       });
-      return response.data;
+      // Parse cost fields from string to number (PostgreSQL returns DECIMAL as string)
+      return response.data.map((method: any) => ({
+        ...method,
+        cost: parseFloat(method.calculated_cost || method.cost || 0),
+        free_threshold: method.free_threshold ? parseFloat(method.free_threshold) : null
+      }));
     },
     staleTime: 5 * 60 * 1000,
     retry: 1

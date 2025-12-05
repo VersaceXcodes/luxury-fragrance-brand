@@ -425,7 +425,7 @@ export const cartItemSchema = z.object({
     added_at: z.coerce.date()
 });
 export const createCartItemInputSchema = z.object({
-    cart_id: z.string(),
+    cart_id: z.string().optional(),
     product_id: z.string(),
     size_ml: z.number().int().positive(),
     quantity: z.number().int().positive().default(1),

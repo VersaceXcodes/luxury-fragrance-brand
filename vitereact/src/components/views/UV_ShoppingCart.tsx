@@ -66,9 +66,11 @@ const UV_ShoppingCart: React.FC = () => {
           }
         }
       );
+      // Parse cost fields from string to number (PostgreSQL returns DECIMAL as string)
       return response.data.map((method: any) => ({
         ...method,
-        cost: Number(method.cost || 0)
+        cost: parseFloat(method.calculated_cost || method.cost || 0),
+        free_threshold: method.free_threshold ? parseFloat(method.free_threshold) : null
       }));
     },
     enabled: !!zipCode && subtotal > 0,

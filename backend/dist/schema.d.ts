@@ -1145,7 +1145,7 @@ export declare const cartItemSchema: z.ZodObject<{
     added_at?: Date;
 }>;
 export declare const createCartItemInputSchema: z.ZodObject<{
-    cart_id: z.ZodString;
+    cart_id: z.ZodOptional<z.ZodString>;
     product_id: z.ZodString;
     size_ml: z.ZodNumber;
     quantity: z.ZodDefault<z.ZodNumber>;
