@@ -17,7 +17,7 @@ interface RecentOrder {
   order_id: string;
   order_number: string;
   order_status: string;
-  total_amount: number;
+  total_amount: number | string;
   created_at: string;
 }
 
@@ -249,7 +249,7 @@ const GV_AccountDropdown: React.FC = () => {
                           <p className="text-xs font-medium text-gray-900">#{order.order_number}</p>
                           <p className="text-xs text-gray-600 capitalize">{order.order_status}</p>
                         </div>
-                        <p className="text-xs font-medium text-gray-900">${order.total_amount.toFixed(2)}</p>
+                        <p className="text-xs font-medium text-gray-900">${Number(order.total_amount).toFixed(2)}</p>
                       </div>
                     </Link>
                   ))}

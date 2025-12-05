@@ -124,6 +124,7 @@ const App: React.FC = () => {
               <Route path="/cart" element={<UV_ShoppingCart />} />
               <Route path="/checkout" element={<UV_Checkout />} />
               <Route path="/login" element={<UV_LoginRegistration />} />
+              <Route path="/sign-in" element={<UV_LoginRegistration />} />
               <Route path="/fragrance-finder" element={<UV_FragranceFinder />} />
               <Route path="/samples" element={<UV_SampleProgram />} />
               <Route path="/gifts" element={<UV_GiftServices />} />

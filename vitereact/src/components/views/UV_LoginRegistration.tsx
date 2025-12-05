@@ -117,14 +117,17 @@ const UV_LoginRegistration: React.FC = () => {
   const currentUser = useAppStore(state => state.authentication_state.current_user);
   const loginUser = useAppStore(state => state.login_user);
   const registerUser = useAppStore(state => state.register_user);
+  const logoutUser = useAppStore(state => state.logout_user);
   const clearAuthError = useAppStore(state => state.clear_auth_error);
+  const showNotification = useAppStore(state => state.show_notification);
   
-  // Redirect if already authenticated
+  // Redirect if already authenticated (unless force_logout param is present)
+  const forceLogout = searchParams.get('force_logout') === 'true';
   useEffect(() => {
-    if (isAuthenticated && currentUser) {
+    if (isAuthenticated && currentUser && !forceLogout) {
       navigate(redirectTo);
     }
-  }, [isAuthenticated, currentUser, navigate, redirectTo]);
+  }, [isAuthenticated, currentUser, navigate, redirectTo, forceLogout]);
   
   // Clear errors when switching modes
   useEffect(() => {

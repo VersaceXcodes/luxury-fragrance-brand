@@ -9,14 +9,14 @@ interface Order {
   order_id: string;
   user_id: string | null;
   order_number: string;
-  order_status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
+  order_status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded' | 'completed';
   payment_status: 'pending' | 'paid' | 'failed' | 'refunded' | 'partially_refunded';
   fulfillment_status: 'unfulfilled' | 'partial' | 'fulfilled';
-  subtotal: number;
-  tax_amount: number;
-  shipping_cost: number;
-  discount_amount: number;
-  total_amount: number;
+  subtotal: number | string;
+  tax_amount: number | string;
+  shipping_cost: number | string;
+  discount_amount: number | string;
+  total_amount: number | string;
   currency: string;
   shipping_address_id: string;
   billing_address_id: string;
@@ -316,11 +316,12 @@ const UV_OrderHistory: React.FC = () => {
   };
 
   // Format currency
-  const formatCurrency = (amount: number, currency: string = 'USD') => {
+  const formatCurrency = (amount: number | string, currency: string = 'USD') => {
+    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: currency,
-    }).format(amount);
+    }).format(numAmount);
   };
 
   // Format date
