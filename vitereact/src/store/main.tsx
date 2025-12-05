@@ -753,8 +753,8 @@ export const useAppStore = create<AppState>()(
           const cart = response.data;
           const items = cart.items || [];
 
-          // Calculate totals
-          const subtotal = items.reduce((sum: number, item: any) => sum + (item.unit_price * item.quantity), 0);
+          // Calculate totals - convert unit_price to number if it's a string
+          const subtotal = items.reduce((sum: number, item: any) => sum + (Number(item.unit_price) * item.quantity), 0);
           const item_count = items.reduce((count: number, item: any) => count + item.quantity, 0);
 
           set((state) => ({
@@ -767,7 +767,7 @@ export const useAppStore = create<AppState>()(
                 brand_name: item.brand_name || 'Unknown Brand',
                 size_ml: item.size_ml,
                 quantity: item.quantity,
-                unit_price: item.unit_price,
+                unit_price: Number(item.unit_price), // Convert string to number
                 gift_wrap: item.gift_wrap || false,
                 sample_included: item.sample_included || false,
                 added_at: item.added_at,
