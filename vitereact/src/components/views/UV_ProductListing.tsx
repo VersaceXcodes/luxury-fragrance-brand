@@ -63,7 +63,7 @@ const UV_ProductListing: React.FC = () => {
   const addToCart = useAppStore(state => state.add_to_cart);
   const showNotification = useAppStore(state => state.show_notification);
 
-  // Parse URL parameters and sync with store
+  // Parse URL parameters and sync with store (ONLY on mount and URL changes)
   useEffect(() => {
     const params = Object.fromEntries(searchParams.entries());
     
@@ -108,7 +108,7 @@ const UV_ProductListing: React.FC = () => {
     if (page !== currentPage) {
       setCurrentPage(page);
     }
-  }, [searchParams, currentPage, currentQuery, activeFilters, sortBy, updateSearchQuery, updateSearchFilters, updateSortOption]);
+  }, [searchParams]); // Only depend on searchParams to avoid circular updates
 
   // Update URL when store state changes
   useEffect(() => {
@@ -119,8 +119,8 @@ const UV_ProductListing: React.FC = () => {
     if (currentPage > 1) newParams.set('page', currentPage.toString());
     
     // Add filters to URL
-    if (activeFilters.price_min) newParams.set('price_min', activeFilters.price_min.toString());
-    if (activeFilters.price_max) newParams.set('price_max', activeFilters.price_max.toString());
+    if (activeFilters.price_min !== null) newParams.set('price_min', activeFilters.price_min.toString());
+    if (activeFilters.price_max !== null) newParams.set('price_max', activeFilters.price_max.toString());
     if (activeFilters.brand_ids.length > 0) newParams.set('brand_ids', activeFilters.brand_ids.join(','));
     if (activeFilters.fragrance_families.length > 0) newParams.set('fragrance_families', activeFilters.fragrance_families.join(','));
     if (activeFilters.size_options.length > 0) newParams.set('size_options', activeFilters.size_options.join(','));
@@ -128,12 +128,21 @@ const UV_ProductListing: React.FC = () => {
     if (activeFilters.season_suitability.length > 0) newParams.set('season_suitability', activeFilters.season_suitability.join(','));
     if (activeFilters.availability_status.length > 0) newParams.set('availability_status', activeFilters.availability_status.join(','));
 
-    setSearchParams(newParams, { replace: true });
-  }, [currentQuery, activeFilters, sortBy, currentPage, setSearchParams]);
+    const currentSearch = searchParams.toString();
+    const newSearch = newParams.toString();
+    
+    // Only update if URL actually changed to prevent unnecessary re-renders
+    if (currentSearch !== newSearch) {
+      setSearchParams(newParams, { replace: true });
+    }
+  }, [currentQuery, activeFilters, sortBy, currentPage]);
+
+  // Serialize active filters for query key to ensure proper cache invalidation
+  const serializedFilters = useMemo(() => JSON.stringify(activeFilters), [activeFilters]);
 
   // API queries
   const productsQuery = useQuery({
-    queryKey: ['products', currentQuery, activeFilters, sortBy, currentPage],
+    queryKey: ['products', currentQuery, serializedFilters, sortBy, currentPage],
     queryFn: async (): Promise<ProductsResponse> => {
       const params: any = {
         page: currentPage,
@@ -142,8 +151,8 @@ const UV_ProductListing: React.FC = () => {
       };
 
       if (currentQuery) params.query = currentQuery;
-      if (activeFilters.price_min) params.price_min = activeFilters.price_min;
-      if (activeFilters.price_max) params.price_max = activeFilters.price_max;
+      if (activeFilters.price_min !== null) params.price_min = activeFilters.price_min;
+      if (activeFilters.price_max !== null) params.price_max = activeFilters.price_max;
       if (activeFilters.brand_ids.length > 0) params.brand_ids = activeFilters.brand_ids.join(',');
       if (activeFilters.fragrance_families.length > 0) params.fragrance_families = activeFilters.fragrance_families.join(',');
       if (activeFilters.size_options.length > 0) params.size_options = activeFilters.size_options.join(',');
@@ -154,8 +163,10 @@ const UV_ProductListing: React.FC = () => {
       const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/products`, { params });
       return response.data;
     },
-    staleTime: 60000,
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000, // Cache for 5 minutes
     refetchOnWindowFocus: false,
+    refetchOnMount: true,
   });
 
   const brandsQuery = useQuery({
@@ -294,7 +305,13 @@ const UV_ProductListing: React.FC = () => {
               <div className="mt-4 md:mt-0 flex items-center space-x-4">
                 {/* Results count */}
                 <span className="text-sm text-gray-500">
-                  {pagination ? `${pagination.total} products` : ''}
+                  {productsQuery.isLoading ? (
+                    'Loading...'
+                  ) : pagination ? (
+                    `${pagination.total} product${pagination.total !== 1 ? 's' : ''}`
+                  ) : (
+                    '0 products'
+                  )}
                 </span>
                 
                 {/* Sort dropdown */}
