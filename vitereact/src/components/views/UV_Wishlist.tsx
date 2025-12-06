@@ -76,7 +76,11 @@ const UV_Wishlist: React.FC = () => {
   const [bulkActionMode, setBulkActionMode] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [newWishlistName, setNewWishlistName] = useState('');
+  const [editWishlistName, setEditWishlistName] = useState('');
+  const [deleteWishlistId, setDeleteWishlistId] = useState<string | null>(null);
   const [sharingOptions, setSharingOptions] = useState<ShareOptions>({
     public_url: null,
     share_token: null,
@@ -250,6 +254,71 @@ const UV_Wishlist: React.FC = () => {
     }
   });
 
+  // Update wishlist mutation
+  const updateWishlistMutation = useMutation({
+    mutationFn: async ({ wishlist_id, wishlist_name, is_public }: { wishlist_id: string; wishlist_name: string; is_public: boolean }) => {
+      const response = await axios.put(
+        `${getApiUrl()}/api/wishlists/${wishlist_id}`,
+        { wishlist_name, is_public },
+        { headers: getAuthHeaders() }
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['wishlists', currentUser?.user_id] });
+      queryClient.invalidateQueries({ queryKey: ['wishlist', currentWishlistId] });
+      setShowEditModal(false);
+      setEditWishlistName('');
+      showNotification({
+        type: 'success',
+        message: 'Wishlist updated successfully',
+        auto_dismiss: true,
+        duration: 3000
+      });
+    },
+    onError: (error: any) => {
+      showNotification({
+        type: 'error',
+        message: error.response?.data?.message || 'Failed to update wishlist',
+        auto_dismiss: true,
+        duration: 5000
+      });
+    }
+  });
+
+  // Delete wishlist mutation
+  const deleteWishlistMutation = useMutation({
+    mutationFn: async (wishlist_id: string) => {
+      await axios.delete(
+        `${getApiUrl()}/api/wishlists/${wishlist_id}`,
+        { headers: getAuthHeaders() }
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['wishlists', currentUser?.user_id] });
+      setShowDeleteModal(false);
+      setDeleteWishlistId(null);
+      // Switch to another wishlist if current one was deleted
+      if (deleteWishlistId === currentWishlistId) {
+        setCurrentWishlistId(null);
+      }
+      showNotification({
+        type: 'success',
+        message: 'Wishlist deleted successfully',
+        auto_dismiss: true,
+        duration: 3000
+      });
+    },
+    onError: (error: any) => {
+      showNotification({
+        type: 'error',
+        message: error.response?.data?.message || 'Failed to delete wishlist',
+        auto_dismiss: true,
+        duration: 5000
+      });
+    }
+  });
+
   // Generate share link mutation
   const generateShareLinkMutation = useMutation({
     mutationFn: async () => {
@@ -301,6 +370,21 @@ const UV_Wishlist: React.FC = () => {
     }
     setSelectedItems([]);
     setBulkActionMode(false);
+  };
+
+  // Handle edit wishlist
+  const handleEditWishlist = () => {
+    const currentWishlist = wishlists.find(w => w.wishlist_id === currentWishlistId);
+    if (currentWishlist) {
+      setEditWishlistName(currentWishlist.wishlist_name);
+      setShowEditModal(true);
+    }
+  };
+
+  // Handle delete wishlist
+  const handleDeleteWishlist = (wishlist_id: string) => {
+    setDeleteWishlistId(wishlist_id);
+    setShowDeleteModal(true);
   };
 
   // Copy share link to clipboard
@@ -417,26 +501,52 @@ const UV_Wishlist: React.FC = () => {
             </div>
 
             {/* Wishlist Tabs */}
-            {wishlists.length > 1 && (
+            {wishlists.length > 0 && (
               <div className="mt-6 border-b border-gray-200">
-                <nav className="-mb-px flex space-x-8 overflow-x-auto">
-                  {wishlists.map((wishlist) => (
-                    <button
-                      key={wishlist.wishlist_id}
-                      onClick={() => setCurrentWishlistId(wishlist.wishlist_id)}
-                      className={`whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
-                        currentWishlistId === wishlist.wishlist_id
-                          ? 'border-purple-500 text-purple-600'
-                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                      }`}
-                    >
-                      {wishlist.wishlist_name}
-                      <span className="ml-2 bg-gray-100 text-gray-900 py-0.5 px-2.5 rounded-full text-xs">
-                        {wishlist.item_count || 0}
-                      </span>
-                    </button>
-                  ))}
-                </nav>
+                <div className="flex items-center justify-between mb-2">
+                  <nav className="-mb-px flex space-x-8 overflow-x-auto flex-1">
+                    {wishlists.map((wishlist) => (
+                      <button
+                        key={wishlist.wishlist_id}
+                        onClick={() => setCurrentWishlistId(wishlist.wishlist_id)}
+                        className={`whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                          currentWishlistId === wishlist.wishlist_id
+                            ? 'border-purple-500 text-purple-600'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        }`}
+                      >
+                        {wishlist.wishlist_name}
+                        <span className="ml-2 bg-gray-100 text-gray-900 py-0.5 px-2.5 rounded-full text-xs">
+                          {wishlist.item_count || 0}
+                        </span>
+                      </button>
+                    ))}
+                  </nav>
+                  
+                  {/* Edit and Delete buttons for current wishlist */}
+                  {currentWishlistId && (
+                    <div className="flex items-center space-x-2 ml-4">
+                      <button
+                        onClick={handleEditWishlist}
+                        className="p-2 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-md transition-colors"
+                        title="Edit wishlist name"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteWishlist(currentWishlistId)}
+                        className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                        title="Delete wishlist"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 
@@ -731,6 +841,128 @@ const UV_Wishlist: React.FC = () => {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* Edit Wishlist Modal */}
+        {showEditModal && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg max-w-md w-full p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-medium text-gray-900">Edit Wishlist</h3>
+                <button
+                  onClick={() => {
+                    setShowEditModal(false);
+                    setEditWishlistName('');
+                  }}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                if (editWishlistName.trim() && currentWishlistId) {
+                  const currentWishlist = wishlists.find(w => w.wishlist_id === currentWishlistId);
+                  updateWishlistMutation.mutate({
+                    wishlist_id: currentWishlistId,
+                    wishlist_name: editWishlistName.trim(),
+                    is_public: currentWishlist?.is_public || false
+                  });
+                }
+              }}>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Wishlist Name
+                  </label>
+                  <input
+                    type="text"
+                    value={editWishlistName}
+                    onChange={(e) => setEditWishlistName(e.target.value)}
+                    placeholder="Enter wishlist name"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    maxLength={255}
+                    required
+                  />
+                </div>
+                
+                <div className="flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowEditModal(false);
+                      setEditWishlistName('');
+                    }}
+                    className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={updateWishlistMutation.isPending || !editWishlistName.trim()}
+                    className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 disabled:opacity-50 transition-colors"
+                  >
+                    {updateWishlistMutation.isPending ? 'Updating...' : 'Update Wishlist'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Wishlist Modal */}
+        {showDeleteModal && deleteWishlistId && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg max-w-md w-full p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-medium text-gray-900">Delete Wishlist</h3>
+                <button
+                  onClick={() => {
+                    setShowDeleteModal(false);
+                    setDeleteWishlistId(null);
+                  }}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              <div className="mb-6">
+                <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
+                  <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <p className="text-center text-gray-700">
+                  Are you sure you want to delete this wishlist? This action cannot be undone and will remove all items in the wishlist.
+                </p>
+              </div>
+              
+              <div className="flex justify-end space-x-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowDeleteModal(false);
+                    setDeleteWishlistId(null);
+                  }}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => deleteWishlistMutation.mutate(deleteWishlistId)}
+                  disabled={deleteWishlistMutation.isPending}
+                  className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700 disabled:opacity-50 transition-colors"
+                >
+                  {deleteWishlistMutation.isPending ? 'Deleting...' : 'Delete Wishlist'}
+                </button>
+              </div>
             </div>
           </div>
         )}
