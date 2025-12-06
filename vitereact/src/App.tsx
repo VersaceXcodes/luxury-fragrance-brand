@@ -33,6 +33,7 @@ import UV_Journal from '@/components/views/UV_Journal.tsx';
 import UV_FAQ from '@/components/views/UV_FAQ.tsx';
 import UV_Contact from '@/components/views/UV_Contact.tsx';
 import UV_BrandDetail from '@/components/views/UV_BrandDetail.tsx';
+import UV_NotFound from '@/components/views/UV_NotFound.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -192,8 +193,8 @@ const App: React.FC = () => {
                 } 
               />
               
-              {/* Catch all route - redirect to homepage */}
-              <Route path="*" element={<Navigate to="/" replace />} />
+              {/* Catch all route - 404 Not Found */}
+              <Route path="*" element={<UV_NotFound />} />
             </Routes>
           </main>
           
