@@ -6,8 +6,8 @@
     "registration_endpoint": "/api/auth/register",
     "login_endpoint": "/api/auth/login"
   },
-  "total_users": 6,
-  "verified_users": 6,
+  "total_users": 7,
+  "verified_users": 7,
   "users": [
     {
       "user_id": "user_001",
@@ -86,6 +86,19 @@
       "fragrance_profile": "{\"preferred_families\": [\"floral\", \"fresh\"], \"intensity\": \"moderate\"}",
       "verified": true,
       "role": "customer"
+    },
+    {
+      "user_id": "user_007",
+      "email": "versacecodes@gmail.com",
+      "password": "Airplanes@99",
+      "first_name": "Guest",
+      "last_name": "User",
+      "phone_number": "+1234567896",
+      "loyalty_tier": "bronze",
+      "email_verified": true,
+      "fragrance_profile": "{\"preferred_families\": [\"fresh\", \"citrus\"], \"intensity\": \"moderate\"}",
+      "verified": true,
+      "role": "customer"
     }
   ],
   "by_role": {
@@ -131,6 +144,14 @@
         "last_name": "Thompson",
         "loyalty_tier": "gold",
         "verified": true
+      },
+      {
+        "email": "versacecodes@gmail.com",
+        "password": "Airplanes@99",
+        "first_name": "Guest",
+        "last_name": "User",
+        "loyalty_tier": "bronze",
+        "verified": true
       }
     ],
     "vip_customer": [
@@ -147,7 +168,7 @@
   "loyalty_tiers": {
     "bronze": {
       "description": "Entry level tier",
-      "users": ["carol.white@email.com"]
+      "users": ["carol.white@email.com", "versacecodes@gmail.com"]
     },
     "silver": {
       "description": "Mid-level tier with some benefits",
@@ -172,14 +193,16 @@
       "new_user": "carol.white@email.com (email not verified)",
       "regular_user": "alice.smith@email.com (gold tier)",
       "admin_user": "bob.jones@email.com (admin access)",
-      "vip_user": "david.brown@email.com (platinum tier)"
+      "vip_user": "david.brown@email.com (platinum tier)",
+      "guest_user": "versacecodes@gmail.com (bronze tier - for testing)"
     },
     "fragrance_preferences": {
       "floral_lover": "alice.smith@email.com",
       "woody_oriental": "bob.jones@email.com", 
       "fresh_citrus": "carol.white@email.com",
       "spicy_leather": "david.brown@email.com",
-      "gourmand_vanilla": "emma.davis@email.com"
+      "gourmand_vanilla": "emma.davis@email.com",
+      "guest_tester": "versacecodes@gmail.com"
     }
   },
   "api_test_examples": {
