@@ -254,22 +254,7 @@ const UV_ProductListing: React.FC = () => {
     setCurrentPage(1);
   };
 
-  const handleAddToCart = async (product: Product) => {
-    try {
-      await addToCart({
-        product_id: product.product_id,
-        product_name: product.product_name,
-        brand_name: 'Brand Name', // Would need to join with brand data
-        size_ml: 50, // Default size, would need size selection
-        quantity: 1,
-        unit_price: product.sale_price || product.base_price,
-        gift_wrap: false,
-        sample_included: false,
-      });
-    } catch (error) {
-      console.error('Failed to add to cart:', error);
-    }
-  };
+  // Removed handleAddToCart - users should view product details to select size before adding to cart
 
   // Get active filter count
   const activeFilterCount = useMemo(() => {
@@ -686,19 +671,24 @@ const UV_ProductListing: React.FC = () => {
                                 </svg>
                               </button>
                               
-                              <button
+                              <Link
+                                to={`/products/${product.product_id}`}
                                 onClick={(e) => {
-                                  e.preventDefault();
-                                  handleAddToCart(product);
+                                  if (product.availability_status !== 'in_stock') {
+                                    e.preventDefault();
+                                  }
                                 }}
-                                disabled={product.availability_status !== 'in_stock'}
-                                className="p-2 bg-purple-600 text-white rounded-full shadow-md hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                                aria-label="Add to cart"
+                                className={`p-2 rounded-full shadow-md ${
+                                  product.availability_status !== 'in_stock'
+                                    ? 'bg-gray-400 cursor-not-allowed'
+                                    : 'bg-purple-600 text-white hover:bg-purple-700'
+                                }`}
+                                aria-label="View product details"
                               >
                                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.1 5H19M7 13v8a2 2 0 002 2h6a2 2 0 002-2v-8m-8 0V9a2 2 0 012-2h4a2 2 0 012 2v4.1" />
                                 </svg>
-                              </button>
+                              </Link>
                             </div>
                           </div>
                         </div>
