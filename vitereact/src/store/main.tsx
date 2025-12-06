@@ -10,6 +10,8 @@ interface User {
   last_name: string;
   phone_number: string | null;
   date_of_birth: string | null;
+  user_role?: string;
+  role?: string; // Support both user_role and role for compatibility
   loyalty_tier: string | null;
   email_verified: boolean;
   notification_preferences: string;

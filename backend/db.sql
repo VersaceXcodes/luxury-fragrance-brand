@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
     last_name VARCHAR(255) NOT NULL,
     phone_number VARCHAR(255),
     date_of_birth VARCHAR(255),
+    user_role VARCHAR(255) NOT NULL DEFAULT 'customer',
     loyalty_tier VARCHAR(255),
     email_verified BOOLEAN NOT NULL DEFAULT FALSE,
     notification_preferences TEXT NOT NULL DEFAULT '{"email_marketing": false, "sms_updates": false, "restock_alerts": true, "price_drop_alerts": true}',
@@ -438,14 +439,14 @@ CREATE TABLE IF NOT EXISTS ticket_messages (
 
 -- Seed data
 -- Users
-INSERT INTO users (user_id, email, password_hash, first_name, last_name, phone_number, date_of_birth, loyalty_tier, email_verified, notification_preferences, fragrance_profile, created_at, updated_at) VALUES 
-('user_001', 'alice.smith@email.com', 'password123', 'Alice', 'Smith', '+1234567890', '1990-05-15', 'gold', TRUE, '{"email_marketing": true, "sms_updates": false, "restock_alerts": true, "price_drop_alerts": true}', '{"preferred_families": ["floral", "fresh"], "intensity": "moderate"}', '2024-01-15T09:00:00Z', '2024-01-15T09:00:00Z'),
-('user_002', 'bob.jones@email.com', 'admin123', 'Bob', 'Jones', '+1234567891', '1985-08-22', 'silver', TRUE, '{"email_marketing": false, "sms_updates": true, "restock_alerts": true, "price_drop_alerts": false}', '{"preferred_families": ["woody", "oriental"], "intensity": "strong"}', '2024-01-16T10:30:00Z', '2024-01-16T10:30:00Z'),
-('user_003', 'carol.white@email.com', 'user123', 'Carol', 'White', '+1234567892', '1992-12-03', 'bronze', FALSE, '{"email_marketing": true, "sms_updates": true, "restock_alerts": true, "price_drop_alerts": true}', '{"preferred_families": ["citrus", "aquatic"], "intensity": "light"}', '2024-01-17T11:15:00Z', '2024-01-17T11:15:00Z'),
-('user_004', 'david.brown@email.com', 'secure456', 'David', 'Brown', '+1234567893', '1988-03-18', 'platinum', TRUE, '{"email_marketing": true, "sms_updates": false, "restock_alerts": true, "price_drop_alerts": true}', '{"preferred_families": ["spicy", "leather"], "intensity": "very_strong"}', '2024-01-18T14:20:00Z', '2024-01-18T14:20:00Z'),
-('user_005', 'emma.davis@email.com', 'mypass789', 'Emma', 'Davis', '+1234567894', '1995-07-09', 'gold', TRUE, '{"email_marketing": false, "sms_updates": false, "restock_alerts": true, "price_drop_alerts": false}', '{"preferred_families": ["gourmand", "vanilla"], "intensity": "moderate"}', '2024-01-19T16:45:00Z', '2024-01-19T16:45:00Z'),
-('user_006', 'sarah.thompson@email.com', 'guestpass123', 'Sarah', 'Thompson', '+1234567895', '1993-11-25', 'gold', TRUE, '{"email_marketing": true, "sms_updates": false, "restock_alerts": true, "price_drop_alerts": true}', '{"preferred_families": ["floral", "fresh"], "intensity": "moderate"}', '2024-01-20T09:00:00Z', '2024-01-20T09:00:00Z'),
-('user_007', 'versacecodes@gmail.com', 'Airplanes@99', 'Guest', 'User', '+1234567896', '1990-01-01', 'bronze', TRUE, '{"email_marketing": true, "sms_updates": false, "restock_alerts": true, "price_drop_alerts": true}', '{"preferred_families": ["fresh", "citrus"], "intensity": "moderate"}', '2024-01-21T10:00:00Z', '2024-01-21T10:00:00Z')
+INSERT INTO users (user_id, email, password_hash, first_name, last_name, phone_number, date_of_birth, user_role, loyalty_tier, email_verified, notification_preferences, fragrance_profile, created_at, updated_at) VALUES 
+('user_001', 'alice.smith@email.com', 'password123', 'Alice', 'Smith', '+1234567890', '1990-05-15', 'customer', 'gold', TRUE, '{"email_marketing": true, "sms_updates": false, "restock_alerts": true, "price_drop_alerts": true}', '{"preferred_families": ["floral", "fresh"], "intensity": "moderate"}', '2024-01-15T09:00:00Z', '2024-01-15T09:00:00Z'),
+('user_002', 'bob.jones@email.com', 'admin123', 'Bob', 'Jones', '+1234567891', '1985-08-22', 'admin', 'silver', TRUE, '{"email_marketing": false, "sms_updates": true, "restock_alerts": true, "price_drop_alerts": false}', '{"preferred_families": ["woody", "oriental"], "intensity": "strong"}', '2024-01-16T10:30:00Z', '2024-01-16T10:30:00Z'),
+('user_003', 'carol.white@email.com', 'user123', 'Carol', 'White', '+1234567892', '1992-12-03', 'customer', 'bronze', FALSE, '{"email_marketing": true, "sms_updates": true, "restock_alerts": true, "price_drop_alerts": true}', '{"preferred_families": ["citrus", "aquatic"], "intensity": "light"}', '2024-01-17T11:15:00Z', '2024-01-17T11:15:00Z'),
+('user_004', 'david.brown@email.com', 'secure456', 'David', 'Brown', '+1234567893', '1988-03-18', 'vip_customer', 'platinum', TRUE, '{"email_marketing": true, "sms_updates": false, "restock_alerts": true, "price_drop_alerts": true}', '{"preferred_families": ["spicy", "leather"], "intensity": "very_strong"}', '2024-01-18T14:20:00Z', '2024-01-18T14:20:00Z'),
+('user_005', 'emma.davis@email.com', 'mypass789', 'Emma', 'Davis', '+1234567894', '1995-07-09', 'customer', 'gold', TRUE, '{"email_marketing": false, "sms_updates": false, "restock_alerts": true, "price_drop_alerts": false}', '{"preferred_families": ["gourmand", "vanilla"], "intensity": "moderate"}', '2024-01-19T16:45:00Z', '2024-01-19T16:45:00Z'),
+('user_006', 'sarah.thompson@email.com', 'guestpass123', 'Sarah', 'Thompson', '+1234567895', '1993-11-25', 'host', 'gold', TRUE, '{"email_marketing": true, "sms_updates": false, "restock_alerts": true, "price_drop_alerts": true}', '{"preferred_families": ["floral", "fresh"], "intensity": "moderate"}', '2024-01-20T09:00:00Z', '2024-01-20T09:00:00Z'),
+('user_007', 'versacecodes@gmail.com', 'Airplanes@99', 'Guest', 'User', '+1234567896', '1990-01-01', 'customer', 'bronze', TRUE, '{"email_marketing": true, "sms_updates": false, "restock_alerts": true, "price_drop_alerts": true}', '{"preferred_families": ["fresh", "citrus"], "intensity": "moderate"}', '2024-01-21T10:00:00Z', '2024-01-21T10:00:00Z')
 ON CONFLICT (user_id) DO NOTHING;
 
 -- Brands

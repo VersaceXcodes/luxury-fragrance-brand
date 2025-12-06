@@ -231,10 +231,10 @@ app.post('/api/auth/register', async (req, res) => {
         const userId = uuidv4();
         const now = new Date().toISOString();
         const result = await client.query(`INSERT INTO users (user_id, email, password_hash, first_name, last_name, phone_number, date_of_birth, 
-       notification_preferences, email_verified, created_at, updated_at) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
-       RETURNING user_id, email, first_name, last_name, phone_number, date_of_birth, loyalty_tier, email_verified, created_at`, [userId, validatedData.email.toLowerCase(), validatedData.password, validatedData.first_name, validatedData.last_name,
-            validatedData.phone_number, validatedData.date_of_birth, validatedData.notification_preferences, false, now, now]);
+       user_role, notification_preferences, email_verified, created_at, updated_at) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) 
+       RETURNING user_id, email, first_name, last_name, phone_number, date_of_birth, user_role, loyalty_tier, email_verified, created_at`, [userId, validatedData.email.toLowerCase(), validatedData.password, validatedData.first_name, validatedData.last_name,
+            validatedData.phone_number, validatedData.date_of_birth, 'customer', validatedData.notification_preferences, false, now, now]);
         client.release();
         const user = result.rows[0];
         // Generate JWT token
@@ -321,7 +321,7 @@ loyalty status, and fragrance profile data for personalization features
 app.get('/api/users/profile', authenticateToken, async (req, res) => {
     try {
         const client = await pool.connect();
-        const result = await client.query('SELECT user_id, email, first_name, last_name, phone_number, date_of_birth, loyalty_tier, email_verified, notification_preferences, fragrance_profile, created_at, updated_at FROM users WHERE user_id = $1', [req.user.user_id]);
+        const result = await client.query('SELECT user_id, email, first_name, last_name, phone_number, date_of_birth, user_role, loyalty_tier, email_verified, notification_preferences, fragrance_profile, created_at, updated_at FROM users WHERE user_id = $1', [req.user.user_id]);
         client.release();
         if (result.rows.length === 0) {
             return res.status(404).json(createErrorResponse('User not found', null, 'USER_NOT_FOUND'));

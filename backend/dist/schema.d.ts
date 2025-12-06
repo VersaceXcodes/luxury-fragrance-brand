@@ -7,6 +7,7 @@ export declare const userSchema: z.ZodObject<{
     last_name: z.ZodString;
     phone_number: z.ZodNullable<z.ZodString>;
     date_of_birth: z.ZodNullable<z.ZodString>;
+    user_role: z.ZodDefault<z.ZodEnum<["customer", "host", "admin", "vip_customer"]>>;
     loyalty_tier: z.ZodNullable<z.ZodString>;
     email_verified: z.ZodBoolean;
     notification_preferences: z.ZodString;
@@ -21,6 +22,7 @@ export declare const userSchema: z.ZodObject<{
     last_name?: string;
     phone_number?: string;
     date_of_birth?: string;
+    user_role?: "customer" | "host" | "admin" | "vip_customer";
     loyalty_tier?: string;
     email_verified?: boolean;
     notification_preferences?: string;
@@ -35,6 +37,7 @@ export declare const userSchema: z.ZodObject<{
     last_name?: string;
     phone_number?: string;
     date_of_birth?: string;
+    user_role?: "customer" | "host" | "admin" | "vip_customer";
     loyalty_tier?: string;
     email_verified?: boolean;
     notification_preferences?: string;
@@ -49,6 +52,7 @@ export declare const createUserInputSchema: z.ZodObject<{
     last_name: z.ZodString;
     phone_number: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     date_of_birth: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    user_role: z.ZodOptional<z.ZodDefault<z.ZodEnum<["customer", "host", "admin", "vip_customer"]>>>;
     loyalty_tier: z.ZodOptional<z.ZodNullable<z.ZodEnum<["bronze", "silver", "gold", "platinum"]>>>;
     email_verified: z.ZodDefault<z.ZodBoolean>;
     notification_preferences: z.ZodDefault<z.ZodString>;
@@ -59,6 +63,7 @@ export declare const createUserInputSchema: z.ZodObject<{
     last_name?: string;
     phone_number?: string;
     date_of_birth?: string;
+    user_role?: "customer" | "host" | "admin" | "vip_customer";
     loyalty_tier?: "bronze" | "silver" | "gold" | "platinum";
     email_verified?: boolean;
     notification_preferences?: string;
@@ -70,6 +75,7 @@ export declare const createUserInputSchema: z.ZodObject<{
     last_name?: string;
     phone_number?: string;
     date_of_birth?: string;
+    user_role?: "customer" | "host" | "admin" | "vip_customer";
     loyalty_tier?: "bronze" | "silver" | "gold" | "platinum";
     email_verified?: boolean;
     notification_preferences?: string;
@@ -83,6 +89,7 @@ export declare const updateUserInputSchema: z.ZodObject<{
     last_name: z.ZodOptional<z.ZodString>;
     phone_number: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     date_of_birth: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    user_role: z.ZodOptional<z.ZodEnum<["customer", "host", "admin", "vip_customer"]>>;
     loyalty_tier: z.ZodOptional<z.ZodNullable<z.ZodEnum<["bronze", "silver", "gold", "platinum"]>>>;
     email_verified: z.ZodOptional<z.ZodBoolean>;
     notification_preferences: z.ZodOptional<z.ZodString>;
@@ -94,6 +101,7 @@ export declare const updateUserInputSchema: z.ZodObject<{
     last_name?: string;
     phone_number?: string;
     date_of_birth?: string;
+    user_role?: "customer" | "host" | "admin" | "vip_customer";
     loyalty_tier?: "bronze" | "silver" | "gold" | "platinum";
     email_verified?: boolean;
     notification_preferences?: string;
@@ -105,6 +113,7 @@ export declare const updateUserInputSchema: z.ZodObject<{
     last_name?: string;
     phone_number?: string;
     date_of_birth?: string;
+    user_role?: "customer" | "host" | "admin" | "vip_customer";
     loyalty_tier?: "bronze" | "silver" | "gold" | "platinum";
     email_verified?: boolean;
     notification_preferences?: string;

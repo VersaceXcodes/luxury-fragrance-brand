@@ -85,7 +85,7 @@
       "email_verified": true,
       "fragrance_profile": "{\"preferred_families\": [\"floral\", \"fresh\"], \"intensity\": \"moderate\"}",
       "verified": true,
-      "role": "customer"
+      "role": "host"
     },
     {
       "user_id": "user_007",
@@ -109,6 +109,16 @@
         "first_name": "Bob",
         "last_name": "Jones",
         "loyalty_tier": "silver",
+        "verified": true
+      }
+    ],
+    "host": [
+      {
+        "email": "sarah.thompson@email.com",
+        "password": "guestpass123",
+        "first_name": "Sarah",
+        "last_name": "Thompson",
+        "loyalty_tier": "gold",
         "verified": true
       }
     ],
@@ -137,14 +147,7 @@
         "loyalty_tier": "gold",
         "verified": true
       },
-      {
-        "email": "sarah.thompson@email.com",
-        "password": "guestpass123",
-        "first_name": "Sarah",
-        "last_name": "Thompson",
-        "loyalty_tier": "gold",
-        "verified": true
-      },
+
       {
         "email": "versacecodes@gmail.com",
         "password": "Airplanes@99",

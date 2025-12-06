@@ -16,7 +16,7 @@ import UV_ProductListing from '@/components/views/UV_ProductListing.tsx';
 import UV_ProductDetail from '@/components/views/UV_ProductDetail.tsx';
 import UV_ShoppingCart from '@/components/views/UV_ShoppingCart.tsx';
 import UV_Checkout from '@/components/views/UV_Checkout.tsx';
-import UV_AccountDashboard from '@/components/views/UV_AccountDashboard.tsx';
+import UV_DashboardRouter from '@/components/views/UV_DashboardRouter.tsx';
 import UV_LoginRegistration from '@/components/views/UV_LoginRegistration.tsx';
 import UV_Wishlist from '@/components/views/UV_Wishlist.tsx';
 import UV_FragranceFinder from '@/components/views/UV_FragranceFinder.tsx';
@@ -147,7 +147,7 @@ const App: React.FC = () => {
                 path="/account" 
                 element={
                   <ProtectedRoute>
-                    <UV_AccountDashboard />
+                    <UV_DashboardRouter />
                   </ProtectedRoute>
                 } 
               />
