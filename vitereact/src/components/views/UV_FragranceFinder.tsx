@@ -73,13 +73,21 @@ const UV_FragranceFinder: React.FC = () => {
     total_questions: number;
     can_navigate_back: boolean;
   }>({
-    status: searchParams.get('results') === 'true' ? 'results' : 'intro',
-    current_question: parseInt(searchParams.get('step') || '0'),
+    status: searchParams.get('results') === 'true' ? 'results' : 
+            (persistedQuizProgress.started_at ? 'questions' : 'intro'),
+    current_question: parseInt(searchParams.get('step') || persistedQuizProgress.current_question.toString() || '0'),
     total_questions: 15,
-    can_navigate_back: false
+    can_navigate_back: persistedQuizProgress.current_question > 0
   });
 
-  const [quizAnswers, setQuizAnswers] = useState<{ [question_id: string]: any }>({});
+  // Get persisted quiz progress from global state
+  const persistedQuizProgress = useAppStore(state => state.user_preferences.quiz_in_progress);
+  const updateQuizProgress = useAppStore(state => state.update_quiz_progress);
+  const clearQuizProgress = useAppStore(state => state.clear_quiz_progress);
+  
+  const [quizAnswers, setQuizAnswers] = useState<{ [question_id: string]: any }>(
+    persistedQuizProgress.answers || {}
+  );
   const [quizProgress, setQuizProgress] = useState({
     percentage: 0,
     completed_questions: 0,
@@ -178,6 +186,9 @@ const UV_FragranceFinder: React.FC = () => {
         completed_at: new Date().toISOString()
       });
       
+      // Clear quiz progress since we've completed it
+      clearQuizProgress();
+      
       showNotification({
         type: 'success',
         message: 'Quiz completed! Your personalized recommendations are ready.',
@@ -232,6 +243,16 @@ const UV_FragranceFinder: React.FC = () => {
         ...prev,
         total_questions: quizQuestions.length
       }));
+      
+      // If there's persisted quiz progress, notify user
+      if (persistedQuizProgress.started_at && Object.keys(persistedQuizProgress.answers).length > 0) {
+        showNotification({
+          type: 'info',
+          message: 'Your quiz progress has been restored. Continue where you left off!',
+          auto_dismiss: true,
+          duration: 5000
+        });
+      }
     }
   }, [quizQuestions]);
 
@@ -291,6 +312,12 @@ const UV_FragranceFinder: React.FC = () => {
         can_navigate_back: true
       }));
       setSearchParams({ step: nextQuestion.toString() });
+      
+      // Persist quiz progress to global state
+      updateQuizProgress(updatedAnswers, nextQuestion);
+    } else {
+      // Last question - just update answers
+      updateQuizProgress(updatedAnswers, quizState.current_question);
     }
   };
 
@@ -317,6 +344,9 @@ const UV_FragranceFinder: React.FC = () => {
       can_navigate_back: questionIndex > 0
     }));
     setSearchParams({ step: questionIndex.toString() });
+    
+    // Persist current question to global state
+    updateQuizProgress(quizAnswers, questionIndex);
   };
 
   const handleRetakeQuiz = () => {
@@ -340,6 +370,9 @@ const UV_FragranceFinder: React.FC = () => {
       save_error: null
     });
     setSearchParams({});
+    
+    // Clear persisted quiz progress
+    clearQuizProgress();
   };
 
   const handleSaveResults = () => {
@@ -497,15 +530,28 @@ const UV_FragranceFinder: React.FC = () => {
               <div className="text-center">
                 <button
                   onClick={() => {
-                    setQuizState(prev => ({ ...prev, status: 'questions' }));
-                    setSearchParams({ step: '0' });
+                    const hasProgress = persistedQuizProgress.started_at && Object.keys(persistedQuizProgress.answers).length > 0;
+                    setQuizState(prev => ({ 
+                      ...prev, 
+                      status: 'questions',
+                      current_question: hasProgress ? persistedQuizProgress.current_question : 0,
+                      can_navigate_back: hasProgress && persistedQuizProgress.current_question > 0
+                    }));
+                    setSearchParams({ step: hasProgress ? persistedQuizProgress.current_question.toString() : '0' });
                   }}
                   className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-200 transform hover:scale-105"
                 >
-                  Start Quiz
+                  {persistedQuizProgress.started_at && Object.keys(persistedQuizProgress.answers).length > 0 
+                    ? 'Continue Quiz' 
+                    : 'Start Quiz'}
                 </button>
                 <p className="text-sm text-gray-500 mt-2">
                   {quizQuestions.length} questions • ~{Math.ceil(quizQuestions.length * 20 / 60)} minutes
+                  {persistedQuizProgress.started_at && Object.keys(persistedQuizProgress.answers).length > 0 && (
+                    <span className="block text-purple-600 font-medium mt-1">
+                      {Object.keys(persistedQuizProgress.answers).length} questions already answered
+                    </span>
+                  )}
                 </p>
               </div>
             </div>

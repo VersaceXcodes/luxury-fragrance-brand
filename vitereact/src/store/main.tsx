@@ -125,6 +125,11 @@ interface UserPreferences {
   fragrance_profile: FragranceProfile | null;
   quiz_results: QuizResults | null;
   notification_preferences: NotificationPreferences;
+  quiz_in_progress: {
+    answers: { [question_id: string]: any };
+    current_question: number;
+    started_at: string | null;
+  };
 }
 
 // Main App State Interface
@@ -188,6 +193,8 @@ interface AppState {
   update_fragrance_profile: (profile: FragranceProfile) => void;
   update_quiz_results: (results: QuizResults) => void;
   update_notification_preferences: (preferences: NotificationPreferences) => void;
+  update_quiz_progress: (answers: { [question_id: string]: any }, current_question: number) => void;
+  clear_quiz_progress: () => void;
 }
 
 // Utility function to generate unique IDs
@@ -276,6 +283,11 @@ export const useAppStore = create<AppState>()(
           sms_updates: false,
           restock_alerts: true,
           price_drop_alerts: true,
+        },
+        quiz_in_progress: {
+          answers: {},
+          current_question: 0,
+          started_at: null,
         },
       },
 
@@ -798,14 +810,27 @@ export const useAppStore = create<AppState>()(
               cart_id: cart.cart_id || state.cart_state.cart_id,
             },
           }));
-        } catch {
-          // Don't show error for cart loading - might be empty or not exist yet
-          set((state) => ({
-            cart_state: {
-              ...state.cart_state,
-              is_loading: false,
-            },
-          }));
+        } catch (error) {
+          // For guest users, if cart loading fails but we have persisted cart data,
+          // keep the persisted data instead of clearing it
+          const currentCartState = get().cart_state;
+          if (!get().authentication_state.auth_token && currentCartState.items.length > 0) {
+            // Keep existing persisted cart for guest users
+            set((state) => ({
+              cart_state: {
+                ...state.cart_state,
+                is_loading: false,
+              },
+            }));
+          } else {
+            // For authenticated users or empty carts, just mark as not loading
+            set((state) => ({
+              cart_state: {
+                ...state.cart_state,
+                is_loading: false,
+              },
+            }));
+          }
         }
       },
 
@@ -969,6 +994,32 @@ export const useAppStore = create<AppState>()(
           user_preferences: {
             ...state.user_preferences,
             notification_preferences: preferences,
+          },
+        }));
+      },
+
+      update_quiz_progress: (answers: { [question_id: string]: any }, current_question: number) => {
+        set((state) => ({
+          user_preferences: {
+            ...state.user_preferences,
+            quiz_in_progress: {
+              answers,
+              current_question,
+              started_at: state.user_preferences.quiz_in_progress.started_at || new Date().toISOString(),
+            },
+          },
+        }));
+      },
+
+      clear_quiz_progress: () => {
+        set((state) => ({
+          user_preferences: {
+            ...state.user_preferences,
+            quiz_in_progress: {
+              answers: {},
+              current_question: 0,
+              started_at: null,
+            },
           },
         }));
       },
