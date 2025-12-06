@@ -1257,18 +1257,18 @@ export declare const addressSchema: z.ZodObject<{
     is_default?: boolean;
 }>;
 export declare const createAddressInputSchema: z.ZodObject<{
-    user_id: z.ZodString;
+    user_id: z.ZodOptional<z.ZodString>;
     address_type: z.ZodEnum<["shipping", "billing", "both"]>;
     first_name: z.ZodString;
     last_name: z.ZodString;
-    company: z.ZodNullable<z.ZodString>;
+    company: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     address_line_1: z.ZodString;
-    address_line_2: z.ZodNullable<z.ZodString>;
+    address_line_2: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     city: z.ZodString;
     state_province: z.ZodString;
     postal_code: z.ZodString;
     country: z.ZodString;
-    phone_number: z.ZodNullable<z.ZodString>;
+    phone_number: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     is_default: z.ZodDefault<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
     user_id?: string;

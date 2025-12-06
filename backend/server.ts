@@ -1945,11 +1945,14 @@ app.post('/api/addresses', authenticateToken, async (req: AuthenticatedRequest, 
     
     const client = await pool.connect();
     
+    // Use authenticated user's ID
+    const userId = validatedData.user_id || req.user.user_id;
+    
     // If setting as default, unset other defaults
     if (validatedData.is_default) {
       await client.query(
         'UPDATE addresses SET is_default = false WHERE user_id = $1 AND address_type = $2',
-        [req.user.user_id, validatedData.address_type]
+        [userId, validatedData.address_type]
       );
     }
 
@@ -1962,10 +1965,10 @@ app.post('/api/addresses', authenticateToken, async (req: AuthenticatedRequest, 
        is_default, created_at) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) 
        RETURNING *`,
-      [addressId, req.user.user_id, validatedData.address_type, validatedData.first_name, 
-       validatedData.last_name, validatedData.company, validatedData.address_line_1, 
-       validatedData.address_line_2, validatedData.city, validatedData.state_province, 
-       validatedData.postal_code, validatedData.country, validatedData.phone_number, 
+      [addressId, userId, validatedData.address_type, validatedData.first_name, 
+       validatedData.last_name, validatedData.company || null, validatedData.address_line_1, 
+       validatedData.address_line_2 || null, validatedData.city, validatedData.state_province, 
+       validatedData.postal_code, validatedData.country, validatedData.phone_number || null, 
        validatedData.is_default, now]
     );
 
@@ -2043,9 +2046,9 @@ app.put('/api/addresses/:address_id', authenticateToken, async (req: Authenticat
        postal_code = $9, country = $10, phone_number = $11, is_default = $12
        WHERE address_id = $13 RETURNING *`,
       [validatedData.address_type, validatedData.first_name, validatedData.last_name,
-       validatedData.company, validatedData.address_line_1, validatedData.address_line_2,
+       validatedData.company || null, validatedData.address_line_1, validatedData.address_line_2 || null,
        validatedData.city, validatedData.state_province, validatedData.postal_code,
-       validatedData.country, validatedData.phone_number, validatedData.is_default, address_id]
+       validatedData.country, validatedData.phone_number || null, validatedData.is_default, address_id]
     );
 
     client.release();

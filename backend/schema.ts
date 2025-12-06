@@ -511,18 +511,18 @@ export const addressSchema = z.object({
 });
 
 export const createAddressInputSchema = z.object({
-  user_id: z.string(),
+  user_id: z.string().optional(),
   address_type: z.enum(['shipping', 'billing', 'both']),
   first_name: z.string().min(1).max(255),
   last_name: z.string().min(1).max(255),
-  company: z.string().max(255).nullable(),
+  company: z.string().max(255).nullable().optional(),
   address_line_1: z.string().min(1).max(255),
-  address_line_2: z.string().max(255).nullable(),
+  address_line_2: z.string().max(255).nullable().optional(),
   city: z.string().min(1).max(255),
   state_province: z.string().min(1).max(255),
   postal_code: z.string().min(1).max(20),
   country: z.string().min(2).max(100),
-  phone_number: z.string().max(20).nullable(),
+  phone_number: z.string().max(20).nullable().optional(),
   is_default: z.boolean().default(false)
 });
 
