@@ -1845,6 +1845,106 @@ export declare const searchShippingMethodsInputSchema: z.ZodObject<{
     is_express?: boolean;
     requires_signature?: boolean;
 }>;
+export declare const notificationSchema: z.ZodObject<{
+    notification_id: z.ZodString;
+    user_id: z.ZodString;
+    notification_type: z.ZodEnum<["wishlist_activity", "order_update", "price_drop", "restock", "system", "general"]>;
+    title: z.ZodString;
+    message: z.ZodString;
+    reference_type: z.ZodNullable<z.ZodString>;
+    reference_id: z.ZodNullable<z.ZodString>;
+    metadata: z.ZodNullable<z.ZodString>;
+    is_read: z.ZodBoolean;
+    read_at: z.ZodNullable<z.ZodString>;
+    created_at: z.ZodDate;
+}, "strip", z.ZodTypeAny, {
+    user_id?: string;
+    created_at?: Date;
+    message?: string;
+    title?: string;
+    notification_id?: string;
+    notification_type?: "wishlist_activity" | "order_update" | "price_drop" | "restock" | "system" | "general";
+    reference_type?: string;
+    reference_id?: string;
+    metadata?: string;
+    is_read?: boolean;
+    read_at?: string;
+}, {
+    user_id?: string;
+    created_at?: Date;
+    message?: string;
+    title?: string;
+    notification_id?: string;
+    notification_type?: "wishlist_activity" | "order_update" | "price_drop" | "restock" | "system" | "general";
+    reference_type?: string;
+    reference_id?: string;
+    metadata?: string;
+    is_read?: boolean;
+    read_at?: string;
+}>;
+export declare const createNotificationInputSchema: z.ZodObject<{
+    user_id: z.ZodString;
+    notification_type: z.ZodEnum<["wishlist_activity", "order_update", "price_drop", "restock", "system", "general"]>;
+    title: z.ZodString;
+    message: z.ZodString;
+    reference_type: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    reference_id: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    metadata: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+}, "strip", z.ZodTypeAny, {
+    user_id?: string;
+    message?: string;
+    title?: string;
+    notification_type?: "wishlist_activity" | "order_update" | "price_drop" | "restock" | "system" | "general";
+    reference_type?: string;
+    reference_id?: string;
+    metadata?: string;
+}, {
+    user_id?: string;
+    message?: string;
+    title?: string;
+    notification_type?: "wishlist_activity" | "order_update" | "price_drop" | "restock" | "system" | "general";
+    reference_type?: string;
+    reference_id?: string;
+    metadata?: string;
+}>;
+export declare const updateNotificationInputSchema: z.ZodObject<{
+    notification_id: z.ZodString;
+    is_read: z.ZodOptional<z.ZodBoolean>;
+    read_at: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+}, "strip", z.ZodTypeAny, {
+    notification_id?: string;
+    is_read?: boolean;
+    read_at?: string;
+}, {
+    notification_id?: string;
+    is_read?: boolean;
+    read_at?: string;
+}>;
+export declare const searchNotificationsInputSchema: z.ZodObject<{
+    user_id: z.ZodOptional<z.ZodString>;
+    notification_type: z.ZodOptional<z.ZodEnum<["wishlist_activity", "order_update", "price_drop", "restock", "system", "general"]>>;
+    is_read: z.ZodOptional<z.ZodBoolean>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    offset: z.ZodDefault<z.ZodNumber>;
+    sort_by: z.ZodDefault<z.ZodEnum<["created_at"]>>;
+    sort_order: z.ZodDefault<z.ZodEnum<["asc", "desc"]>>;
+}, "strip", z.ZodTypeAny, {
+    user_id?: string;
+    limit?: number;
+    offset?: number;
+    sort_by?: "created_at";
+    sort_order?: "asc" | "desc";
+    notification_type?: "wishlist_activity" | "order_update" | "price_drop" | "restock" | "system" | "general";
+    is_read?: boolean;
+}, {
+    user_id?: string;
+    limit?: number;
+    offset?: number;
+    sort_by?: "created_at";
+    sort_order?: "asc" | "desc";
+    notification_type?: "wishlist_activity" | "order_update" | "price_drop" | "restock" | "system" | "general";
+    is_read?: boolean;
+}>;
 export type User = z.infer<typeof userSchema>;
 export type CreateUserInput = z.infer<typeof createUserInputSchema>;
 export type UpdateUserInput = z.infer<typeof updateUserInputSchema>;
@@ -1897,4 +1997,8 @@ export type ShippingMethod = z.infer<typeof shippingMethodSchema>;
 export type CreateShippingMethodInput = z.infer<typeof createShippingMethodInputSchema>;
 export type UpdateShippingMethodInput = z.infer<typeof updateShippingMethodInputSchema>;
 export type SearchShippingMethodsInput = z.infer<typeof searchShippingMethodsInputSchema>;
+export type Notification = z.infer<typeof notificationSchema>;
+export type CreateNotificationInput = z.infer<typeof createNotificationInputSchema>;
+export type UpdateNotificationInput = z.infer<typeof updateNotificationInputSchema>;
+export type SearchNotificationsInput = z.infer<typeof searchNotificationsInputSchema>;
 //# sourceMappingURL=schema.d.ts.map

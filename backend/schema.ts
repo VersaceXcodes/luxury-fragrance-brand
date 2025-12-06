@@ -755,6 +755,50 @@ export const searchShippingMethodsInputSchema = z.object({
 });
 
 // ============================================================================
+// NOTIFICATIONS SCHEMAS
+// ============================================================================
+
+export const notificationSchema = z.object({
+  notification_id: z.string(),
+  user_id: z.string(),
+  notification_type: z.enum(['wishlist_activity', 'order_update', 'price_drop', 'restock', 'system', 'general']),
+  title: z.string(),
+  message: z.string(),
+  reference_type: z.string().nullable(),
+  reference_id: z.string().nullable(),
+  metadata: z.string().nullable(),
+  is_read: z.boolean(),
+  read_at: z.string().nullable(),
+  created_at: z.coerce.date()
+});
+
+export const createNotificationInputSchema = z.object({
+  user_id: z.string(),
+  notification_type: z.enum(['wishlist_activity', 'order_update', 'price_drop', 'restock', 'system', 'general']),
+  title: z.string().min(1).max(255),
+  message: z.string().min(1).max(1000),
+  reference_type: z.string().max(100).nullable().optional(),
+  reference_id: z.string().max(255).nullable().optional(),
+  metadata: z.string().nullable().optional()
+});
+
+export const updateNotificationInputSchema = z.object({
+  notification_id: z.string(),
+  is_read: z.boolean().optional(),
+  read_at: z.string().nullable().optional()
+});
+
+export const searchNotificationsInputSchema = z.object({
+  user_id: z.string().optional(),
+  notification_type: z.enum(['wishlist_activity', 'order_update', 'price_drop', 'restock', 'system', 'general']).optional(),
+  is_read: z.boolean().optional(),
+  limit: z.number().int().positive().default(50),
+  offset: z.number().int().nonnegative().default(0),
+  sort_by: z.enum(['created_at']).default('created_at'),
+  sort_order: z.enum(['asc', 'desc']).default('desc')
+});
+
+// ============================================================================
 // TYPE EXPORTS
 // ============================================================================
 
@@ -822,3 +866,8 @@ export type ShippingMethod = z.infer<typeof shippingMethodSchema>;
 export type CreateShippingMethodInput = z.infer<typeof createShippingMethodInputSchema>;
 export type UpdateShippingMethodInput = z.infer<typeof updateShippingMethodInputSchema>;
 export type SearchShippingMethodsInput = z.infer<typeof searchShippingMethodsInputSchema>;
+
+export type Notification = z.infer<typeof notificationSchema>;
+export type CreateNotificationInput = z.infer<typeof createNotificationInputSchema>;
+export type UpdateNotificationInput = z.infer<typeof updateNotificationInputSchema>;
+export type SearchNotificationsInput = z.infer<typeof searchNotificationsInputSchema>;

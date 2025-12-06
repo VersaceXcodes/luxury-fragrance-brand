@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useAppStore } from '@/store/main';
+import NotificationBell from '@/components/ui/NotificationBell';
 
 // Types for host-specific data
 interface HostProfile {
@@ -167,9 +168,12 @@ const UV_HostDashboard: React.FC = () => {
                 Manage your villas, reservations, and revenue
               </p>
             </div>
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-lg">
-              <div className="text-sm font-medium">HOST ACCOUNT</div>
-              <div className="text-xs opacity-90">Premium Member</div>
+            <div className="flex items-center gap-4">
+              <NotificationBell />
+              <div className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-lg">
+                <div className="text-sm font-medium">HOST ACCOUNT</div>
+                <div className="text-xs opacity-90">Premium Member</div>
+              </div>
             </div>
           </div>
         </div>

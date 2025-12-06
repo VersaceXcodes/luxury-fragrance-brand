@@ -65,7 +65,8 @@ import {
   orderSchema, createOrderInputSchema,
   reviewSchema, createReviewInputSchema,
   wishlistSchema, wishlistItemSchema, createWishlistItemInputSchema,
-  brandSchema, categorySchema, productSizeSchema, shippingMethodSchema
+  brandSchema, categorySchema, productSizeSchema, shippingMethodSchema,
+  notificationSchema, createNotificationInputSchema, updateNotificationInputSchema, searchNotificationsInputSchema
 } from './schema.js';
 
 // Load environment variables
@@ -217,6 +218,48 @@ function createErrorResponse(message: string, error: Error | null = null, errorC
   }
 
   return response;
+}
+
+// Notification helper function
+async function createAndBroadcastNotification(
+  userId: string,
+  notificationType: string,
+  title: string,
+  message: string,
+  referenceType: string | null = null,
+  referenceId: string | null = null,
+  metadata: any = null
+) {
+  try {
+    const notification_id = uuidv4();
+    const created_at = new Date().toISOString();
+    const metadataJson = metadata ? JSON.stringify(metadata) : null;
+
+    const client = await pool.connect();
+    const result = await client.query(
+      `INSERT INTO notifications (notification_id, user_id, notification_type, title, message, reference_type, reference_id, metadata, is_read, read_at, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, false, NULL, $9)
+       RETURNING *`,
+      [notification_id, userId, notificationType, title, message, referenceType, referenceId, metadataJson, created_at]
+    );
+    client.release();
+
+    const notification = result.rows[0];
+
+    // Broadcast notification via WebSocket to user if connected
+    const userWs = activeConnections.get(userId);
+    if (userWs && userWs.readyState === WebSocket.OPEN) {
+      userWs.send(JSON.stringify({
+        type: 'notification',
+        data: notification
+      }));
+    }
+
+    return notification;
+  } catch (error) {
+    console.error('Create notification error:', error);
+    return null;
+  }
 }
 
 // Authentication middleware
@@ -2998,7 +3041,32 @@ app.post('/api/wishlists/:wishlist_id/items', authenticateToken, async (req: Aut
       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *
     `, [wishlistItemId, wishlist_id, validatedData.product_id, validatedData.size_ml, validatedData.notes || null, now]);
 
+    // Get product details for notification
+    const productResult = await client.query(
+      'SELECT product_name FROM products WHERE product_id = $1',
+      [validatedData.product_id]
+    );
+
     client.release();
+
+    // Notify all host users about wishlist activity
+    const hostUsersResult = await pool.query('SELECT user_id FROM users WHERE user_role = $1', ['host']);
+    for (const hostUser of hostUsersResult.rows) {
+      await createAndBroadcastNotification(
+        hostUser.user_id,
+        'wishlist_activity',
+        'New Wishlist Activity',
+        `${req.user.first_name} ${req.user.last_name} added "${productResult.rows[0].product_name}" to their wishlist`,
+        'wishlist_item',
+        wishlistItemId,
+        {
+          guest_user_id: req.user.user_id,
+          guest_name: `${req.user.first_name} ${req.user.last_name}`,
+          product_id: validatedData.product_id,
+          product_name: productResult.rows[0].product_name
+        }
+      );
+    }
 
     res.status(201).json(result.rows[0]);
   } catch (error) {
@@ -3083,6 +3151,166 @@ app.get('/api/wishlists/shared/:share_token', async (req, res) => {
     });
   } catch (error) {
     console.error('Get shared wishlist error:', error);
+    res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
+  }
+});
+
+// ============================================================================
+// NOTIFICATIONS ROUTES
+// ============================================================================
+
+/*
+Get user notifications - retrieves all notifications for authenticated user
+*/
+app.get('/api/notifications', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const user_id = req.user?.user_id;
+    const { is_read, limit = 50, offset = 0 } = req.query;
+
+    const client = await pool.connect();
+    
+    let query = `SELECT * FROM notifications WHERE user_id = $1`;
+    const params: any[] = [user_id];
+    let paramIndex = 2;
+
+    if (is_read !== undefined) {
+      query += ` AND is_read = $${paramIndex}`;
+      params.push(is_read === 'true');
+      paramIndex++;
+    }
+
+    query += ` ORDER BY created_at DESC LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
+    params.push(Number(limit), Number(offset));
+
+    const result = await client.query(query, params);
+    
+    // Get unread count
+    const countResult = await client.query(
+      'SELECT COUNT(*) as unread_count FROM notifications WHERE user_id = $1 AND is_read = false',
+      [user_id]
+    );
+
+    client.release();
+
+    res.json({
+      notifications: result.rows,
+      unread_count: parseInt(countResult.rows[0].unread_count),
+      total: result.rows.length
+    });
+  } catch (error) {
+    console.error('Get notifications error:', error);
+    res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
+  }
+});
+
+/*
+Get unread notification count
+*/
+app.get('/api/notifications/unread-count', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const user_id = req.user?.user_id;
+
+    const client = await pool.connect();
+    const result = await client.query(
+      'SELECT COUNT(*) as unread_count FROM notifications WHERE user_id = $1 AND is_read = false',
+      [user_id]
+    );
+    client.release();
+
+    res.json({
+      unread_count: parseInt(result.rows[0].unread_count)
+    });
+  } catch (error) {
+    console.error('Get unread count error:', error);
+    res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
+  }
+});
+
+/*
+Mark notification as read
+*/
+app.put('/api/notifications/:notification_id/read', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { notification_id } = req.params;
+    const user_id = req.user?.user_id;
+    const read_at = new Date().toISOString();
+
+    const client = await pool.connect();
+    
+    // Verify notification belongs to user
+    const checkResult = await client.query(
+      'SELECT * FROM notifications WHERE notification_id = $1 AND user_id = $2',
+      [notification_id, user_id]
+    );
+
+    if (checkResult.rows.length === 0) {
+      client.release();
+      return res.status(404).json(createErrorResponse('Notification not found', null, 'NOTIFICATION_NOT_FOUND'));
+    }
+
+    const result = await client.query(
+      'UPDATE notifications SET is_read = true, read_at = $1 WHERE notification_id = $2 AND user_id = $3 RETURNING *',
+      [read_at, notification_id, user_id]
+    );
+
+    client.release();
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Mark notification read error:', error);
+    res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
+  }
+});
+
+/*
+Mark all notifications as read
+*/
+app.put('/api/notifications/read-all', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const user_id = req.user?.user_id;
+    const read_at = new Date().toISOString();
+
+    const client = await pool.connect();
+    const result = await client.query(
+      'UPDATE notifications SET is_read = true, read_at = $1 WHERE user_id = $2 AND is_read = false RETURNING *',
+      [read_at, user_id]
+    );
+    client.release();
+
+    res.json({
+      message: 'All notifications marked as read',
+      updated_count: result.rows.length
+    });
+  } catch (error) {
+    console.error('Mark all read error:', error);
+    res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
+  }
+});
+
+/*
+Delete notification
+*/
+app.delete('/api/notifications/:notification_id', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { notification_id } = req.params;
+    const user_id = req.user?.user_id;
+
+    const client = await pool.connect();
+    
+    const result = await client.query(
+      'DELETE FROM notifications WHERE notification_id = $1 AND user_id = $2 RETURNING *',
+      [notification_id, user_id]
+    );
+
+    client.release();
+
+    if (result.rows.length === 0) {
+      return res.status(404).json(createErrorResponse('Notification not found', null, 'NOTIFICATION_NOT_FOUND'));
+    }
+
+    res.json({ message: 'Notification deleted successfully' });
+  } catch (error) {
+    console.error('Delete notification error:', error);
     res.status(500).json(createErrorResponse('Internal server error', error, 'INTERNAL_SERVER_ERROR'));
   }
 });

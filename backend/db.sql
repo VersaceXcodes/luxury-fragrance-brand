@@ -299,6 +299,20 @@ CREATE TABLE IF NOT EXISTS quiz_results (
     completed_at VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS notifications (
+    notification_id VARCHAR(255) PRIMARY KEY,
+    user_id VARCHAR(255) NOT NULL REFERENCES users(user_id),
+    notification_type VARCHAR(255) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    reference_type VARCHAR(255),
+    reference_id VARCHAR(255),
+    metadata TEXT,
+    is_read BOOLEAN NOT NULL DEFAULT FALSE,
+    read_at VARCHAR(255),
+    created_at VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS gift_cards (
     gift_card_id VARCHAR(255) PRIMARY KEY,
     gift_card_code VARCHAR(255) UNIQUE NOT NULL,
