@@ -680,6 +680,59 @@ const UV_ProductDetail: React.FC = () => {
             </div>
           </div>
 
+          {/* Brand Story Section */}
+          {brand && brand.heritage_story && (
+            <div className="mt-16 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-8">
+              <div className="grid md:grid-cols-3 gap-8">
+                {brand.logo_url && (
+                  <div className="flex items-center justify-center">
+                    <img
+                      src={brand.logo_url}
+                      alt={`${brand.brand_name} logo`}
+                      className="w-full h-auto max-w-[250px] object-contain"
+                    />
+                  </div>
+                )}
+                <div className={brand.logo_url ? 'md:col-span-2' : 'md:col-span-3'}>
+                  <div className="flex items-center gap-3 mb-4">
+                    <h3 className="text-2xl font-bold text-gray-900">About {brand.brand_name}</h3>
+                    {brand.is_niche_brand && (
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                        Niche Brand
+                      </span>
+                    )}
+                  </div>
+                  
+                  {brand.country_origin && (
+                    <p className="text-sm text-gray-600 mb-3">
+                      <span className="font-semibold">Origin:</span> {brand.country_origin}
+                    </p>
+                  )}
+                  
+                  <p className="text-gray-700 leading-relaxed mb-4">
+                    {brand.heritage_story}
+                  </p>
+                  
+                  {brand.description && (
+                    <p className="text-gray-600 leading-relaxed italic">
+                      {brand.description}
+                    </p>
+                  )}
+                  
+                  <Link
+                    to={`/brands/${brand.brand_id}`}
+                    className="inline-flex items-center mt-4 text-purple-600 hover:text-purple-700 font-medium text-sm"
+                  >
+                    View all {brand.brand_name} products
+                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Fragrance Profile */}
           <div className="mt-16">
             <h3 className="text-2xl font-bold text-gray-900 mb-8">Fragrance Profile</h3>

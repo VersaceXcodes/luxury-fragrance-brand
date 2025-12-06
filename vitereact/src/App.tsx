@@ -32,6 +32,7 @@ import UV_About from '@/components/views/UV_About.tsx';
 import UV_Journal from '@/components/views/UV_Journal.tsx';
 import UV_FAQ from '@/components/views/UV_FAQ.tsx';
 import UV_Contact from '@/components/views/UV_Contact.tsx';
+import UV_BrandDetail from '@/components/views/UV_BrandDetail.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -124,6 +125,7 @@ const App: React.FC = () => {
               <Route path="/" element={<UV_Homepage />} />
               <Route path="/products" element={<UV_ProductListing />} />
               <Route path="/products/:product_id" element={<UV_ProductDetail />} />
+              <Route path="/brands/:brand_id" element={<UV_BrandDetail />} />
               <Route path="/search" element={<UV_SearchResults />} />
               <Route path="/cart" element={<UV_ShoppingCart />} />
               <Route path="/checkout" element={<UV_Checkout />} />

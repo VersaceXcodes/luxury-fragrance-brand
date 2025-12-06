@@ -19,6 +19,8 @@ interface ProductCardProps {
   reviewCount?: number;
   badges?: Array<'new' | 'bestseller' | 'limited'>;
   isWishlisted?: boolean;
+  brandName?: string;
+  brandLogo?: string;
   onWishlistToggle?: (id: string) => void;
   onQuickAdd?: (id: string, size: '10ml' | '50ml' | '100ml') => void;
   onClick?: (id: string) => void;
@@ -36,6 +38,8 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
   reviewCount = 0,
   badges = [],
   isWishlisted = false,
+  brandName,
+  brandLogo,
   onWishlistToggle,
   onQuickAdd,
   onClick,
@@ -160,6 +164,24 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
       </div>
 
       <NocturneCardContent className="p-4">
+        {/* Brand Info */}
+        {(brandName || brandLogo) && (
+          <div className="flex items-center gap-2 mb-2">
+            {brandLogo && (
+              <img
+                src={brandLogo}
+                alt={brandName || 'Brand logo'}
+                className="h-6 w-auto object-contain"
+              />
+            )}
+            {brandName && !brandLogo && (
+              <span className="text-caption text-[var(--color-fg-muted)] font-[var(--font-weight-medium)]">
+                {brandName}
+              </span>
+            )}
+          </div>
+        )}
+
         {/* Family Tag */}
         <NocturneBadge variant="family" className="mb-2 w-fit">
           {family}

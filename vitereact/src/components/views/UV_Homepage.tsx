@@ -589,6 +589,117 @@ const UV_Homepage: React.FC = () => {
         </div>
       </section>
 
+      {/* Featured Brands Section */}
+      <section className="py-24 bg-[var(--color-bg-primary)]">
+        <div className="nocturne-container">
+          <div className="text-center mb-16">
+            <h2 className="text-h2 font-[var(--font-heading)] font-[var(--text-h2-weight)] text-[var(--color-fg-primary)] mb-6 tracking-[var(--text-h2-spacing)]">
+              Featured Brands
+            </h2>
+            <p className="text-subtitle text-[var(--color-fg-secondary)] max-w-2xl mx-auto leading-relaxed">
+              Discover luxury perfume houses with rich heritage and exquisite craftsmanship
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {[
+              { 
+                brand_id: 'brand_001',
+                name: 'Chanel', 
+                description: 'Iconic French luxury brand known for timeless elegance',
+                logo: 'https://picsum.photos/300/200?random=1',
+                country: 'France',
+                founded: '1910',
+                productCount: 1
+              },
+              { 
+                brand_id: 'brand_002',
+                name: 'Tom Ford', 
+                description: 'Modern luxury creating bold, sensual fragrances',
+                logo: 'https://picsum.photos/300/200?random=2',
+                country: 'USA',
+                founded: '2006',
+                productCount: 1
+              },
+              { 
+                brand_id: 'brand_003',
+                name: 'Dior', 
+                description: 'French luxury with rich heritage in perfumery',
+                logo: 'https://picsum.photos/300/200?random=3',
+                country: 'France',
+                founded: '1946',
+                productCount: 1
+              },
+              { 
+                brand_id: 'brand_004',
+                name: 'Creed', 
+                description: 'Historic fragrance house creating bespoke scents',
+                logo: 'https://picsum.photos/300/200?random=4',
+                country: 'UK',
+                founded: '1760',
+                productCount: 1
+              },
+              { 
+                brand_id: 'brand_005',
+                name: 'Maison Margiela', 
+                description: 'Avant-garde fashion house with innovative fragrances',
+                logo: 'https://picsum.photos/300/200?random=5',
+                country: 'France',
+                founded: '1988',
+                productCount: 1
+              },
+              { 
+                brand_id: 'brand_006',
+                name: 'Byredo', 
+                description: 'Contemporary Swedish perfume house',
+                logo: 'https://picsum.photos/300/200?random=6',
+                country: 'Sweden',
+                founded: '2006',
+                productCount: 1
+              }
+            ].map((brand, index) => (
+              <Link
+                key={brand.brand_id}
+                to={`/brands/${brand.brand_id}`}
+                className="group bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] overflow-hidden hover:shadow-[var(--shadow-elevated)] transition-all duration-[var(--duration-normal)] transform hover:-translate-y-2 animate-slide-up"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="aspect-[3/2] overflow-hidden bg-[var(--color-bg-muted)]">
+                  <img
+                    src={brand.logo}
+                    alt={`${brand.name} logo`}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[var(--duration-slow)]"
+                  />
+                </div>
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] group-hover:text-[var(--color-interactive-primary)] transition-colors duration-[var(--duration-normal)]">
+                      {brand.name}
+                    </h3>
+                    <span className="text-caption text-[var(--color-fg-muted)]">{brand.country}</span>
+                  </div>
+                  <p className="text-body text-[var(--color-fg-secondary)] mb-4 line-clamp-2">
+                    {brand.description}
+                  </p>
+                  <div className="flex items-center justify-between text-caption text-[var(--color-fg-muted)]">
+                    <span>Est. {brand.founded}</span>
+                    <span>{brand.productCount} {brand.productCount === 1 ? 'product' : 'products'}</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <NocturneButton size="lg" variant="outline" asChild>
+              <Link to="/products">
+                Explore All Brands
+              </Link>
+            </NocturneButton>
+          </div>
+        </div>
+      </section>
+
       {/* Notes Explorer Section */}
       <section className="py-24 bg-[var(--color-bg-secondary)]">
         <div className="nocturne-container">
