@@ -675,10 +675,10 @@ export const wishlistItemSchema = z.object({
 });
 
 export const createWishlistItemInputSchema = z.object({
-  wishlist_id: z.string(),
+  wishlist_id: z.string().optional(), // Optional since it's in URL params
   product_id: z.string(),
   size_ml: z.number().int().positive().nullable(),
-  notes: z.string().max(500).nullable()
+  notes: z.string().max(500).nullable().optional() // Optional field
 });
 
 export const updateWishlistItemInputSchema = z.object({

@@ -1653,10 +1653,10 @@ export declare const wishlistItemSchema: z.ZodObject<{
     notes?: string;
 }>;
 export declare const createWishlistItemInputSchema: z.ZodObject<{
-    wishlist_id: z.ZodString;
+    wishlist_id: z.ZodOptional<z.ZodString>;
     product_id: z.ZodString;
     size_ml: z.ZodNullable<z.ZodNumber>;
-    notes: z.ZodNullable<z.ZodString>;
+    notes: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, "strip", z.ZodTypeAny, {
     product_id?: string;
     size_ml?: number;

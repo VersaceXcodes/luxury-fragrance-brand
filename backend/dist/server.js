@@ -2416,7 +2416,7 @@ app.post('/api/wishlists/:wishlist_id/items', authenticateToken, async (req, res
         const result = await client.query(`
       INSERT INTO wishlist_items (wishlist_item_id, wishlist_id, product_id, size_ml, notes, added_at)
       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *
-    `, [wishlistItemId, wishlist_id, validatedData.product_id, validatedData.size_ml, validatedData.notes, now]);
+    `, [wishlistItemId, wishlist_id, validatedData.product_id, validatedData.size_ml, validatedData.notes || null, now]);
         client.release();
         res.status(201).json(result.rows[0]);
     }
