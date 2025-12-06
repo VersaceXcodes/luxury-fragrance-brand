@@ -6,8 +6,8 @@
     "registration_endpoint": "/api/auth/register",
     "login_endpoint": "/api/auth/login"
   },
-  "total_users": 5,
-  "verified_users": 5,
+  "total_users": 6,
+  "verified_users": 6,
   "users": [
     {
       "user_id": "user_001",
@@ -73,6 +73,19 @@
       "fragrance_profile": "{\"preferred_families\": [\"gourmand\", \"vanilla\"], \"intensity\": \"moderate\"}",
       "verified": true,
       "role": "customer"
+    },
+    {
+      "user_id": "user_006",
+      "email": "sarah.thompson@email.com",
+      "password": "guestpass123",
+      "first_name": "Sarah",
+      "last_name": "Thompson",
+      "phone_number": "+1234567895",
+      "loyalty_tier": "gold",
+      "email_verified": true,
+      "fragrance_profile": "{\"preferred_families\": [\"floral\", \"fresh\"], \"intensity\": \"moderate\"}",
+      "verified": true,
+      "role": "customer"
     }
   ],
   "by_role": {
@@ -110,6 +123,14 @@
         "last_name": "Davis", 
         "loyalty_tier": "gold",
         "verified": true
+      },
+      {
+        "email": "sarah.thompson@email.com",
+        "password": "guestpass123",
+        "first_name": "Sarah",
+        "last_name": "Thompson",
+        "loyalty_tier": "gold",
+        "verified": true
       }
     ],
     "vip_customer": [
@@ -134,7 +155,7 @@
     },
     "gold": {
       "description": "Premium tier with enhanced benefits",
-      "users": ["alice.smith@email.com", "emma.davis@email.com"]
+      "users": ["alice.smith@email.com", "emma.davis@email.com", "sarah.thompson@email.com"]
     },
     "platinum": {
       "description": "VIP tier with maximum benefits",
