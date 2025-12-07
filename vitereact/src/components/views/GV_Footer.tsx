@@ -221,12 +221,12 @@ const GV_Footer: React.FC = () => {
                   </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors">
+                  <Link to="/support" state={{ activeTab: 'chat' }} className="text-gray-300 hover:text-white transition-colors">
                     Live Chat
                     <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
                       Online
                     </span>
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <Link to="/track-order" className="text-gray-300 hover:text-white transition-colors">

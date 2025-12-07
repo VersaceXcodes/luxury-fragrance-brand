@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, useLocation } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useAppStore } from '@/store/main';
 import axios from 'axios';
@@ -62,6 +62,7 @@ const PRIORITY_OPTIONS = [
 const UV_CustomerService: React.FC = () => {
   // URL params handling
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const topicParam = searchParams.get('topic');
   const orderIdParam = searchParams.get('order_id');
 
@@ -74,7 +75,9 @@ const UV_CustomerService: React.FC = () => {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(topicParam || null);
   const [contextOrderId, setContextOrderId] = useState<string | null>(orderIdParam || null);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<'faq' | 'contact' | 'chat'>('faq');
+  const [activeTab, setActiveTab] = useState<'faq' | 'contact' | 'chat'>(
+    (location.state as any)?.activeTab || 'faq'
+  );
   
   const [supportTicketForm, setSupportTicketForm] = useState<SupportTicketForm>({
     customer_email: currentUser?.email || '',
@@ -258,14 +261,21 @@ const UV_CustomerService: React.FC = () => {
 
   // WebSocket connection
   const connectWebSocket = (sessionId: string) => {
-    const wsUrl = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws`;
+    // Get the API base URL and convert it to WebSocket URL
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai';
+    
+    // Convert HTTP/HTTPS URL to WS/WSS URL
+    const wsUrl = apiBaseUrl
+      .replace('https://', 'wss://')
+      .replace('http://', 'ws://');
+    
     const params = new URLSearchParams();
     params.append('session_id', sessionId);
     if (authToken) {
       params.append('token', authToken);
     }
     
-    const ws = new WebSocket(`${wsUrl}?${params.toString()}`);
+    const ws = new WebSocket(`${wsUrl}/ws?${params.toString()}`);
     
     ws.onopen = () => {
       console.log('WebSocket connected');
