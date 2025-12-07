@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useAppStore } from '@/store/main';
+import LuxuryRecommendations from '@/components/ui/LuxuryRecommendations';
 
 // API Types
 interface ShippingMethod {
@@ -75,6 +76,28 @@ const UV_ShoppingCart: React.FC = () => {
     },
     enabled: !!zipCode && subtotal > 0,
     staleTime: 300000, // 5 minutes
+    retry: 1
+  });
+
+  // Cart recommendations query
+  const { data: recommendations = [] } = useQuery({
+    queryKey: ['cart-recommendations', cartItems],
+    queryFn: async () => {
+      // Get recommendations based on cart items
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai'}/api/products`,
+        {
+          params: {
+            is_featured: true,
+            per_page: 8,
+            page: 1
+          }
+        }
+      );
+      return response.data?.data || [];
+    },
+    enabled: cartItems.length > 0,
+    staleTime: 300000,
     retry: 1
   });
 
@@ -528,6 +551,50 @@ const UV_ShoppingCart: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Luxury Recommendations Component */}
+      {recommendations.length > 0 && (
+        <LuxuryRecommendations
+          products={recommendations}
+          title="Complete Your Olfactory Ritual"
+          onQuickAdd={(productId, sizeId) => {
+            // Handle quick add to cart
+            const product = recommendations.find((p: any) => p.product_id === productId);
+            if (!product) return;
+            
+            // Find the size object
+            const sizeObj = product.sizes?.find((s: any) => s.size_id === sizeId);
+            if (!sizeObj) return;
+            
+            const addToCart = useAppStore.getState().add_to_cart;
+            
+            addToCart({
+              product_id: productId,
+              product_name: product.product_name,
+              brand_name: product.brand_name || 'Unknown Brand',
+              size_ml: sizeObj.size_ml,
+              quantity: 1,
+              unit_price: sizeObj.sale_price || sizeObj.price,
+              gift_wrap: false,
+              sample_included: false,
+            }).then(() => {
+              showNotification({
+                type: 'success',
+                message: 'Added to cart successfully!',
+                auto_dismiss: true,
+                duration: 3000,
+              });
+            }).catch((error) => {
+              showNotification({
+                type: 'error',
+                message: error.message || 'Failed to add to cart',
+                auto_dismiss: true,
+                duration: 5000,
+              });
+            });
+          }}
+        />
+      )}
     </>
   );
 };

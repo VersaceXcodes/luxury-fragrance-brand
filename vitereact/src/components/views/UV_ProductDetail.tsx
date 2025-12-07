@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useAppStore } from '@/store/main';
+import LuxuryRecommendations from '@/components/ui/LuxuryRecommendations';
 
 // Type definitions based on backend schemas
 interface Product {
@@ -1235,37 +1236,51 @@ const UV_ProductDetail: React.FC = () => {
             </div>
           </div>
 
-          {/* Recommendations */}
-          {recommendations.length > 0 && (
-            <div className="mt-16">
-              <h3 className="text-2xl font-bold text-gray-900 mb-8">You Might Also Like</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {recommendations.slice(0, 4).map((rec) => (
-                  <Link
-                    key={rec.product_id}
-                    to={`/products/${rec.product_id}`}
-                    className="group"
-                  >
-                    <div className="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden group-hover:opacity-75 transition-opacity">
-                      <img
-                        src="/api/placeholder/300/300"
-                        alt={rec.product_name}
-                        className="w-full h-full object-center object-cover"
-                      />
-                    </div>
-                     <h3 className="mt-4 text-sm text-gray-700 group-hover:text-purple-600">
-                      {rec.product_name}
-                    </h3>
-                    <p className="mt-1 text-lg font-medium text-gray-900">
-                      ${(Number(rec.sale_price) || Number(rec.base_price)).toFixed(2)}
-                    </p>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* Luxury Recommendations Section */}
         </div>
       </div>
+
+      {/* Luxury Recommendations Component */}
+      {recommendations.length > 0 && (
+        <LuxuryRecommendations
+          products={recommendations}
+          title="Connoisseurs Also Explored"
+          onQuickAdd={(productId, sizeId) => {
+            // Handle quick add to cart
+            const product = recommendations.find(p => p.product_id === productId);
+            if (!product) return;
+            
+            // Find the size object
+            const sizeObj = product.sizes?.find(s => s.size_id === sizeId);
+            if (!sizeObj) return;
+            
+            addToCart({
+              product_id: productId,
+              product_name: product.product_name,
+              brand_name: product.brand_name || 'Unknown Brand',
+              size_ml: sizeObj.size_ml,
+              quantity: 1,
+              unit_price: sizeObj.sale_price || sizeObj.price,
+              gift_wrap: false,
+              sample_included: false,
+            }).then(() => {
+              showNotification({
+                type: 'success',
+                message: 'Added to cart successfully!',
+                auto_dismiss: true,
+                duration: 3000,
+              });
+            }).catch((error) => {
+              showNotification({
+                type: 'error',
+                message: error.message || 'Failed to add to cart',
+                auto_dismiss: true,
+                duration: 5000,
+              });
+            });
+          }}
+        />
+      )}
 
       {/* Wishlist Selector Modal */}
       {showWishlistSelector && (
