@@ -182,14 +182,14 @@ const UV_ProductListing: React.FC = () => {
 
 
 
-  // Filter options
+  // Filter options - Using minimalist dark theme colors
   const fragranceFamilies = [
-    { value: 'fresh', label: 'Fresh & Citrus', color: 'bg-green-100 text-green-800' },
-    { value: 'floral', label: 'Floral', color: 'bg-pink-100 text-pink-800' },
-    { value: 'oriental', label: 'Oriental & Spicy', color: 'bg-orange-100 text-orange-800' },
-    { value: 'woody', label: 'Woody', color: 'bg-amber-100 text-amber-800' },
-    { value: 'aquatic', label: 'Aquatic', color: 'bg-blue-100 text-blue-800' },
-    { value: 'gourmand', label: 'Gourmand', color: 'bg-purple-100 text-purple-800' },
+    { value: 'fresh', label: 'Fresh & Citrus', color: 'bg-transparent text-[#F5F5F0]/60' },
+    { value: 'floral', label: 'Floral', color: 'bg-transparent text-[#F5F5F0]/60' },
+    { value: 'oriental', label: 'Oriental & Spicy', color: 'bg-transparent text-[#F5F5F0]/60' },
+    { value: 'woody', label: 'Woody', color: 'bg-transparent text-[#F5F5F0]/60' },
+    { value: 'aquatic', label: 'Aquatic', color: 'bg-transparent text-[#F5F5F0]/60' },
+    { value: 'gourmand', label: 'Gourmand', color: 'bg-transparent text-[#F5F5F0]/60' },
   ];
 
   const occasionTags = [
@@ -276,20 +276,20 @@ const UV_ProductListing: React.FC = () => {
 
   return (
     <>
-      <div className="bg-white">
+      <div className="bg-[#1A1A1A] min-h-screen">
         {/* Page Header */}
-        <div className="bg-gray-50 border-b border-gray-200">
+        <div className="bg-[#1A1A1A] border-b border-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="md:flex md:items-center md:justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Luxury Fragrances</h1>
-                <p className="mt-2 text-sm text-gray-600">
+                <h1 className="text-3xl font-serif text-[#F5F5F0]" style={{fontFamily: 'Playfair Display, serif'}}>Luxury Fragrances</h1>
+                <p className="mt-2 text-sm text-[#F5F5F0]/70">
                   Discover our curated collection of premium fragrances
                 </p>
               </div>
               <div className="mt-4 md:mt-0 flex items-center space-x-4">
                 {/* Results count */}
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-[#F5F5F0]/60">
                   {productsQuery.isLoading ? (
                     'Loading...'
                   ) : pagination ? (
@@ -303,10 +303,10 @@ const UV_ProductListing: React.FC = () => {
                 <select
                   value={sortBy}
                   onChange={(e) => handleSortChange(e.target.value)}
-                  className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="bg-[#2D2D2D] border border-gray-700 rounded-md px-3 py-2 text-sm text-[#F5F5F0] focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
                 >
                   {sortOptions.map(option => (
-                    <option key={option.value} value={option.value}>
+                    <option key={option.value} value={option.value} className="bg-[#2D2D2D]">
                       {option.label}
                     </option>
                   ))}
@@ -315,11 +315,11 @@ const UV_ProductListing: React.FC = () => {
                 {/* Mobile filter toggle */}
                 <button
                   onClick={() => setShowMobileFilters(!showMobileFilters)}
-                  className="md:hidden inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                  className="md:hidden inline-flex items-center px-4 py-2 border border-gray-700 rounded-md shadow-sm text-sm font-medium text-[#F5F5F0] bg-[#2D2D2D] hover:bg-[#3D3D3D] focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-[#1A1A1A]"
                 >
                   Filters
                   {activeFilterCount > 0 && (
-                    <span className="ml-2 bg-purple-600 text-white text-xs rounded-full px-2 py-1">
+                    <span className="ml-2 bg-[#D4AF37] text-[#1A1A1A] text-xs rounded-full px-2 py-1 font-semibold">
                       {activeFilterCount}
                     </span>
                   )}
@@ -331,18 +331,18 @@ const UV_ProductListing: React.FC = () => {
             {activeFilterCount > 0 && (
               <div className="mt-4">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm font-medium text-gray-700">Active filters:</span>
+                  <span className="text-sm font-medium text-[#F5F5F0]">Active filters:</span>
                   
                   {/* Price range filter */}
                   {(activeFilters.price_min || activeFilters.price_max) && (
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-purple-100 text-purple-800">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm border border-[#D4AF37] bg-transparent text-[#D4AF37]">
                       ${activeFilters.price_min || 0} - ${activeFilters.price_max || '500+'}
                       <button
                         onClick={() => {
                           removeFilter('price_min');
                           removeFilter('price_max');
                         }}
-                        className="ml-2 text-purple-600 hover:text-purple-800"
+                        className="ml-2 text-[#D4AF37] hover:text-[#E5C158]"
                       >
                         ×
                       </button>
@@ -353,11 +353,11 @@ const UV_ProductListing: React.FC = () => {
                   {activeFilters.brand_ids.map(brandId => {
                     const brand = brands.find(b => b.brand_id === brandId);
                     return brand ? (
-                      <span key={brandId} className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+                      <span key={brandId} className="inline-flex items-center px-3 py-1 rounded-full text-sm border border-gray-600 bg-transparent text-[#F5F5F0]">
                         {brand.brand_name}
                         <button
                           onClick={() => removeFilter('brand_ids', brandId)}
-                          className="ml-2 text-blue-600 hover:text-blue-800"
+                          className="ml-2 text-[#F5F5F0] hover:text-[#D4AF37]"
                         >
                           ×
                         </button>
@@ -369,11 +369,11 @@ const UV_ProductListing: React.FC = () => {
                   {activeFilters.fragrance_families.map(family => {
                     const familyOption = fragranceFamilies.find(f => f.value === family);
                     return familyOption ? (
-                      <span key={family} className={`inline-flex items-center px-3 py-1 rounded-full text-sm ${familyOption.color}`}>
+                      <span key={family} className="inline-flex items-center px-3 py-1 rounded-full text-sm border border-gray-600 bg-transparent text-[#F5F5F0]/70">
                         {familyOption.label}
                         <button
                           onClick={() => removeFilter('fragrance_families', family)}
-                          className="ml-2 hover:opacity-75"
+                          className="ml-2 hover:text-[#D4AF37]"
                         >
                           ×
                         </button>
@@ -384,7 +384,7 @@ const UV_ProductListing: React.FC = () => {
                   {/* Clear all button */}
                   <button
                     onClick={handleClearAllFilters}
-                    className="text-sm text-purple-600 hover:text-purple-800 font-medium"
+                    className="text-sm text-[#D4AF37] hover:text-[#E5C158] font-medium"
                   >
                     Clear all
                   </button>
@@ -398,43 +398,44 @@ const UV_ProductListing: React.FC = () => {
           <div className="lg:grid lg:grid-cols-4 lg:gap-8">
             {/* Sidebar - Desktop */}
             <div className="hidden lg:block">
-              <div className="bg-white border border-gray-200 rounded-lg p-6 sticky top-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Filters</h3>
+              <div className="bg-[#1A1A1A] border border-gray-800 rounded-lg p-6 sticky top-8">
+                <h3 className="text-lg font-serif text-[#F5F5F0] mb-4" style={{fontFamily: 'Playfair Display, serif'}}>Filters</h3>
                 
                 {/* Price Range */}
                 <div className="mb-6">
-                  <h4 className="text-sm font-medium text-gray-900 mb-3">Price Range</h4>
+                  <h4 className="text-sm font-serif font-medium text-[#F5F5F0] mb-3" style={{fontFamily: 'Playfair Display, serif'}}>Price Range</h4>
                   <div className="grid grid-cols-2 gap-3">
                     <input
                       type="number"
                       placeholder="Min"
                       value={activeFilters.price_min || ''}
                       onChange={(e) => handleFilterChange('price_min', e.target.value ? Number(e.target.value) : null)}
-                      className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="bg-[#2D2D2D] border border-gray-700 rounded-md px-3 py-2 text-sm text-[#F5F5F0] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
                     />
                     <input
                       type="number"
                       placeholder="Max"
                       value={activeFilters.price_max || ''}
                       onChange={(e) => handleFilterChange('price_max', e.target.value ? Number(e.target.value) : null)}
-                      className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="bg-[#2D2D2D] border border-gray-700 rounded-md px-3 py-2 text-sm text-[#F5F5F0] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
                     />
                   </div>
                 </div>
 
                 {/* Brands */}
                 <div className="mb-6">
-                  <h4 className="text-sm font-medium text-gray-900 mb-3">Brands</h4>
-                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                  <h4 className="text-sm font-serif font-medium text-[#F5F5F0] mb-3" style={{fontFamily: 'Playfair Display, serif'}}>Brands</h4>
+                  <div className="space-y-2 max-h-48 overflow-y-auto custom-scrollbar">
                     {brands.map(brand => (
-                      <label key={brand.brand_id} className="flex items-center">
+                      <label key={brand.brand_id} className="flex items-center cursor-pointer group">
                         <input
                           type="checkbox"
                           checked={activeFilters.brand_ids.includes(brand.brand_id)}
                           onChange={() => handleFilterChange('brand_ids', brand.brand_id)}
-                          className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                          className="h-4 w-4 bg-[#2D2D2D] border-gray-700 rounded text-[#D4AF37] focus:ring-[#D4AF37] focus:ring-offset-[#1A1A1A]"
+                          style={{accentColor: '#D4AF37'}}
                         />
-                        <span className="ml-2 text-sm text-gray-700">{brand.brand_name}</span>
+                        <span className="ml-2 text-sm text-[#F5F5F0]/80 group-hover:text-[#F5F5F0]">{brand.brand_name}</span>
                       </label>
                     ))}
                   </div>
@@ -442,17 +443,18 @@ const UV_ProductListing: React.FC = () => {
 
                 {/* Fragrance Families */}
                 <div className="mb-6">
-                  <h4 className="text-sm font-medium text-gray-900 mb-3">Fragrance Families</h4>
+                  <h4 className="text-sm font-serif font-medium text-[#F5F5F0] mb-3" style={{fontFamily: 'Playfair Display, serif'}}>Fragrance Families</h4>
                   <div className="space-y-2">
                     {fragranceFamilies.map(family => (
-                      <label key={family.value} className="flex items-center">
+                      <label key={family.value} className="flex items-center cursor-pointer group">
                         <input
                           type="checkbox"
                           checked={activeFilters.fragrance_families.includes(family.value)}
                           onChange={() => handleFilterChange('fragrance_families', family.value)}
-                          className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                          className="h-4 w-4 bg-[#2D2D2D] border-gray-700 rounded text-[#D4AF37] focus:ring-[#D4AF37] focus:ring-offset-[#1A1A1A]"
+                          style={{accentColor: '#D4AF37'}}
                         />
-                        <span className={`ml-2 px-2 py-1 rounded text-xs ${family.color}`}>
+                        <span className="ml-2 text-xs text-[#F5F5F0]/60 uppercase tracking-wider group-hover:text-[#F5F5F0]/80">
                           {family.label}
                         </span>
                       </label>
@@ -462,16 +464,16 @@ const UV_ProductListing: React.FC = () => {
 
                 {/* Size Options */}
                 <div className="mb-6">
-                  <h4 className="text-sm font-medium text-gray-900 mb-3">Size (ml)</h4>
+                  <h4 className="text-sm font-serif font-medium text-[#F5F5F0] mb-3" style={{fontFamily: 'Playfair Display, serif'}}>Size (ml)</h4>
                   <div className="flex flex-wrap gap-2">
                     {sizeOptions.map(size => (
                       <button
                         key={size}
                         onClick={() => handleFilterChange('size_options', size)}
-                        className={`px-3 py-1 rounded-md text-sm border ${
+                        className={`px-3 py-1 rounded-md text-sm border transition-all ${
                           activeFilters.size_options.includes(size)
-                            ? 'bg-purple-600 text-white border-purple-600'
-                            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                            ? 'bg-[#D4AF37] text-[#1A1A1A] border-[#D4AF37] font-semibold'
+                            : 'bg-transparent text-[#F5F5F0]/70 border-gray-700 hover:border-[#D4AF37] hover:text-[#F5F5F0]'
                         }`}
                       >
                         {size}ml
@@ -482,17 +484,18 @@ const UV_ProductListing: React.FC = () => {
 
                 {/* Occasions */}
                 <div className="mb-6">
-                  <h4 className="text-sm font-medium text-gray-900 mb-3">Occasions</h4>
+                  <h4 className="text-sm font-serif font-medium text-[#F5F5F0] mb-3" style={{fontFamily: 'Playfair Display, serif'}}>Occasions</h4>
                   <div className="space-y-2">
                     {occasionTags.map(occasion => (
-                      <label key={occasion} className="flex items-center">
+                      <label key={occasion} className="flex items-center cursor-pointer group">
                         <input
                           type="checkbox"
                           checked={activeFilters.occasion_tags.includes(occasion)}
                           onChange={() => handleFilterChange('occasion_tags', occasion)}
-                          className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                          className="h-4 w-4 bg-[#2D2D2D] border-gray-700 rounded text-[#D4AF37] focus:ring-[#D4AF37] focus:ring-offset-[#1A1A1A]"
+                          style={{accentColor: '#D4AF37'}}
                         />
-                        <span className="ml-2 text-sm text-gray-700">{occasion}</span>
+                        <span className="ml-2 text-sm text-[#F5F5F0]/80 group-hover:text-[#F5F5F0]">{occasion}</span>
                       </label>
                     ))}
                   </div>
@@ -500,16 +503,16 @@ const UV_ProductListing: React.FC = () => {
 
                 {/* Seasons */}
                 <div className="mb-6">
-                  <h4 className="text-sm font-medium text-gray-900 mb-3">Seasons</h4>
+                  <h4 className="text-sm font-serif font-medium text-[#F5F5F0] mb-3" style={{fontFamily: 'Playfair Display, serif'}}>Seasons</h4>
                   <div className="grid grid-cols-2 gap-2">
                     {seasonOptions.map(season => (
                       <button
                         key={season.value}
                         onClick={() => handleFilterChange('season_suitability', season.value)}
-                        className={`flex items-center justify-center px-3 py-2 rounded-md text-sm border ${
+                        className={`flex items-center justify-center px-3 py-2 rounded-md text-sm border transition-all ${
                           activeFilters.season_suitability.includes(season.value)
-                            ? 'bg-purple-600 text-white border-purple-600'
-                            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                            ? 'bg-[#D4AF37] text-[#1A1A1A] border-[#D4AF37] font-semibold'
+                            : 'bg-transparent text-[#F5F5F0]/70 border-gray-700 hover:border-[#D4AF37] hover:text-[#F5F5F0]'
                         }`}
                       >
                         <span className="mr-1">{season.icon}</span>
@@ -524,13 +527,13 @@ const UV_ProductListing: React.FC = () => {
             {/* Mobile Filter Modal */}
             {showMobileFilters && (
               <div className="fixed inset-0 z-50 lg:hidden">
-                <div className="fixed inset-0 bg-black bg-opacity-25" onClick={() => setShowMobileFilters(false)} />
-                <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-lg p-6 max-h-[80vh] overflow-y-auto">
+                <div className="fixed inset-0 bg-black bg-opacity-75" onClick={() => setShowMobileFilters(false)} />
+                <div className="fixed bottom-0 left-0 right-0 bg-[#1A1A1A] rounded-t-lg p-6 max-h-[80vh] overflow-y-auto border-t border-gray-800">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
+                    <h3 className="text-lg font-serif text-[#F5F5F0]" style={{fontFamily: 'Playfair Display, serif'}}>Filters</h3>
                     <button
                       onClick={() => setShowMobileFilters(false)}
-                      className="text-gray-400 hover:text-gray-600"
+                      className="text-[#F5F5F0]/60 hover:text-[#F5F5F0]"
                     >
                       <span className="sr-only">Close</span>
                       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -543,37 +546,37 @@ const UV_ProductListing: React.FC = () => {
                   <div className="space-y-6">
                     {/* Price Range */}
                     <div>
-                      <h4 className="text-sm font-medium text-gray-900 mb-3">Price Range</h4>
+                      <h4 className="text-sm font-serif font-medium text-[#F5F5F0] mb-3" style={{fontFamily: 'Playfair Display, serif'}}>Price Range</h4>
                       <div className="grid grid-cols-2 gap-3">
                         <input
                           type="number"
                           placeholder="Min"
                           value={activeFilters.price_min || ''}
                           onChange={(e) => handleFilterChange('price_min', e.target.value ? Number(e.target.value) : null)}
-                          className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          className="bg-[#2D2D2D] border border-gray-700 rounded-md px-3 py-2 text-sm text-[#F5F5F0] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
                         />
                         <input
                           type="number"
                           placeholder="Max"
                           value={activeFilters.price_max || ''}
                           onChange={(e) => handleFilterChange('price_max', e.target.value ? Number(e.target.value) : null)}
-                          className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          className="bg-[#2D2D2D] border border-gray-700 rounded-md px-3 py-2 text-sm text-[#F5F5F0] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
                         />
                       </div>
                     </div>
 
                     {/* Fragrance Families */}
                     <div>
-                      <h4 className="text-sm font-medium text-gray-900 mb-3">Fragrance Families</h4>
+                      <h4 className="text-sm font-serif font-medium text-[#F5F5F0] mb-3" style={{fontFamily: 'Playfair Display, serif'}}>Fragrance Families</h4>
                       <div className="grid grid-cols-2 gap-2">
                         {fragranceFamilies.map(family => (
                           <button
                             key={family.value}
                             onClick={() => handleFilterChange('fragrance_families', family.value)}
-                            className={`px-3 py-2 rounded-md text-sm border ${
+                            className={`px-3 py-2 rounded-md text-sm border transition-all ${
                               activeFilters.fragrance_families.includes(family.value)
-                                ? 'bg-purple-600 text-white border-purple-600'
-                                : 'bg-white text-gray-700 border-gray-300'
+                                ? 'bg-[#D4AF37] text-[#1A1A1A] border-[#D4AF37] font-semibold'
+                                : 'bg-transparent text-[#F5F5F0]/70 border-gray-700'
                             }`}
                           >
                             {family.label}
@@ -583,16 +586,16 @@ const UV_ProductListing: React.FC = () => {
                     </div>
 
                     {/* Apply/Clear buttons */}
-                    <div className="flex space-x-3 pt-4 border-t">
+                    <div className="flex space-x-3 pt-4 border-t border-gray-800">
                       <button
                         onClick={handleClearAllFilters}
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                        className="flex-1 px-4 py-2 border border-gray-700 rounded-md text-sm font-medium text-[#F5F5F0] bg-transparent hover:bg-[#2D2D2D]"
                       >
                         Clear All
                       </button>
                       <button
                         onClick={() => setShowMobileFilters(false)}
-                        className="flex-1 px-4 py-2 bg-purple-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-purple-700"
+                        className="flex-1 px-4 py-2 bg-[#D4AF37] border border-transparent rounded-md text-sm font-medium text-[#1A1A1A] hover:bg-[#E5C158]"
                       >
                         Apply Filters
                       </button>
@@ -606,19 +609,19 @@ const UV_ProductListing: React.FC = () => {
             <div className="lg:col-span-3">
               {productsQuery.isLoading ? (
                 <div className="flex items-center justify-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
-                  <span className="ml-3 text-gray-600">Loading products...</span>
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D4AF37]"></div>
+                  <span className="ml-3 text-[#F5F5F0]/70">Loading products...</span>
                 </div>
               ) : productsQuery.error ? (
                 <div className="text-center py-12">
-                  <p className="text-gray-500">Error loading products. Please try again.</p>
+                  <p className="text-[#F5F5F0]/60">Error loading products. Please try again.</p>
                 </div>
               ) : products.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-gray-500">No products found matching your criteria.</p>
+                  <p className="text-[#F5F5F0]/60">No products found matching your criteria.</p>
                   <button
                     onClick={handleClearAllFilters}
-                    className="mt-4 text-purple-600 hover:text-purple-800 font-medium"
+                    className="mt-4 text-[#D4AF37] hover:text-[#E5C158] font-medium"
                   >
                     Clear all filters
                   </button>
@@ -626,23 +629,23 @@ const UV_ProductListing: React.FC = () => {
               ) : (
                 <>
                   {/* Product grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {products.map(product => (
-                      <div key={product.product_id} className="group relative bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg transition-shadow duration-200">
-                        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-lg bg-gray-200">
+                      <div key={product.product_id} className="group relative bg-[#2D2D2D] rounded-lg border border-gray-800 hover:shadow-2xl hover:shadow-[#D4AF37]/10 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+                        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-lg bg-[#1A1A1A]">
                           {product.primary_image ? (
                             <img 
                               src={product.primary_image} 
                               alt={product.product_name}
-                              className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                              className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
                               onError={(e) => {
                                 e.currentTarget.style.display = 'none';
                                 e.currentTarget.nextElementSibling?.classList.remove('hidden');
                               }}
                             />
                           ) : null}
-                          <div className={`w-full h-64 bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center ${product.primary_image ? 'hidden' : ''}`}>
-                            <div className="text-center text-gray-400">
+                          <div className={`w-full h-64 bg-[#1A1A1A] flex items-center justify-center ${product.primary_image ? 'hidden' : ''}`}>
+                            <div className="text-center text-[#F5F5F0]/20">
                               <svg className="w-16 h-16 mx-auto mb-2 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                               </svg>
@@ -650,127 +653,110 @@ const UV_ProductListing: React.FC = () => {
                             </div>
                           </div>
                           
-                          {/* Badges */}
-                          <div className="absolute top-2 left-2 flex flex-col gap-1">
+                          {/* Badges - Minimalist Gold/Red Bordered Pills */}
+                          <div className="absolute top-3 left-3 flex flex-col gap-2">
                             {product.is_new_arrival && (
-                              <span className="bg-green-500 text-white text-xs px-2 py-1 rounded">New</span>
+                              <span className="bg-transparent border border-[#D4AF37] text-[#D4AF37] text-xs px-3 py-1 rounded-full font-medium uppercase tracking-wide">New</span>
                             )}
                             {product.sale_price && (
-                              <span className="bg-red-500 text-white text-xs px-2 py-1 rounded">
+                              <span className="bg-transparent border border-red-400 text-red-400 text-xs px-3 py-1 rounded-full font-medium uppercase tracking-wide">
                                 Sale
                               </span>
                             )}
                             {product.is_limited_edition && (
-                              <span className="bg-purple-500 text-white text-xs px-2 py-1 rounded">Limited</span>
+                              <span className="bg-transparent border border-[#D4AF37] text-[#D4AF37] text-xs px-3 py-1 rounded-full font-medium uppercase tracking-wide">Limited</span>
                             )}
                           </div>
 
-                          {/* Quick actions */}
-                          <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                            <div className="flex flex-col gap-1">
-                              <button
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  // Add to wishlist logic
-                                  showNotification({
-                                    type: 'success',
-                                    message: 'Added to wishlist',
-                                    auto_dismiss: true,
-                                    duration: 3000,
-                                  });
-                                }}
-                                className="p-2 bg-white rounded-full shadow-md hover:bg-gray-50"
-                                aria-label="Add to wishlist"
-                              >
-                                <svg className="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                </svg>
-                              </button>
-                              
-                              <Link
-                                to={`/products/${product.product_id}`}
-                                onClick={(e) => {
-                                  if (product.availability_status !== 'in_stock') {
-                                    e.preventDefault();
-                                  }
-                                }}
-                                className={`p-2 rounded-full shadow-md ${
-                                  product.availability_status !== 'in_stock'
-                                    ? 'bg-gray-400 cursor-not-allowed'
-                                    : 'bg-purple-600 text-white hover:bg-purple-700'
-                                }`}
-                                aria-label="View product details"
-                              >
-                                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.1 5H19M7 13v8a2 2 0 002 2h6a2 2 0 002-2v-8m-8 0V9a2 2 0 012-2h4a2 2 0 012 2v4.1" />
-                                </svg>
-                              </Link>
-                            </div>
+                          {/* Quick Add Button - Appears on Hover */}
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <Link
+                              to={`/products/${product.product_id}`}
+                              className="bg-transparent border-2 border-[#D4AF37] text-[#D4AF37] px-6 py-2 rounded-md font-medium hover:bg-[#D4AF37] hover:text-[#1A1A1A] transition-all duration-200 uppercase tracking-wider text-sm"
+                            >
+                              Quick View
+                            </Link>
+                          </div>
+
+                          {/* Wishlist Icon */}
+                          <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                showNotification({
+                                  type: 'success',
+                                  message: 'Added to wishlist',
+                                  auto_dismiss: true,
+                                  duration: 3000,
+                                });
+                              }}
+                              className="p-2 bg-[#2D2D2D]/90 backdrop-blur-sm rounded-full hover:bg-[#D4AF37] hover:text-[#1A1A1A] transition-all duration-200"
+                              aria-label="Add to wishlist"
+                            >
+                              <svg className="h-5 w-5 text-[#D4AF37]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                              </svg>
+                            </button>
                           </div>
                         </div>
 
-                        <Link to={`/products/${product.product_id}`} className="block p-4">
-                          <div className="flex justify-between items-start mb-2">
-                            <h3 className="text-sm font-medium text-gray-900 group-hover:text-purple-600 transition-colors duration-200">
+                        <Link to={`/products/${product.product_id}`} className="block p-5">
+                          <div className="mb-3">
+                            <h3 className="text-base font-serif text-[#F5F5F0] group-hover:text-[#D4AF37] transition-colors duration-200 mb-1" style={{fontFamily: 'Playfair Display, serif'}}>
                               {product.product_name}
                             </h3>
-                            <div className="text-right">
-                              {product.sale_price ? (
-                                <div className="flex flex-col">
-                                  <span className="text-sm font-medium text-red-600">
-                                    ${Number(product.sale_price).toFixed(2)}
-                                  </span>
-                                  <span className="text-xs text-gray-500 line-through">
-                                    ${Number(product.base_price).toFixed(2)}
-                                  </span>
-                                </div>
-                              ) : (
-                                <span className="text-sm font-medium text-gray-900">
-                                  ${Number(product.base_price).toFixed(2)}
-                                </span>
-                              )}
-                            </div>
+                            <p className="text-xs text-[#F5F5F0]/50 uppercase tracking-wider">
+                              {product.concentration} • {product.gender_category}
+                            </p>
                           </div>
                           
-                          <p className="text-xs text-gray-500 mb-2">
-                            {product.concentration} • {product.gender_category}
-                          </p>
-                          
-                          {product.short_description && (
-                            <p className="text-sm text-gray-600 line-clamp-2 mb-3">
-                              {product.short_description}
-                            </p>
-                          )}
+                          {/* Price in Champagne Gold */}
+                          <div className="mb-3">
+                            {product.sale_price ? (
+                              <div className="flex items-baseline gap-2">
+                                <span className="text-lg font-medium text-[#D4AF37]">
+                                  ${Number(product.sale_price).toFixed(2)}
+                                </span>
+                                <span className="text-sm text-[#F5F5F0]/40 line-through">
+                                  ${Number(product.base_price).toFixed(2)}
+                                </span>
+                              </div>
+                            ) : (
+                              <span className="text-lg font-medium text-[#D4AF37]">
+                                ${Number(product.base_price).toFixed(2)}
+                              </span>
+                            )}
+                          </div>
 
-                          {/* Fragrance families */}
-                          <div className="flex flex-wrap gap-1 mb-3">
-                            {product.fragrance_families.split(',').slice(0, 2).map(family => {
+                          {/* Fragrance families - Minimalist Small Caps */}
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            {product.fragrance_families.split(',').slice(0, 2).map((family, index) => {
                               const familyOption = fragranceFamilies.find(f => f.value === family.trim());
                               return familyOption ? (
-                                <span key={family} className={`text-xs px-2 py-1 rounded ${familyOption.color}`}>
-                                  {familyOption.label}
+                                <span key={family} className="text-xs text-[#F5F5F0]/50 uppercase tracking-widest">
+                                  {familyOption.label.toUpperCase()}{index < Math.min(product.fragrance_families.split(',').length - 1, 1) ? ' •' : ''}
                                 </span>
                               ) : null;
                             })}
                           </div>
 
-                          {/* Rating and reviews placeholder */}
-                          <div className="flex items-center justify-between">
+                          {/* Rating and availability */}
+                          <div className="flex items-center justify-between pt-3 border-t border-gray-800">
                             <div className="flex items-center">
-                              <div className="flex text-yellow-400">
+                              <div className="flex text-[#D4AF37]">
                                 {[1, 2, 3, 4, 5].map(star => (
-                                  <svg key={star} className="h-4 w-4 fill-current" viewBox="0 0 20 20">
+                                  <svg key={star} className="h-3 w-3 fill-current" viewBox="0 0 20 20">
                                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                   </svg>
                                 ))}
                               </div>
-                              <span className="ml-1 text-xs text-gray-500">(24)</span>
+                              <span className="ml-1 text-xs text-[#F5F5F0]/40">(24)</span>
                             </div>
                             
-                            <span className={`text-xs px-2 py-1 rounded-full ${
+                            <span className={`text-xs px-2 py-1 rounded-full uppercase tracking-wide font-medium ${
                               product.availability_status === 'in_stock' 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-red-100 text-red-800'
+                                ? 'bg-transparent border border-green-500/50 text-green-400' 
+                                : 'bg-transparent border border-red-500/50 text-red-400'
                             }`}>
                               {product.availability_status === 'in_stock' ? 'In Stock' : 'Out of Stock'}
                             </span>
@@ -783,7 +769,7 @@ const UV_ProductListing: React.FC = () => {
                   {/* Pagination */}
                   {pagination && pagination.total_pages > 1 && (
                     <div className="mt-12 flex items-center justify-between">
-                      <div className="text-sm text-gray-700">
+                      <div className="text-sm text-[#F5F5F0]/60">
                         Showing {((pagination.page - 1) * pagination.per_page) + 1} to{' '}
                         {Math.min(pagination.page * pagination.per_page, pagination.total)} of{' '}
                         {pagination.total} results
@@ -798,7 +784,7 @@ const UV_ProductListing: React.FC = () => {
                             }
                           }}
                           disabled={!pagination.has_prev}
-                          className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="px-4 py-2 text-sm font-medium text-[#F5F5F0] bg-[#2D2D2D] border border-gray-700 rounded-md hover:border-[#D4AF37] hover:text-[#D4AF37] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                         >
                           Previous
                         </button>
@@ -810,10 +796,10 @@ const UV_ProductListing: React.FC = () => {
                             <button
                               key={pageNum}
                               onClick={() => setCurrentPage(pageNum)}
-                              className={`px-3 py-2 text-sm font-medium rounded-md ${
+                              className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
                                 currentPage === pageNum
-                                  ? 'bg-purple-600 text-white'
-                                  : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                                  ? 'bg-[#D4AF37] text-[#1A1A1A] border border-[#D4AF37]'
+                                  : 'text-[#F5F5F0] bg-[#2D2D2D] border border-gray-700 hover:border-[#D4AF37] hover:text-[#D4AF37]'
                               }`}
                             >
                               {pageNum}
@@ -829,7 +815,7 @@ const UV_ProductListing: React.FC = () => {
                             }
                           }}
                           disabled={!pagination.has_next}
-                          className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="px-4 py-2 text-sm font-medium text-[#F5F5F0] bg-[#2D2D2D] border border-gray-700 rounded-md hover:border-[#D4AF37] hover:text-[#D4AF37] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                         >
                           Next
                         </button>
@@ -842,7 +828,7 @@ const UV_ProductListing: React.FC = () => {
                     <div className="mt-8 text-center">
                       <button
                         onClick={() => setCurrentPage(prev => prev + 1)}
-                        className="px-6 py-3 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors duration-200"
+                        className="px-8 py-3 bg-transparent border-2 border-[#D4AF37] text-[#D4AF37] rounded-md hover:bg-[#D4AF37] hover:text-[#1A1A1A] transition-all duration-200 font-medium uppercase tracking-wider"
                       >
                         Load More Products
                       </button>
