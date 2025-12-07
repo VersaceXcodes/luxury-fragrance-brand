@@ -152,67 +152,11 @@ const UV_Homepage: React.FC = () => {
     };
   }, [heroSlides.length, testimonials.length]);
 
-  // Sample products data for Nocturne Atelier with fallback images
-  const sampleProducts = [
-    {
-      product_id: '1',
-      product_name: 'Aurora No. 1',
-      family: 'Citrus/Floral',
-      price: { '10ml': 45, '50ml': 85, '100ml': 120 },
-      image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&h=400&fit=crop',
-      rating: 4.8,
-      reviewCount: 127,
-      badges: ['bestseller'],
-      notes: { top: ['Bergamot', 'Pink Grapefruit'], heart: ['Rose Petals', 'Jasmine'], base: ['White Musk', 'Cedar'] }
-    },
-    {
-      product_id: '2',
-      product_name: 'Midnight Saffron',
-      family: 'Amber/Spice',
-      price: { '10ml': 50, '50ml': 90, '100ml': 130 },
-      image: 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=400&h=400&fit=crop',
-      rating: 4.9,
-      reviewCount: 89,
-      badges: ['new'],
-      notes: { top: ['Saffron', 'Black Pepper'], heart: ['Rose', 'Oud'], base: ['Amber', 'Sandalwood'] }
-    },
-    {
-      product_id: '3',
-      product_name: 'Coastal Fig',
-      family: 'Green/Woody',
-      price: { '10ml': 48, '50ml': 88, '100ml': 125 },
-      image: 'https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=400&h=400&fit=crop',
-      rating: 4.7,
-      reviewCount: 156,
-      badges: [],
-      notes: { top: ['Fig Leaves', 'Sea Salt'], heart: ['Green Fig', 'Violet'], base: ['Driftwood', 'Ambergris'] }
-    },
-    {
-      product_id: '4',
-      product_name: 'Cinder Oud',
-      family: 'Woody/Smoky',
-      price: { '10ml': 55, '50ml': 95, '100ml': 140 },
-      image: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=400&h=400&fit=crop',
-      rating: 4.6,
-      reviewCount: 73,
-      badges: ['limited'],
-      notes: { top: ['Smoke', 'Pink Pepper'], heart: ['Oud', 'Rose'], base: ['Leather', 'Patchouli'] }
-    },
-    {
-      product_id: '5',
-      product_name: 'Citrus Atlas',
-      family: 'Citrus/Aromatic',
-      price: { '10ml': 42, '50ml': 82, '100ml': 115 },
-      image: 'https://images.unsplash.com/photo-1588405748880-12d1d2a59cc9?w=400&h=400&fit=crop',
-      rating: 4.5,
-      reviewCount: 201,
-      badges: [],
-      notes: { top: ['Lemon', 'Mint'], heart: ['Lavender', 'Geranium'], base: ['Vetiver', 'Tonka Bean'] }
-    }
-  ];
+  // State for featured products with sizes
+  const [featuredProductsWithSizes, setFeaturedProductsWithSizes] = useState<any[]>([]);
 
-  // API Queries
-  useQuery({
+  // API Queries - Fetch featured products with their sizes
+  const { data: featuredProducts = [] } = useQuery({
     queryKey: ['featured-products'],
     queryFn: async () => {
       const response = await axios.get(`${getApiUrl()}/api/products/featured?limit=12`);
@@ -221,6 +165,63 @@ const UV_Homepage: React.FC = () => {
     staleTime: 5 * 60 * 1000,
     retry: 1
   });
+
+  // Fetch sizes for all featured products
+  useEffect(() => {
+    const fetchProductSizes = async () => {
+      if (featuredProducts.length === 0) return;
+
+      const productsWithSizes = await Promise.all(
+        featuredProducts.slice(0, 5).map(async (product) => {
+          try {
+            const sizesResponse = await axios.get(`${getApiUrl()}/api/products/${product.product_id}/sizes`);
+            const sizes = sizesResponse.data;
+
+            // Build price object from sizes
+            const priceMap: { [key: string]: number } = {};
+            sizes.forEach((size: any) => {
+              priceMap[`${size.size_ml}ml`] = size.sale_price || size.price;
+            });
+
+            // Get primary image
+            const imagesResponse = await axios.get(`${getApiUrl()}/api/products/${product.product_id}`);
+            const productData = imagesResponse.data;
+            const primaryImage = productData.images?.find((img: any) => img.is_primary)?.image_url || 
+                               productData.images?.[0]?.image_url || 
+                               'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&h=400&fit=crop';
+
+            return {
+              product_id: product.product_id,
+              product_name: product.product_name,
+              family: product.fragrance_families || 'Luxury Fragrance',
+              price: priceMap,
+              sizes: sizes, // Store actual size objects with stock info
+              image: primaryImage,
+              rating: 4.8,
+              reviewCount: 0,
+              badges: [
+                product.is_new_arrival ? 'new' : null,
+                product.is_featured ? 'bestseller' : null,
+                product.is_limited_edition ? 'limited' : null
+              ].filter(Boolean) as Array<'new' | 'bestseller' | 'limited'>,
+              notes: {
+                top: product.top_notes ? product.top_notes.split(',').slice(0, 2) : [],
+                heart: product.middle_notes ? product.middle_notes.split(',').slice(0, 2) : [],
+                base: product.base_notes ? product.base_notes.split(',').slice(0, 2) : []
+              }
+            };
+          } catch (error) {
+            console.error(`Failed to fetch sizes for product ${product.product_id}:`, error);
+            return null;
+          }
+        })
+      );
+
+      setFeaturedProductsWithSizes(productsWithSizes.filter(Boolean));
+    };
+
+    fetchProductSizes();
+  }, [featuredProducts]);
 
   // Currently unused queries but kept for future implementation
   // const { data: newArrivals = [] } = useQuery({
@@ -521,126 +522,180 @@ const UV_Homepage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {sampleProducts.map((product, index) => (
-              <div
-                key={product.product_id}
-                className="group relative"
-                onMouseEnter={() => setShowQuickView(product.product_id)}
-                onMouseLeave={() => setShowQuickView(null)}
-              >
-                <NocturneProductCard
-                  id={product.product_id}
-                  name={product.product_name}
-                  family={product.family}
-                  price={product.price}
-                  image={product.image}
-                  rating={product.rating}
-                  reviewCount={product.reviewCount}
-                  badges={product.badges as Array<'new' | 'bestseller' | 'limited'>}
-                  onQuickAdd={async (id, size) => {
-                    try {
-                      // Extract the numeric value from the size string (e.g., '50ml' -> 50)
-                      const sizeValue = parseInt(size.replace('ml', ''));
-                      const priceForSize = product.price[size];
-                      
-                      await addToCart({
-                        product_id: id,
-                        product_name: product.product_name,
-                        brand_name: 'Nocturne Atelier',
-                        size_ml: sizeValue,
-                        quantity: 1,
-                        unit_price: priceForSize,
-                        gift_wrap: false,
-                        sample_included: false,
-                      });
-                      
-                      showNotification({
-                        type: 'success',
-                        message: `Added ${product.product_name} (${size}) to cart!`,
-                        title: 'Added to Cart',
-                        auto_dismiss: true,
-                        duration: 3000
-                      });
-                    } catch (error) {
-                      showNotification({
-                        type: 'error',
-                        message: "We couldn't add this to your cart. Please try again.",
-                        title: 'Error',
-                        auto_dismiss: true,
-                        duration: 5000
-                      });
-                    }
-                  }}
-                  onClick={(id) => {
-                    window.location.href = `/products/${id}`;
-                  }}
-                  className={`animate-fade-in transition-all duration-500 hover:scale-105 ${
-                    showQuickView === product.product_id ? 'shadow-2xl' : ''
-                  }`}
-                  style={{ animationDelay: `${index * 100}ms` }}
-                />
-                
-                {/* Quick view overlay */}
-                {showQuickView === product.product_id && (
-                  <div className="absolute inset-0 bg-[var(--nocturne-onyx)]/90 backdrop-blur-sm rounded-[var(--radius-lg)] flex items-center justify-center z-10 animate-fade-in">
-                    <div className="text-center text-[var(--nocturne-porcelain)] p-6">
-                      <h4 className="text-subtitle font-[var(--font-weight-semibold)] mb-2">{product.product_name}</h4>
-                      <p className="text-caption mb-4">
-                        Top: {product.notes.top.join(', ')}
-                      </p>
-                      <div className="flex gap-2 justify-center">
-                        <NocturneButton 
-                          size="sm" 
-                          variant="outline"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            window.location.href = `/products/${product.product_id}`;
-                          }}
-                        >
-                          Quick View
-                        </NocturneButton>
-                        <NocturneButton 
-                          size="sm"
-                          onClick={async (e) => {
-                            e.stopPropagation();
-                            try {
-                              await addToCart({
-                                product_id: product.product_id,
-                                product_name: product.product_name,
-                                brand_name: 'Nocturne Atelier',
-                                size_ml: 50,
-                                quantity: 1,
-                                unit_price: product.price['50ml'],
-                                gift_wrap: false,
-                                sample_included: false,
-                              });
-                              
-                              showNotification({
-                                type: 'success',
-                                message: `Added ${product.product_name} (50ml) to cart!`,
-                                title: 'Added to Cart',
-                                auto_dismiss: true,
-                                duration: 3000
-                              });
-                            } catch (error) {
-                              showNotification({
-                                type: 'error',
-                                message: "We couldn't add this to your cart. Please try again.",
-                                title: 'Error',
-                                auto_dismiss: true,
-                                duration: 5000
-                              });
-                            }
-                          }}
-                        >
-                          Add to Cart
-                        </NocturneButton>
+            {featuredProductsWithSizes.length > 0 ? (
+              featuredProductsWithSizes.map((product, index) => (
+                <div
+                  key={product.product_id}
+                  className="group relative"
+                  onMouseEnter={() => setShowQuickView(product.product_id)}
+                  onMouseLeave={() => setShowQuickView(null)}
+                >
+                  <NocturneProductCard
+                    id={product.product_id}
+                    name={product.product_name}
+                    family={product.family}
+                    price={product.price}
+                    sizes={product.sizes} // Pass actual size objects
+                    image={product.image}
+                    rating={product.rating}
+                    reviewCount={product.reviewCount}
+                    badges={product.badges as Array<'new' | 'bestseller' | 'limited'>}
+                    onQuickAdd={async (id, size, sizeObj) => {
+                      try {
+                        // Validate size selection
+                        if (!sizeObj) {
+                          showNotification({
+                            type: 'warning',
+                            message: 'Please select a size first.',
+                            title: 'Size Required',
+                            auto_dismiss: true,
+                            duration: 3000
+                          });
+                          return;
+                        }
+
+                        // Check stock availability
+                        if (sizeObj.stock_quantity <= 0) {
+                          showNotification({
+                            type: 'error',
+                            message: 'This size is currently out of stock.',
+                            title: 'Out of Stock',
+                            auto_dismiss: true,
+                            duration: 3000
+                          });
+                          return;
+                        }
+                        
+                        await addToCart({
+                          product_id: id,
+                          product_name: product.product_name,
+                          brand_name: 'Nocturne Atelier',
+                          size_ml: sizeObj.size_ml,
+                          quantity: 1,
+                          unit_price: sizeObj.sale_price || sizeObj.price,
+                          gift_wrap: false,
+                          sample_included: false,
+                        });
+                        
+                        showNotification({
+                          type: 'success',
+                          message: `Added ${product.product_name} (${sizeObj.size_ml}ml) to your cart.`,
+                          title: 'Added to Cart',
+                          auto_dismiss: true,
+                          duration: 3000
+                        });
+                      } catch (error: any) {
+                        const errorMessage = error.response?.data?.message || error.message || "We couldn't add this to your cart. Please try again.";
+                        showNotification({
+                          type: 'error',
+                          message: errorMessage,
+                          title: 'Error',
+                          auto_dismiss: true,
+                          duration: 5000
+                        });
+                      }
+                    }}
+                    onClick={(id) => {
+                      window.location.href = `/products/${id}`;
+                    }}
+                    className={`animate-fade-in transition-all duration-500 hover:scale-105 ${
+                      showQuickView === product.product_id ? 'shadow-2xl' : ''
+                    }`}
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  />
+                  
+                  {/* Quick view overlay */}
+                  {showQuickView === product.product_id && (
+                    <div className="absolute inset-0 bg-[var(--nocturne-onyx)]/90 backdrop-blur-sm rounded-[var(--radius-lg)] flex items-center justify-center z-10 animate-fade-in">
+                      <div className="text-center text-[var(--nocturne-porcelain)] p-6">
+                        <h4 className="text-subtitle font-[var(--font-weight-semibold)] mb-2">{product.product_name}</h4>
+                        <p className="text-caption mb-4">
+                          {product.notes.top.length > 0 && `Top: ${product.notes.top.join(', ')}`}
+                        </p>
+                        <div className="flex gap-2 justify-center">
+                          <NocturneButton 
+                            size="sm" 
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.location.href = `/products/${product.product_id}`;
+                            }}
+                          >
+                            Quick View
+                          </NocturneButton>
+                          <NocturneButton 
+                            size="sm"
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              try {
+                                // Find default size (prefer 50ml, or first available)
+                                const defaultSize = product.sizes.find((s: any) => s.size_ml === 50) || product.sizes[0];
+                                
+                                if (!defaultSize) {
+                                  showNotification({
+                                    type: 'error',
+                                    message: 'No sizes available for this product.',
+                                    title: 'Unavailable',
+                                    auto_dismiss: true,
+                                    duration: 3000
+                                  });
+                                  return;
+                                }
+
+                                if (defaultSize.stock_quantity <= 0) {
+                                  showNotification({
+                                    type: 'error',
+                                    message: 'This product is currently out of stock.',
+                                    title: 'Out of Stock',
+                                    auto_dismiss: true,
+                                    duration: 3000
+                                  });
+                                  return;
+                                }
+
+                                await addToCart({
+                                  product_id: product.product_id,
+                                  product_name: product.product_name,
+                                  brand_name: 'Nocturne Atelier',
+                                  size_ml: defaultSize.size_ml,
+                                  quantity: 1,
+                                  unit_price: defaultSize.sale_price || defaultSize.price,
+                                  gift_wrap: false,
+                                  sample_included: false,
+                                });
+                                
+                                showNotification({
+                                  type: 'success',
+                                  message: `Added ${product.product_name} (${defaultSize.size_ml}ml) to your cart.`,
+                                  title: 'Added to Cart',
+                                  auto_dismiss: true,
+                                  duration: 3000
+                                });
+                              } catch (error: any) {
+                                const errorMessage = error.response?.data?.message || error.message || "We couldn't add this to your cart. Please try again.";
+                                showNotification({
+                                  type: 'error',
+                                  message: errorMessage,
+                                  title: 'Error',
+                                  auto_dismiss: true,
+                                  duration: 5000
+                                });
+                              }
+                            }}
+                          >
+                            Add to Cart
+                          </NocturneButton>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+              ))
+            ) : (
+              <div className="col-span-full text-center py-12">
+                <p className="text-body text-[var(--color-fg-secondary)]">Loading featured products...</p>
               </div>
-            ))}
+            )}
           </div>
 
           <div className="text-center mt-16">

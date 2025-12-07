@@ -5,15 +5,25 @@ import { NocturneBadge } from './nocturne-badge';
 import { NocturneButton } from './nocturne-button';
 import { Heart, Plus, Star } from 'lucide-react';
 
+interface ProductSize {
+  size_id: string;
+  size_ml: number;
+  price: number;
+  sale_price: number | null;
+  stock_quantity: number;
+  reserved_quantity: number;
+  sku: string;
+  is_active: boolean;
+}
+
 interface ProductCardProps {
   id: string;
   name: string;
   family: string;
   price: {
-    '10ml': number;
-    '50ml': number;
-    '100ml': number;
+    [key: string]: number; // e.g., '10ml': 45, '50ml': 85
   };
+  sizes?: ProductSize[]; // Optional: actual size objects from API
   image: string;
   rating?: number;
   reviewCount?: number;
@@ -22,7 +32,7 @@ interface ProductCardProps {
   brandName?: string;
   brandLogo?: string;
   onWishlistToggle?: (id: string) => void;
-  onQuickAdd?: (id: string, size: '10ml' | '50ml' | '100ml') => void;
+  onQuickAdd?: (id: string, size: string, sizeObj?: ProductSize) => void;
   onClick?: (id: string) => void;
   className?: string;
   style?: React.CSSProperties;
@@ -33,6 +43,7 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
   name,
   family,
   price,
+  sizes,
   image,
   rating = 0,
   reviewCount = 0,
@@ -46,8 +57,27 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
   className,
   style
 }) => {
-  const [selectedSize, setSelectedSize] = useState<'10ml' | '50ml' | '100ml'>('50ml');
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedSizeObj, setSelectedSizeObj] = useState<ProductSize | null>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [sizeError, setSizeError] = useState<string | null>(null);
+
+  // Set default selected size when component mounts or sizes change
+  React.useEffect(() => {
+    if (sizes && sizes.length > 0 && !selectedSize) {
+      // Prefer 50ml if available, otherwise use first available size
+      const defaultSize = sizes.find(s => s.size_ml === 50 && s.stock_quantity > 0) || 
+                         sizes.find(s => s.stock_quantity > 0) || 
+                         sizes[0];
+      if (defaultSize) {
+        setSelectedSize(`${defaultSize.size_ml}ml`);
+        setSelectedSizeObj(defaultSize);
+      }
+    } else if (!sizes && !selectedSize) {
+      // Fallback for products without size data - default to 50ml
+      setSelectedSize('50ml');
+    }
+  }, [sizes, selectedSize]);
 
   const handleWishlistClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -56,7 +86,21 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onQuickAdd?.(id, selectedSize);
+    
+    // Validate size selection
+    if (!selectedSize) {
+      setSizeError('Please select a size first.');
+      return;
+    }
+
+    // Check stock if size object is available
+    if (selectedSizeObj && selectedSizeObj.stock_quantity <= 0) {
+      setSizeError('This size is out of stock.');
+      return;
+    }
+
+    setSizeError(null);
+    onQuickAdd?.(id, selectedSize, selectedSizeObj || undefined);
   };
 
   const handleCardClick = () => {
@@ -133,32 +177,76 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
             isHovered ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
           )}
         >
+          {/* Size Error Message */}
+          {sizeError && (
+            <div className="mb-2 px-2 py-1 bg-red-500/90 text-white text-xs rounded">
+              {sizeError}
+            </div>
+          )}
+          
           <div className="flex items-center gap-2 mb-2">
-            {Object.entries(price).map(([size]) => (
-              <button
-                key={size}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedSize(size as '10ml' | '50ml' | '100ml');
-                }}
-                className={cn(
-                  "px-2 py-1 rounded-full text-xs font-medium transition-all duration-[var(--duration-fast)]",
-                  selectedSize === size
-                    ? "bg-white text-black"
-                    : "bg-white/20 text-white hover:bg-white/30"
-                )}
-              >
-                {size}
-              </button>
-            ))}
+            {sizes ? (
+              // Use actual size objects if available
+              sizes.map((sizeObj) => {
+                const sizeKey = `${sizeObj.size_ml}ml`;
+                const isOutOfStock = sizeObj.stock_quantity <= 0;
+                return (
+                  <button
+                    key={sizeObj.size_id}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedSize(sizeKey);
+                      setSelectedSizeObj(sizeObj);
+                      setSizeError(null);
+                    }}
+                    disabled={isOutOfStock}
+                    className={cn(
+                      "px-2 py-1 rounded-full text-xs font-medium transition-all duration-[var(--duration-fast)]",
+                      selectedSize === sizeKey
+                        ? "bg-white text-black"
+                        : isOutOfStock
+                        ? "bg-white/10 text-white/50 cursor-not-allowed line-through"
+                        : "bg-white/20 text-white hover:bg-white/30"
+                    )}
+                    title={isOutOfStock ? 'Out of stock' : ''}
+                  >
+                    {sizeKey}
+                  </button>
+                );
+              })
+            ) : (
+              // Fallback to price keys if no size objects
+              Object.entries(price).map(([size]) => (
+                <button
+                  key={size}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedSize(size);
+                    setSelectedSizeObj(null);
+                    setSizeError(null);
+                  }}
+                  className={cn(
+                    "px-2 py-1 rounded-full text-xs font-medium transition-all duration-[var(--duration-fast)]",
+                    selectedSize === size
+                      ? "bg-white text-black"
+                      : "bg-white/20 text-white hover:bg-white/30"
+                  )}
+                >
+                  {size}
+                </button>
+              ))
+            )}
           </div>
           <NocturneButton
             size="sm"
             onClick={handleQuickAdd}
             className="w-full bg-white text-black hover:bg-gray-100"
+            disabled={!selectedSize || (selectedSizeObj?.stock_quantity ?? 1) <= 0}
           >
             <Plus size={14} className="mr-1" />
-            Add €{price[selectedSize]}
+            {selectedSize && price[selectedSize] 
+              ? `Add €${price[selectedSize]}` 
+              : 'Select Size'}
           </NocturneButton>
         </div>
       </div>
