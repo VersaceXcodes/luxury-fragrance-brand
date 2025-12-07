@@ -53,7 +53,7 @@ const UV_Homepage: React.FC = () => {
   // Zustand store selectors (individual to avoid infinite loops)
   const isAuthenticated = useAppStore(state => state.authentication_state.authentication_status.is_authenticated);
   const currentUser = useAppStore(state => state.authentication_state.current_user);
-  // const addToCart = useAppStore(state => state.add_to_cart); // Currently unused but kept for future implementation
+  const addToCart = useAppStore(state => state.add_to_cart);
   const showNotification = useAppStore(state => state.show_notification);
 
   // Newsletter form state
@@ -152,14 +152,14 @@ const UV_Homepage: React.FC = () => {
     };
   }, [heroSlides.length, testimonials.length]);
 
-  // Sample products data for Nocturne Atelier
+  // Sample products data for Nocturne Atelier with fallback images
   const sampleProducts = [
     {
       product_id: '1',
       product_name: 'Aurora No. 1',
       family: 'Citrus/Floral',
       price: { '10ml': 45, '50ml': 85, '100ml': 120 },
-      image: '/api/placeholder/400/400',
+      image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&h=400&fit=crop',
       rating: 4.8,
       reviewCount: 127,
       badges: ['bestseller'],
@@ -170,7 +170,7 @@ const UV_Homepage: React.FC = () => {
       product_name: 'Midnight Saffron',
       family: 'Amber/Spice',
       price: { '10ml': 50, '50ml': 90, '100ml': 130 },
-      image: '/api/placeholder/400/400',
+      image: 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=400&h=400&fit=crop',
       rating: 4.9,
       reviewCount: 89,
       badges: ['new'],
@@ -181,7 +181,7 @@ const UV_Homepage: React.FC = () => {
       product_name: 'Coastal Fig',
       family: 'Green/Woody',
       price: { '10ml': 48, '50ml': 88, '100ml': 125 },
-      image: '/api/placeholder/400/400',
+      image: 'https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=400&h=400&fit=crop',
       rating: 4.7,
       reviewCount: 156,
       badges: [],
@@ -192,7 +192,7 @@ const UV_Homepage: React.FC = () => {
       product_name: 'Cinder Oud',
       family: 'Woody/Smoky',
       price: { '10ml': 55, '50ml': 95, '100ml': 140 },
-      image: '/api/placeholder/400/400',
+      image: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=400&h=400&fit=crop',
       rating: 4.6,
       reviewCount: 73,
       badges: ['limited'],
@@ -203,7 +203,7 @@ const UV_Homepage: React.FC = () => {
       product_name: 'Citrus Atlas',
       family: 'Citrus/Aromatic',
       price: { '10ml': 42, '50ml': 82, '100ml': 115 },
-      image: '/api/placeholder/400/400',
+      image: 'https://images.unsplash.com/photo-1588405748880-12d1d2a59cc9?w=400&h=400&fit=crop',
       rating: 4.5,
       reviewCount: 201,
       badges: [],
@@ -537,18 +537,42 @@ const UV_Homepage: React.FC = () => {
                   rating={product.rating}
                   reviewCount={product.reviewCount}
                   badges={product.badges as Array<'new' | 'bestseller' | 'limited'>}
-                  onQuickAdd={(id, size) => {
-                    console.log(`Quick add ${id} in ${size}`);
-                    showNotification({
-                      type: 'success',
-                      message: `Added ${product.product_name} (${size}) to cart!`,
-                      title: 'Added to Cart',
-                      auto_dismiss: true,
-                      duration: 3000
-                    });
+                  onQuickAdd={async (id, size) => {
+                    try {
+                      // Extract the numeric value from the size string (e.g., '50ml' -> 50)
+                      const sizeValue = parseInt(size.replace('ml', ''));
+                      const priceForSize = product.price[size];
+                      
+                      await addToCart({
+                        product_id: id,
+                        product_name: product.product_name,
+                        brand_name: 'Nocturne Atelier',
+                        size_ml: sizeValue,
+                        quantity: 1,
+                        unit_price: priceForSize,
+                        gift_wrap: false,
+                        sample_included: false,
+                      });
+                      
+                      showNotification({
+                        type: 'success',
+                        message: `Added ${product.product_name} (${size}) to cart!`,
+                        title: 'Added to Cart',
+                        auto_dismiss: true,
+                        duration: 3000
+                      });
+                    } catch (error) {
+                      showNotification({
+                        type: 'error',
+                        message: "We couldn't add this to your cart. Please try again.",
+                        title: 'Error',
+                        auto_dismiss: true,
+                        duration: 5000
+                      });
+                    }
                   }}
                   onClick={(id) => {
-                    console.log(`Navigate to product ${id}`);
+                    window.location.href = `/products/${id}`;
                   }}
                   className={`animate-fade-in transition-all duration-500 hover:scale-105 ${
                     showQuickView === product.product_id ? 'shadow-2xl' : ''
@@ -565,10 +589,50 @@ const UV_Homepage: React.FC = () => {
                         Top: {product.notes.top.join(', ')}
                       </p>
                       <div className="flex gap-2 justify-center">
-                        <NocturneButton size="sm" variant="outline">
+                        <NocturneButton 
+                          size="sm" 
+                          variant="outline"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.location.href = `/products/${product.product_id}`;
+                          }}
+                        >
                           Quick View
                         </NocturneButton>
-                        <NocturneButton size="sm">
+                        <NocturneButton 
+                          size="sm"
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            try {
+                              await addToCart({
+                                product_id: product.product_id,
+                                product_name: product.product_name,
+                                brand_name: 'Nocturne Atelier',
+                                size_ml: 50,
+                                quantity: 1,
+                                unit_price: product.price['50ml'],
+                                gift_wrap: false,
+                                sample_included: false,
+                              });
+                              
+                              showNotification({
+                                type: 'success',
+                                message: `Added ${product.product_name} (50ml) to cart!`,
+                                title: 'Added to Cart',
+                                auto_dismiss: true,
+                                duration: 3000
+                              });
+                            } catch (error) {
+                              showNotification({
+                                type: 'error',
+                                message: "We couldn't add this to your cart. Please try again.",
+                                title: 'Error',
+                                auto_dismiss: true,
+                                duration: 5000
+                              });
+                            }
+                          }}
+                        >
                           Add to Cart
                         </NocturneButton>
                       </div>
