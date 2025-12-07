@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '@/store/main';
+import { cartDrawerVariants, cartItemVariants, MOTION_CONFIG } from '@/lib/motion-config';
+import { CartItemAnimation } from '@/components/ui/motion-components';
 
 // Types based on Zod schemas
 
@@ -105,15 +108,27 @@ const GV_CartDropdown: React.FC = () => {
   if (!cartDropdownOpen) return null;
 
   return (
-    <>
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black bg-opacity-50 z-50"
-        onClick={toggleCartDropdown}
-      />
-      
-      {/* Cart Slide-Out Drawer */}
-      <div className="fixed top-0 right-0 h-full w-full max-w-md bg-[#1A1A1A] shadow-2xl border-l border-[#C5A059] z-60 flex flex-col">
+    <AnimatePresence>
+      {cartDropdownOpen && (
+        <>
+          {/* Backdrop with fade */}
+          <motion.div 
+            className="fixed inset-0 bg-black z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.5 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: MOTION_CONFIG.duration.fast }}
+            onClick={toggleCartDropdown}
+          />
+          
+          {/* Cart Slide-Out Drawer with Spring Physics */}
+          <motion.div 
+            className="fixed top-0 right-0 h-full w-full max-w-md bg-[#1A1A1A] shadow-2xl border-l border-[#C5A059] z-[60] flex flex-col"
+            variants={cartDrawerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
         {/* Cart Header */}
         <div className="flex items-center justify-between p-6 border-b border-[#C5A059]/30">
           <h3 className="text-xl font-semibold text-[#F5F5F0]" style={{ fontFamily: 'Playfair Display, serif' }}>
@@ -176,8 +191,10 @@ const GV_CartDropdown: React.FC = () => {
           <>
             {/* Cart Items List */}
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              {cartItems.map((item) => (
-                <div key={item.cart_item_id} className="flex items-start space-x-4 pb-4 border-b border-[#C5A059]/20">
+              <AnimatePresence mode="popLayout">
+                {cartItems.map((item, index) => (
+                  <CartItemAnimation key={item.cart_item_id} delay={index * 0.05}>
+                    <div className="flex items-start space-x-4 pb-4 border-b border-[#C5A059]/20">
                   {/* Product Image Placeholder */}
                   <div className="w-20 h-20 bg-[#2D2D2D] rounded-md flex items-center justify-center flex-shrink-0">
                     <svg className="w-8 h-8 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -234,8 +251,10 @@ const GV_CartDropdown: React.FC = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                   </button>
-                </div>
-              ))}
+                    </div>
+                  </CartItemAnimation>
+                ))}
+              </AnimatePresence>
             </div>
 
             {/* Cart Summary */}
@@ -310,8 +329,10 @@ const GV_CartDropdown: React.FC = () => {
             </div>
           </>
         )}
-      </div>
-    </>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 };
 

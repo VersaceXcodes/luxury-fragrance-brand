@@ -2,7 +2,10 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { motion } from 'framer-motion';
 import { useAppStore } from '@/store/main';
+import { ScrollReveal, MuseumProductCard } from '@/components/ui/motion-components';
+import { productImageVariants } from '@/lib/motion-config';
 
 // Types based on backend schemas
 interface Product {
@@ -628,16 +631,20 @@ const UV_ProductListing: React.FC = () => {
                 </div>
               ) : (
                 <>
-                  {/* Product grid */}
+                  {/* Product grid with Museum hover effects */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {products.map(product => (
-                      <div key={product.product_id} className="group relative bg-[#2D2D2D] rounded-lg border border-gray-800 hover:shadow-2xl hover:shadow-[#D4AF37]/10 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+                    {products.map((product, index) => (
+                      <ScrollReveal key={product.product_id} delay={index * 0.05}>
+                        <MuseumProductCard className="bg-[#2D2D2D] rounded-lg border border-gray-800 overflow-hidden h-full">
                         <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-lg bg-[#1A1A1A]">
                           {product.primary_image ? (
-                            <img 
+                            <motion.img 
                               src={product.primary_image} 
                               alt={product.product_name}
-                              className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                              className="w-full h-64 object-cover"
+                              variants={productImageVariants}
+                              initial="initial"
+                              whileHover="hover"
                               onError={(e) => {
                                 e.currentTarget.style.display = 'none';
                                 e.currentTarget.nextElementSibling?.classList.remove('hidden');
@@ -700,11 +707,16 @@ const UV_ProductListing: React.FC = () => {
                           </div>
                         </div>
 
-                        <Link to={`/products/${product.product_id}`} className="block p-5">
+                        <Link to={`/products/${product.product_id}`} className="block p-5 group/link">
                           <div className="mb-3">
-                            <h3 className="text-base font-serif text-[#F5F5F0] group-hover:text-[#D4AF37] transition-colors duration-200 mb-1" style={{fontFamily: 'Playfair Display, serif'}}>
+                            <motion.h3 
+                              className="text-base font-serif text-[#F5F5F0] mb-1" 
+                              style={{fontFamily: 'Playfair Display, serif'}}
+                              whileHover={{ color: '#D4AF37' }}
+                              transition={{ duration: 0.3 }}
+                            >
                               {product.product_name}
-                            </h3>
+                            </motion.h3>
                             <p className="text-xs text-[#F5F5F0]/50 uppercase tracking-wider">
                               {product.concentration} • {product.gender_category}
                             </p>
@@ -762,7 +774,8 @@ const UV_ProductListing: React.FC = () => {
                             </span>
                           </div>
                         </Link>
-                      </div>
+                        </MuseumProductCard>
+                      </ScrollReveal>
                     ))}
                   </div>
 

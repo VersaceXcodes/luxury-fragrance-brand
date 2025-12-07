@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AnimatePresence } from 'framer-motion';
 import { useAppStore } from '@/store/main';
+import { PageTransition } from '@/components/ui/page-transition';
 
 // Import all views
 import GV_TopNavigation from '@/components/views/GV_TopNavigation.tsx';
@@ -69,6 +71,103 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return <>{children}</>;
 };
 
+// Inner component to access useLocation
+const AppRoutes: React.FC = () => {
+  const location = useLocation();
+  
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+            <Routes location={location} key={location.pathname}>
+              {/* Public Routes */}
+              <Route path="/" element={<PageTransition><UV_Homepage /></PageTransition>} />
+              <Route path="/products" element={<PageTransition><UV_ProductListing /></PageTransition>} />
+              <Route path="/products/:product_id" element={<PageTransition><UV_ProductDetail /></PageTransition>} />
+              <Route path="/brands/:brand_id" element={<PageTransition><UV_BrandDetail /></PageTransition>} />
+              <Route path="/search" element={<PageTransition><UV_SearchResults /></PageTransition>} />
+              <Route path="/cart" element={<PageTransition><UV_ShoppingCart /></PageTransition>} />
+              <Route path="/checkout" element={<PageTransition><UV_Checkout /></PageTransition>} />
+              <Route path="/login" element={<PageTransition><UV_LoginRegistration /></PageTransition>} />
+              <Route path="/sign-in" element={<PageTransition><UV_LoginRegistration /></PageTransition>} />
+              <Route path="/fragrance-finder" element={<PageTransition><UV_FragranceFinder /></PageTransition>} />
+              <Route path="/samples" element={<PageTransition><UV_SampleProgram /></PageTransition>} />
+              <Route path="/gifts" element={<PageTransition><UV_GiftServices /></PageTransition>} />
+              <Route path="/support" element={<PageTransition><UV_CustomerService /></PageTransition>} />
+              <Route path="/track-order" element={<PageTransition><UV_OrderTracking /></PageTransition>} />
+              <Route path="/about" element={<PageTransition><UV_About /></PageTransition>} />
+              <Route path="/journal" element={<PageTransition><UV_Journal /></PageTransition>} />
+              <Route path="/journal/:article_id" element={<PageTransition><UV_Journal /></PageTransition>} />
+              <Route path="/faq" element={<PageTransition><UV_FAQ /></PageTransition>} />
+              <Route path="/contact" element={<PageTransition><UV_Contact /></PageTransition>} />
+              
+              {/* Protected Routes */}
+              <Route 
+                path="/account" 
+                element={
+                  <PageTransition>
+                    <ProtectedRoute>
+                      <UV_DashboardRouter />
+                    </ProtectedRoute>
+                  </PageTransition>
+                } 
+              />
+              <Route 
+                path="/wishlist" 
+                element={
+                  <PageTransition>
+                    <ProtectedRoute>
+                      <UV_Wishlist />
+                    </ProtectedRoute>
+                  </PageTransition>
+                } 
+              />
+              <Route 
+                path="/orders/:order_id" 
+                element={
+                  <PageTransition>
+                    <ProtectedRoute>
+                      <UV_OrderTracking />
+                    </ProtectedRoute>
+                  </PageTransition>
+                } 
+              />
+              <Route 
+                path="/account/profile" 
+                element={
+                  <PageTransition>
+                    <ProtectedRoute>
+                      <UV_ProfileSettings />
+                    </ProtectedRoute>
+                  </PageTransition>
+                } 
+              />
+              <Route 
+                path="/account/orders" 
+                element={
+                  <PageTransition>
+                    <ProtectedRoute>
+                      <UV_OrderHistory />
+                    </ProtectedRoute>
+                  </PageTransition>
+                } 
+              />
+              <Route 
+                path="/order-confirmation" 
+                element={
+                  <PageTransition>
+                    <ProtectedRoute>
+                      <UV_OrderConfirmation />
+                    </ProtectedRoute>
+                  </PageTransition>
+                } 
+              />
+              
+              {/* Catch all route - 404 Not Found */}
+              <Route path="*" element={<PageTransition><UV_NotFound /></PageTransition>} />
+            </Routes>
+          </AnimatePresence>
+        );
+};
+
 const App: React.FC = () => {
   // Individual Zustand selectors to prevent infinite re-renders
   const isLoading = useAppStore(state => state.authentication_state.authentication_status.is_loading);
@@ -119,83 +218,9 @@ const App: React.FC = () => {
           {/* Global Notification Toasts */}
           <GV_NotificationToast />
           
-          {/* Main Content Area */}
+          {/* Main Content Area with Page Transitions */}
           <main className="flex-1" style={{ paddingTop: 'var(--nav-height)' }}>
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<UV_Homepage />} />
-              <Route path="/products" element={<UV_ProductListing />} />
-              <Route path="/products/:product_id" element={<UV_ProductDetail />} />
-              <Route path="/brands/:brand_id" element={<UV_BrandDetail />} />
-              <Route path="/search" element={<UV_SearchResults />} />
-              <Route path="/cart" element={<UV_ShoppingCart />} />
-              <Route path="/checkout" element={<UV_Checkout />} />
-              <Route path="/login" element={<UV_LoginRegistration />} />
-              <Route path="/sign-in" element={<UV_LoginRegistration />} />
-              <Route path="/fragrance-finder" element={<UV_FragranceFinder />} />
-              <Route path="/samples" element={<UV_SampleProgram />} />
-              <Route path="/gifts" element={<UV_GiftServices />} />
-              <Route path="/support" element={<UV_CustomerService />} />
-              <Route path="/track-order" element={<UV_OrderTracking />} />
-              <Route path="/about" element={<UV_About />} />
-              <Route path="/journal" element={<UV_Journal />} />
-              <Route path="/journal/:article_id" element={<UV_Journal />} />
-              <Route path="/faq" element={<UV_FAQ />} />
-              <Route path="/contact" element={<UV_Contact />} />
-              
-              {/* Protected Routes */}
-              <Route 
-                path="/account" 
-                element={
-                  <ProtectedRoute>
-                    <UV_DashboardRouter />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/wishlist" 
-                element={
-                  <ProtectedRoute>
-                    <UV_Wishlist />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/orders/:order_id" 
-                element={
-                  <ProtectedRoute>
-                    <UV_OrderTracking />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/account/profile" 
-                element={
-                  <ProtectedRoute>
-                    <UV_ProfileSettings />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/account/orders" 
-                element={
-                  <ProtectedRoute>
-                    <UV_OrderHistory />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/order-confirmation" 
-                element={
-                  <ProtectedRoute>
-                    <UV_OrderConfirmation />
-                  </ProtectedRoute>
-                } 
-              />
-              
-              {/* Catch all route - 404 Not Found */}
-              <Route path="*" element={<UV_NotFound />} />
-            </Routes>
+            <AppRoutes />
           </main>
           
           {/* Footer - Fixed at bottom */}

@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useAppStore } from '@/store/main';
 import { NocturneProductCard } from '@/components/ui/nocturne-product-card';
 import { NocturneButton } from '@/components/ui/nocturne-button';
 import { NocturneBadge } from '@/components/ui/nocturne-badge';
+import { ScrollReveal, MagneticButton, StaggeredContainer, StaggeredItem } from '@/components/ui/motion-components';
+import { MOTION_CONFIG } from '@/lib/motion-config';
 
 // API Response Types
 interface Product {
@@ -386,12 +389,25 @@ const UV_Homepage: React.FC = () => {
   //   ));
   // };
 
+  // Parallax effect for hero section
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollY } = useScroll();
+  const heroY = useTransform(scrollY, [0, 500], [0, 150]);
+  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
+
   return (
     <>
-      {/* Interactive Hero Section with Carousel - Midnight Velvet */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[var(--nocturne-onyx)]">
-        {/* Dynamic Background based on current slide */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${heroSlides[currentHeroSlide].background} transition-all duration-1000`} />
+      {/* Interactive Hero Section with Carousel - Midnight Velvet + Parallax */}
+      <motion.section 
+        ref={heroRef}
+        className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[var(--nocturne-onyx)]"
+        style={{ opacity: heroOpacity }}
+      >
+        {/* Dynamic Background based on current slide - moves slower than content */}
+        <motion.div 
+          className={`absolute inset-0 bg-gradient-to-br ${heroSlides[currentHeroSlide].background} transition-all duration-1000`}
+          style={{ y: useTransform(scrollY, [0, 500], [0, 75]) }}
+        />
         {/* Atmospheric texture overlay */}
         <div className="absolute inset-0 opacity-30" style={{
           backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(15, 23, 42, 0.4) 0%, transparent 50%)'
@@ -442,42 +458,55 @@ const UV_Homepage: React.FC = () => {
           </svg>
         </button>
 
-        {/* Hero Content with Glassmorphism Card */}
-        <div className="relative z-10 text-center text-[var(--nocturne-porcelain)] nocturne-container py-32">
-          <div className="animate-fade-in max-w-4xl mx-auto" key={currentHeroSlide}>
-            {/* Glassmorphism Card */}
+        {/* Hero Content with Glassmorphism Card + Parallax */}
+        <motion.div 
+          className="relative z-10 text-center text-[var(--nocturne-porcelain)] nocturne-container py-32"
+          style={{ y: heroY }}
+        >
+          <StaggeredContainer className="max-w-4xl mx-auto" key={currentHeroSlide}>
+            {/* Glassmorphism Card with Staggered Animations */}
             <div className="backdrop-blur-xl bg-[var(--nocturne-slate)]/30 border border-[var(--nocturne-champagne)]/20 rounded-3xl p-12 shadow-2xl">
-              <h1 className="text-h1 font-[var(--font-heading)] font-[var(--text-h1-weight)] mb-6 tracking-[var(--text-h1-spacing)] leading-[var(--text-h1-line)] animate-slide-up text-[var(--nocturne-porcelain)]">
-                {heroSlides[currentHeroSlide].title}
-              </h1>
-              <p className="text-subtitle mb-4 font-[var(--font-weight-light)] text-[var(--nocturne-champagne)] animate-slide-up delay-100 tracking-[0.05em] uppercase">
-                {heroSlides[currentHeroSlide].subtitle}
-              </p>
-              <p className="text-body mb-12 max-w-2xl mx-auto text-[var(--nocturne-porcelain)]/90 leading-relaxed animate-slide-up delay-200">
-                {heroSlides[currentHeroSlide].description}
-              </p>
+              <StaggeredItem>
+                <h1 className="text-h1 font-[var(--font-heading)] font-[var(--text-h1-weight)] mb-6 tracking-[var(--text-h1-spacing)] leading-[var(--text-h1-line)] text-[var(--nocturne-porcelain)]">
+                  {heroSlides[currentHeroSlide].title}
+                </h1>
+              </StaggeredItem>
               
-              {/* Dual CTAs side by side */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up delay-300">
-                <Link
-                  to={heroSlides[currentHeroSlide].ctaLink}
-                  className="inline-flex items-center bg-[var(--nocturne-champagne)] text-[var(--nocturne-onyx)] px-8 py-4 rounded-[var(--radius-full)] font-[var(--font-weight-semibold)] text-body hover:bg-[var(--nocturne-bronze)] transition-all duration-[var(--duration-normal)] transform hover:scale-105 active:scale-95 group shadow-lg"
-                >
-                  <span>{heroSlides[currentHeroSlide].cta}</span>
-                  <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-[var(--duration-normal)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </Link>
-                
-                <Link
-                  to={heroSlides[currentHeroSlide].cta2Link}
-                  className="inline-flex items-center bg-transparent border-2 border-[var(--nocturne-champagne)] text-[var(--nocturne-champagne)] px-8 py-4 rounded-[var(--radius-full)] font-[var(--font-weight-semibold)] text-body hover:bg-[var(--nocturne-champagne)]/10 transition-all duration-[var(--duration-normal)] transform hover:scale-105 active:scale-95"
-                >
-                  {heroSlides[currentHeroSlide].cta2}
-                </Link>
-              </div>
+              <StaggeredItem>
+                <p className="text-subtitle mb-4 font-[var(--font-weight-light)] text-[var(--nocturne-champagne)] tracking-[0.05em] uppercase">
+                  {heroSlides[currentHeroSlide].subtitle}
+                </p>
+              </StaggeredItem>
+              
+              <StaggeredItem>
+                <p className="text-body mb-12 max-w-2xl mx-auto text-[var(--nocturne-porcelain)]/90 leading-relaxed">
+                  {heroSlides[currentHeroSlide].description}
+                </p>
+              </StaggeredItem>
+              
+              {/* Dual CTAs side by side with Magnetic Effect */}
+              <StaggeredItem>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                  <MagneticButton
+                    className="inline-flex items-center bg-[var(--nocturne-champagne)] text-[var(--nocturne-onyx)] px-8 py-4 rounded-[var(--radius-full)] font-[var(--font-weight-semibold)] text-body shadow-lg"
+                    onClick={() => window.location.href = heroSlides[currentHeroSlide].ctaLink}
+                  >
+                    <span>{heroSlides[currentHeroSlide].cta}</span>
+                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </MagneticButton>
+                  
+                  <MagneticButton
+                    className="inline-flex items-center bg-transparent border-2 border-[var(--nocturne-champagne)] text-[var(--nocturne-champagne)] px-8 py-4 rounded-[var(--radius-full)] font-[var(--font-weight-semibold)] text-body"
+                    onClick={() => window.location.href = heroSlides[currentHeroSlide].cta2Link}
+                  >
+                    {heroSlides[currentHeroSlide].cta2}
+                  </MagneticButton>
+                </div>
+              </StaggeredItem>
             </div>
-          </div>
+          </StaggeredContainer>
           
           {isAuthenticated && currentUser && (
             <div className="mt-8 animate-slide-up delay-400">
@@ -489,227 +518,6 @@ const UV_Homepage: React.FC = () => {
               </div>
             </div>
           )}
-        </div>
-
-        {/* Hero Slide Indicators */}
-        <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
-          {heroSlides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentHeroSlide 
-                  ? 'bg-[var(--nocturne-champagne)] scale-125' 
-                  : 'bg-[var(--nocturne-porcelain)]/30 hover:bg-[var(--nocturne-porcelain)]/50'
-              }`}
-            />
-          ))}
-        </div>
-
-        {/* Live visitor counter */}
-        <div className="absolute top-8 right-8 bg-[var(--nocturne-porcelain)]/10 backdrop-blur-sm px-4 py-2 rounded-[var(--radius-full)] border border-[var(--nocturne-porcelain)]/20 text-[var(--nocturne-porcelain)] text-caption">
-          <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span>{visitorCount} exploring now</span>
-          </div>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <svg className="w-6 h-6 text-[var(--nocturne-champagne)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
-        </div>
-      </section>
-
-      {/* Bestsellers Section */}
-      <section className="py-24 bg-[var(--color-bg-primary)]">
-        <div className="nocturne-container">
-          <div className="text-center mb-16">
-            <h2 className="text-h2 font-[var(--font-heading)] font-[var(--text-h2-weight)] text-[var(--color-fg-primary)] mb-6 tracking-[var(--text-h2-spacing)]">
-              Featured Collections
-            </h2>
-            <p className="text-subtitle text-[var(--color-fg-secondary)] max-w-2xl mx-auto leading-relaxed">
-              Our most coveted fragrances, chosen by connoisseurs worldwide
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {featuredProductsWithSizes.length > 0 ? (
-              featuredProductsWithSizes.map((product, index) => (
-                <div
-                  key={product.product_id}
-                  className="group relative"
-                  onMouseEnter={() => setShowQuickView(product.product_id)}
-                  onMouseLeave={() => setShowQuickView(null)}
-                >
-                  <NocturneProductCard
-                    id={product.product_id}
-                    name={product.product_name}
-                    family={product.family}
-                    price={product.price}
-                    sizes={product.sizes} // Pass actual size objects
-                    image={product.image}
-                    rating={product.rating}
-                    reviewCount={product.reviewCount}
-                    badges={product.badges as Array<'new' | 'bestseller' | 'limited'>}
-                    onQuickAdd={async (id, size, sizeObj) => {
-                      try {
-                        // Validate size selection
-                        if (!sizeObj) {
-                          showNotification({
-                            type: 'warning',
-                            message: 'Please select a size first.',
-                            title: 'Size Required',
-                            auto_dismiss: true,
-                            duration: 3000
-                          });
-                          return;
-                        }
-
-                        // Check stock availability
-                        if (sizeObj.stock_quantity <= 0) {
-                          showNotification({
-                            type: 'error',
-                            message: 'This size is currently out of stock.',
-                            title: 'Out of Stock',
-                            auto_dismiss: true,
-                            duration: 3000
-                          });
-                          return;
-                        }
-                        
-                        await addToCart({
-                          product_id: id,
-                          product_name: product.product_name,
-                          brand_name: 'Nocturne Atelier',
-                          size_ml: sizeObj.size_ml,
-                          quantity: 1,
-                          unit_price: sizeObj.sale_price || sizeObj.price,
-                          gift_wrap: false,
-                          sample_included: false,
-                        });
-                        
-                        showNotification({
-                          type: 'success',
-                          message: `Added ${product.product_name} (${sizeObj.size_ml}ml) to your cart.`,
-                          title: 'Added to Cart',
-                          auto_dismiss: true,
-                          duration: 3000
-                        });
-                      } catch (error: any) {
-                        const errorMessage = error.response?.data?.message || error.message || "We couldn't add this to your cart. Please try again.";
-                        showNotification({
-                          type: 'error',
-                          message: errorMessage,
-                          title: 'Error',
-                          auto_dismiss: true,
-                          duration: 5000
-                        });
-                      }
-                    }}
-                    onClick={(id) => {
-                      window.location.href = `/products/${id}`;
-                    }}
-                    className={`animate-fade-in transition-all duration-500 hover:scale-105 ${
-                      showQuickView === product.product_id ? 'shadow-2xl' : ''
-                    }`}
-                    style={{ animationDelay: `${index * 100}ms` }}
-                  />
-                  
-                  {/* Quick view overlay */}
-                  {showQuickView === product.product_id && (
-                    <div className="absolute inset-0 bg-[var(--nocturne-onyx)]/90 backdrop-blur-sm rounded-[var(--radius-lg)] flex items-center justify-center z-10 animate-fade-in">
-                      <div className="text-center text-[var(--nocturne-porcelain)] p-6">
-                        <h4 className="text-subtitle font-[var(--font-weight-semibold)] mb-2">{product.product_name}</h4>
-                        <p className="text-caption mb-4">
-                          {product.notes.top.length > 0 && `Top: ${product.notes.top.join(', ')}`}
-                        </p>
-                        <div className="flex gap-2 justify-center">
-                          <NocturneButton 
-                            size="sm" 
-                            variant="outline"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              window.location.href = `/products/${product.product_id}`;
-                            }}
-                          >
-                            Quick View
-                          </NocturneButton>
-                          <NocturneButton 
-                            size="sm"
-                            onClick={async (e) => {
-                              e.stopPropagation();
-                              try {
-                                // Find default size (prefer 50ml, or first available)
-                                const defaultSize = product.sizes.find((s: any) => s.size_ml === 50) || product.sizes[0];
-                                
-                                if (!defaultSize) {
-                                  showNotification({
-                                    type: 'error',
-                                    message: 'No sizes available for this product.',
-                                    title: 'Unavailable',
-                                    auto_dismiss: true,
-                                    duration: 3000
-                                  });
-                                  return;
-                                }
-
-                                if (defaultSize.stock_quantity <= 0) {
-                                  showNotification({
-                                    type: 'error',
-                                    message: 'This product is currently out of stock.',
-                                    title: 'Out of Stock',
-                                    auto_dismiss: true,
-                                    duration: 3000
-                                  });
-                                  return;
-                                }
-
-                                await addToCart({
-                                  product_id: product.product_id,
-                                  product_name: product.product_name,
-                                  brand_name: 'Nocturne Atelier',
-                                  size_ml: defaultSize.size_ml,
-                                  quantity: 1,
-                                  unit_price: defaultSize.sale_price || defaultSize.price,
-                                  gift_wrap: false,
-                                  sample_included: false,
-                                });
-                                
-                                showNotification({
-                                  type: 'success',
-                                  message: `Added ${product.product_name} (${defaultSize.size_ml}ml) to your cart.`,
-                                  title: 'Added to Cart',
-                                  auto_dismiss: true,
-                                  duration: 3000
-                                });
-                              } catch (error: any) {
-                                const errorMessage = error.response?.data?.message || error.message || "We couldn't add this to your cart. Please try again.";
-                                showNotification({
-                                  type: 'error',
-                                  message: errorMessage,
-                                  title: 'Error',
-                                  auto_dismiss: true,
-                                  duration: 5000
-                                });
-                              }
-                            }}
-                          >
-                            Add to Cart
-                          </NocturneButton>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))
-            ) : (
-              <div className="col-span-full text-center py-12">
-                <p className="text-body text-[var(--color-fg-secondary)]">Loading featured products...</p>
-              </div>
-            )}
-          </div>
 
           <div className="text-center mt-16">
             <NocturneButton size="lg" asChild>
@@ -718,20 +526,20 @@ const UV_Homepage: React.FC = () => {
               </Link>
             </NocturneButton>
           </div>
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       {/* Featured Brands Section */}
       <section className="py-24 bg-[var(--color-bg-primary)]">
         <div className="nocturne-container">
-          <div className="text-center mb-16">
+          <ScrollReveal className="text-center mb-16">
             <h2 className="text-h2 font-[var(--font-heading)] font-[var(--text-h2-weight)] text-[var(--color-fg-primary)] mb-6 tracking-[var(--text-h2-spacing)]">
               Featured Brands
             </h2>
             <p className="text-subtitle text-[var(--color-fg-secondary)] max-w-2xl mx-auto leading-relaxed">
               Discover luxury perfume houses with rich heritage and exquisite craftsmanship
             </p>
-          </div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
             {[
@@ -790,12 +598,11 @@ const UV_Homepage: React.FC = () => {
                 productCount: 1
               }
             ].map((brand, index) => (
-              <Link
-                key={brand.brand_id}
-                to={`/brands/${brand.brand_id}`}
-                className="group bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] overflow-hidden hover:shadow-[var(--shadow-elevated)] transition-all duration-[var(--duration-normal)] transform hover:-translate-y-2 animate-slide-up"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
+              <ScrollReveal key={brand.brand_id} delay={index * 0.1}>
+                <Link
+                  to={`/brands/${brand.brand_id}`}
+                  className="group bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] overflow-hidden hover:shadow-[var(--shadow-elevated)] transition-all duration-[var(--duration-normal)] transform hover:-translate-y-2"
+                >
                 <div className="aspect-[3/2] overflow-hidden bg-[var(--color-bg-muted)]">
                   <img
                     src={brand.logo}
@@ -821,7 +628,8 @@ const UV_Homepage: React.FC = () => {
                     <span>{brand.productCount} {brand.productCount === 1 ? 'product' : 'products'}</span>
                   </div>
                 </div>
-              </Link>
+                </Link>
+              </ScrollReveal>
             ))}
           </div>
 

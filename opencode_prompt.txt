@@ -1,221 +1,93 @@
-This project is a luxury fragrance brand site (Nocturne Atelier). There are two problems on the home page product grid (Featured Collections):
-
-Clicking “Add to Cart” from the home page doesn’t work.
-
-Product images are missing (cards show 400×400 placeholders instead of real images).
-
-Please fix both issues without changing the current layout or design style.
-
-1. Fix “Add to Cart” from the home page
-
-For each product card in the Featured Collections / home page grid:
-
-Make sure the Add to Cart button (or the cart icon / CTA used on that card) actually:
-
-Calls the same cart logic used on the product details page.
-
-Adds the correct product variant (default size / base variant) to the cart.
-
-Updates the cart state (cart icon in header, mini-cart, etc.).
-
-If the site uses a global cart store (e.g. CartContext, Redux, Zustand, or a cart API):
-
-Ensure the home page is wired to that same store and not using a disconnected stub.
-
-After clicking Add to Cart from the home page:
-
-The product must appear in the cart with the correct:
-
-Name
-
-Price
-
-Quantity (default 1)
-
-Variant/size (use default or the first available option).
-
-Show a small, non-intrusive confirmation:
-
-e.g. toast “Added Aurora No. 1 to cart” or open the mini-cart.
-
-Handle errors gracefully:
-
-If the add-to-cart request fails, show a clear message:
-
-“We couldn’t add this to your cart. Please try again.”
-
-2. Fix missing product images on home page cards
-
-Each product card currently shows a grey “400 × 400” placeholder instead of a real product image.
-
-Do the following:
-
-Ensure each product card pulls its image from the correct data source (CMS / product API), e.g. product.image, product.thumbnail, or product.featuredImage.
-
-If products already have image URLs in the data:
-
-Bind those URLs to the <img> tag (or equivalent image component) on the card.
-
-Make sure the component uses proper alt text (e.g. the product name).
-
-If some products do not yet have an image:
-
-Use a default brand-consistent fallback image (e.g. a neutral bottle silhouette) instead of the grey “400 × 400” placeholder.
-
-Ensure images are:
-
-Correctly sized (square 400×400 or responsive equivalent),
-
-Optimized (no layout shift, object-fit: cover),
-
-Loaded lazily if needed for performance.
-
-3. Keep existing design & structure
-
-Do not change:
-
-The layout of the Featured Collections section,
-
-Typography,
-
-Card spacing,
-
-Button styles,
-
-Navigation.
-
-Only fix:
-
-The add-to-cart functionality from the home page,
-
-The product image binding and fallbacks.
-
-4. Final checks
-
-After implementing:
-
-From the home page, click Add to Cart on several different products:
-
-Verify they appear in the cart with correct name, price, and quantity.
-
-Refresh the home page:
-
-All product cards in Featured Collections should display either their proper product image or a branded fallback, never the raw grey placeholder.
-
-Implement these changes so that home page shopping works smoothly and the product grid looks complete and professional.
-
-When the user mentions generic pages, map them to concrete files/components by scanning for headings and routes. Examples you MUST follow:
-- If the user says "login" or "sign in", search for components containing the literal heading "Sign in to your account" and edit that file.
-- If the user says "sign up" or "register", search for "Create your account" or equivalent.
-- Always return an explicit list of changed file paths. If your first attempt doesn't change the UI, re-search by heading text and update the correct file.
-
-⚠️ PRIORITY INSTRUCTIONS:
-- The user's request above is the PRIMARY task. Complete it first.
-- Ignore any existing errors, warnings, or issues you detect in the project unless they directly prevent you from completing the user's requested task.
-- Do NOT automatically fix unrelated errors or refactor code unless explicitly requested.
-- Focus solely on implementing the user's request: "This project is a luxury fragrance brand site (Nocturne Atelier). There are two problems on the home page product grid (Featured Collections):
-
-Clicking “Add to Cart” from the home page doesn’t work.
-
-Product images are missing (cards show 400×400 placeholders instead of real images).
-
-Please fix both issues without changing the current layout or design style.
-
-1. Fix “Add to Cart” from the home page
-
-For each product card in the Featured Collections / home page grid:
-
-Make sure the Add to Cart button (or the cart icon / CTA used on that card) actually:
-
-Calls the same cart logic used on the product details page.
-
-Adds the correct product variant (default size / base variant) to the cart.
-
-Updates the cart state (cart icon in header, mini-cart, etc.).
-
-If the site uses a global cart store (e.g. CartContext, Redux, Zustand, or a cart API):
-
-Ensure the home page is wired to that same store and not using a disconnected stub.
-
-After clicking Add to Cart from the home page:
-
-The product must appear in the cart with the correct:
-
-Name
-
-Price
-
-Quantity (default 1)
-
-Variant/size (use default or the first available option).
-
-Show a small, non-intrusive confirmation:
-
-e.g. toast “Added Aurora No. 1 to cart” or open the mini-cart.
-
-Handle errors gracefully:
-
-If the add-to-cart request fails, show a clear message:
-
-“We couldn’t add this to your cart. Please try again.”
-
-2. Fix missing product images on home page cards
-
-Each product card currently shows a grey “400 × 400” placeholder instead of a real product image.
-
-Do the following:
-
-Ensure each product card pulls its image from the correct data source (CMS / product API), e.g. product.image, product.thumbnail, or product.featuredImage.
-
-If products already have image URLs in the data:
-
-Bind those URLs to the <img> tag (or equivalent image component) on the card.
-
-Make sure the component uses proper alt text (e.g. the product name).
-
-If some products do not yet have an image:
-
-Use a default brand-consistent fallback image (e.g. a neutral bottle silhouette) instead of the grey “400 × 400” placeholder.
-
-Ensure images are:
-
-Correctly sized (square 400×400 or responsive equivalent),
-
-Optimized (no layout shift, object-fit: cover),
-
-Loaded lazily if needed for performance.
-
-3. Keep existing design & structure
-
-Do not change:
-
-The layout of the Featured Collections section,
-
-Typography,
-
-Card spacing,
-
-Button styles,
-
-Navigation.
-
-Only fix:
-
-The add-to-cart functionality from the home page,
-
-The product image binding and fallbacks.
-
-4. Final checks
-
-After implementing:
-
-From the home page, click Add to Cart on several different products:
-
-Verify they appear in the cart with correct name, price, and quantity.
-
-Refresh the home page:
-
-All product cards in Featured Collections should display either their proper product image or a branded fallback, never the raw grey placeholder.
-
-Implement these changes so that home page shopping works smoothly and the product grid looks complete and professional."
-- Only address errors if they block the specific functionality requested by the user.
+## BUILD FAILURE - Fix Required (Attempt 1/3)
+
+The Vite build process failed. Analyze the error output below and fix the issue.
+
+## Build Error Output:
+```
+on-&lsqb;var(--duration-normal)&rsqb;` to silence this warning.
+
+warn - The class `duration-[var(--duration-slow)]` is ambiguous and matches multiple utilities.
+warn - If this is content and not a class, replace it with `duration-&lsqb;var(--duration-slow)&rsqb;` to silence this warning.
+x Build failed in 2.13s
+error during build:
+[vite:esbuild] Transform failed with 5 errors:
+/app/vitereact/src/components/views/UV_Homepage.tsx:521:20: ERROR: Unexpected closing "div" tag does not match opening "motion.div" tag
+/app/vitereact/src/components/views/UV_Homepage.tsx:522:18: ERROR: Unexpected closing "ScrollReveal" tag does not match opening "motion.section" tag
+/app/vitereact/src/components/views/UV_Homepage.tsx:528:13: ERROR: The character "}" is not valid inside a JSX element
+/app/vitereact/src/components/views/UV_Homepage.tsx:529:12: ERROR: Unexpected closing "div" tag does not match opening fragment tag
+/app/vitereact/src/components/views/UV_Homepage.tsx:531:15: ERROR: Expected ")" but found "className"
+file: /app/vitereact/src/components/views/UV_Homepage.tsx:521:20
+
+Unexpected closing "div" tag does not match opening "motion.div" tag
+519|                      </div>
+520|                    )}
+521|                    </div>
+   |                      ^
+522|                  </ScrollReveal>
+523|                ))
+
+Unexpected closing "ScrollReveal" tag does not match opening "motion.section" tag
+520|                    )}
+521|                    </div>
+522|                  </ScrollReveal>
+   |                    ^
+523|                ))
+524|              ) : (
+
+The character "}" is not valid inside a JSX element
+526|                  <p className="text-body text-[var(--color-fg-secondary)]">Loading featured products...</p>
+527|                </div>
+528|              )}
+   |               ^
+529|            </div>
+530|  
+
+Unexpected closing "div" tag does not match opening fragment tag
+527|                </div>
+528|              )}
+529|            </div>
+   |              ^
+530|  
+531|            <div className="text-center mt-16">
+
+Expected ")" but found "className"
+529|            </div>
+530|  
+531|            <div className="text-center mt-16">
+   |                 ^
+532|              <NocturneButton size="lg" asChild>
+533|                <Link to="/products">
+
+    at failureErrorWithLog (/app/vitereact/node_modules/esbuild/lib/main.js:1472:15)
+    at /app/vitereact/node_modules/esbuild/lib/main.js:755:50
+    at responseCallbacks.<computed> (/app/vitereact/node_modules/esbuild/lib/main.js:622:9)
+    at handleIncomingPacket (/app/vitereact/node_modules/esbuild/lib/main.js:677:12)
+    at Socket.readFromStdout (/app/vitereact/node_modules/esbuild/lib/main.js:600:7)
+    at Socket.emit (node:events:517:28)
+    at addChunk (node:internal/streams/readable:368:12)
+    at readableAddChunk (node:internal/streams/readable:341:9)
+    at Readable.push (node:internal/streams/readable:278:10)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:190:23)
+
+```
+
+## Build Directory: /app/vitereact
+
+## Your Task:
+1. **Analyze the Error**: Read the error output carefully to understand what went wrong
+2. **Locate the Problem**: Find the file(s) mentioned in the error
+3. **Apply the Fix**: 
+   - Missing file/component? CREATE it with correct exports
+   - Wrong import path? FIX the import statement  
+   - Syntax error? FIX the syntax in the affected file
+   - Type error? FIX the TypeScript types
+   - Missing dependency? Check if it needs to be installed or if it's a local import issue
+4. **Verify**: After fixing, ensure all imports resolve correctly
+
+## IMPORTANT:
+- The build CANNOT succeed until this error is fixed
+- If creating a missing component, ensure exports match what's being imported (default vs named)
+- If the error mentions a specific line number, check that line in the source file
+- Run `npx tsc --noEmit` after fixing to verify no TypeScript errors remain
+
+Fix this error so the build can succeed on retry.
