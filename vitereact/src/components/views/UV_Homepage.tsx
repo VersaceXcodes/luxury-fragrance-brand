@@ -72,31 +72,37 @@ const UV_Homepage: React.FC = () => {
   // API Base URL
   const getApiUrl = () => import.meta.env.VITE_API_BASE_URL || 'https://123luxury-fragrance-brand.launchpulse.ai';
 
-  // Hero slides data
+  // Hero slides data - Updated for Midnight Velvet theme
   const heroSlides = [
     {
-      title: "Scent After Dark",
-      subtitle: "Artisanal fragrances, crafted in small batches",
-      description: "Discover our collection of sophisticated, sensual fragrances designed for those who appreciate the art of scent",
-      cta: "Explore Collection",
+      title: "Scent is the memory of the soul",
+      subtitle: "Mysterious. Artisanal. Atmospheric.",
+      description: "Step into the sensory darkness where every fragrance tells a nocturnal story",
+      cta: "Shop New Arrivals",
+      cta2: "Take the Scent Quiz",
       ctaLink: "/products",
-      background: "from-[var(--nocturne-onyx)] via-[var(--nocturne-warm-taupe)] to-[var(--nocturne-onyx)]"
+      cta2Link: "/fragrance-finder",
+      background: "from-[var(--nocturne-onyx)] via-[var(--nocturne-midnight)] to-[var(--nocturne-onyx)]"
     },
     {
-      title: "New Arrival: Midnight Saffron",
-      subtitle: "Limited Edition Release",
-      description: "An intoxicating blend of precious saffron and dark rose, crafted for the most discerning collectors",
-      cta: "Discover Now",
-      ctaLink: "/products/midnight-saffron",
-      background: "from-[var(--nocturne-onyx)] via-purple-900 to-[var(--nocturne-onyx)]"
+      title: "Artistry in Every Bottle",
+      subtitle: "Crafted in Darkness, Born in Light",
+      description: "Small batch perfumery created when the senses are most acute",
+      cta: "Shop New Arrivals",
+      cta2: "Take the Scent Quiz",
+      ctaLink: "/products",
+      cta2Link: "/fragrance-finder",
+      background: "from-[var(--nocturne-midnight)] via-[#1E293B] to-[var(--nocturne-onyx)]"
     },
     {
-      title: "Sample Discovery Set",
-      subtitle: "Try before you commit",
-      description: "Explore our entire collection with 10ml samples. Perfect for discovering your signature scent",
-      cta: "Shop Samples",
+      title: "Try Before You Commit",
+      subtitle: "Sample Program",
+      description: "Discover your signature scent with our 2ml sample vials — credited towards your full bottle purchase",
+      cta: "Shop New Arrivals",
+      cta2: "Take the Scent Quiz",
       ctaLink: "/samples",
-      background: "from-[var(--nocturne-onyx)] via-amber-900 to-[var(--nocturne-onyx)]"
+      cta2Link: "/fragrance-finder",
+      background: "from-[var(--nocturne-onyx)] via-[#0A0F1A] to-[var(--nocturne-midnight)]"
     }
   ];
 
@@ -382,12 +388,15 @@ const UV_Homepage: React.FC = () => {
 
   return (
     <>
-      {/* Interactive Hero Section with Carousel */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[var(--color-bg-primary)]">
+      {/* Interactive Hero Section with Carousel - Midnight Velvet */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[var(--nocturne-onyx)]">
         {/* Dynamic Background based on current slide */}
         <div className={`absolute inset-0 bg-gradient-to-br ${heroSlides[currentHeroSlide].background} transition-all duration-1000`} />
-        <div className="absolute inset-0 bg-[url('/api/placeholder/1920/1080')] bg-cover bg-center opacity-20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--nocturne-onyx)]/80 via-transparent to-[var(--nocturne-onyx)]/40" />
+        {/* Atmospheric texture overlay */}
+        <div className="absolute inset-0 opacity-30" style={{
+          backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(15, 23, 42, 0.4) 0%, transparent 50%)'
+        }} />
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--nocturne-onyx)] via-transparent to-[var(--nocturne-midnight)]/60" />
         
         {/* Interactive floating elements that follow mouse */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -433,36 +442,40 @@ const UV_Homepage: React.FC = () => {
           </svg>
         </button>
 
-        {/* Hero Content */}
+        {/* Hero Content with Glassmorphism Card */}
         <div className="relative z-10 text-center text-[var(--nocturne-porcelain)] nocturne-container py-32">
-          <div className="animate-fade-in" key={currentHeroSlide}>
-            <h1 className="text-h1 font-[var(--font-heading)] font-[var(--text-h1-weight)] mb-6 tracking-[var(--text-h1-spacing)] leading-[var(--text-h1-line)] animate-slide-up">
-              {heroSlides[currentHeroSlide].title}
-            </h1>
-            <p className="text-subtitle mb-4 font-[var(--font-weight-light)] text-[var(--nocturne-champagne)] animate-slide-up delay-100">
-              {heroSlides[currentHeroSlide].subtitle}
-            </p>
-            <p className="text-body mb-12 max-w-2xl mx-auto text-[var(--nocturne-porcelain)]/80 leading-relaxed animate-slide-up delay-200">
-              {heroSlides[currentHeroSlide].description}
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up delay-300">
-              <Link
-                to={heroSlides[currentHeroSlide].ctaLink}
-                className="inline-flex items-center bg-[var(--color-interactive-primary)] text-[var(--color-fg-inverse)] px-8 py-4 rounded-[var(--radius-full)] font-[var(--font-weight-semibold)] text-body hover:bg-[var(--color-interactive-primary-hover)] transition-all duration-[var(--duration-normal)] transform hover:scale-105 active:scale-95 group"
-              >
-                <span>{heroSlides[currentHeroSlide].cta}</span>
-                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-[var(--duration-normal)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </Link>
+          <div className="animate-fade-in max-w-4xl mx-auto" key={currentHeroSlide}>
+            {/* Glassmorphism Card */}
+            <div className="backdrop-blur-xl bg-[var(--nocturne-slate)]/30 border border-[var(--nocturne-champagne)]/20 rounded-3xl p-12 shadow-2xl">
+              <h1 className="text-h1 font-[var(--font-heading)] font-[var(--text-h1-weight)] mb-6 tracking-[var(--text-h1-spacing)] leading-[var(--text-h1-line)] animate-slide-up text-[var(--nocturne-porcelain)]">
+                {heroSlides[currentHeroSlide].title}
+              </h1>
+              <p className="text-subtitle mb-4 font-[var(--font-weight-light)] text-[var(--nocturne-champagne)] animate-slide-up delay-100 tracking-[0.05em] uppercase">
+                {heroSlides[currentHeroSlide].subtitle}
+              </p>
+              <p className="text-body mb-12 max-w-2xl mx-auto text-[var(--nocturne-porcelain)]/90 leading-relaxed animate-slide-up delay-200">
+                {heroSlides[currentHeroSlide].description}
+              </p>
               
-              <Link
-                to="/samples"
-                className="inline-flex items-center bg-transparent border border-[var(--nocturne-champagne)] text-[var(--nocturne-champagne)] px-8 py-4 rounded-[var(--radius-full)] font-[var(--font-weight-semibold)] text-body hover:bg-[var(--nocturne-champagne)] hover:text-[var(--nocturne-onyx)] transition-all duration-[var(--duration-normal)] transform hover:scale-105 active:scale-95"
-              >
-                Try 10ml First
-              </Link>
+              {/* Dual CTAs side by side */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up delay-300">
+                <Link
+                  to={heroSlides[currentHeroSlide].ctaLink}
+                  className="inline-flex items-center bg-[var(--nocturne-champagne)] text-[var(--nocturne-onyx)] px-8 py-4 rounded-[var(--radius-full)] font-[var(--font-weight-semibold)] text-body hover:bg-[var(--nocturne-bronze)] transition-all duration-[var(--duration-normal)] transform hover:scale-105 active:scale-95 group shadow-lg"
+                >
+                  <span>{heroSlides[currentHeroSlide].cta}</span>
+                  <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-[var(--duration-normal)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
+                
+                <Link
+                  to={heroSlides[currentHeroSlide].cta2Link}
+                  className="inline-flex items-center bg-transparent border-2 border-[var(--nocturne-champagne)] text-[var(--nocturne-champagne)] px-8 py-4 rounded-[var(--radius-full)] font-[var(--font-weight-semibold)] text-body hover:bg-[var(--nocturne-champagne)]/10 transition-all duration-[var(--duration-normal)] transform hover:scale-105 active:scale-95"
+                >
+                  {heroSlides[currentHeroSlide].cta2}
+                </Link>
+              </div>
             </div>
           </div>
           
@@ -836,40 +849,82 @@ const UV_Homepage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {[
-              { family: 'Citrus', description: 'Fresh, energizing, bright', icon: '🍋', color: 'from-yellow-400 to-orange-400', products: 12 },
-              { family: 'Floral', description: 'Romantic, elegant, feminine', icon: '🌸', color: 'from-pink-400 to-rose-400', products: 8 },
-              { family: 'Amber', description: 'Warm, sensual, mysterious', icon: '🔥', color: 'from-amber-400 to-orange-600', products: 6 },
-              { family: 'Woody', description: 'Sophisticated, grounding, rich', icon: '🌳', color: 'from-amber-600 to-brown-600', products: 10 },
-              { family: 'Green', description: 'Natural, crisp, refreshing', icon: '🌿', color: 'from-green-400 to-emerald-500', products: 5 }
+              { 
+                family: 'Hesperidic', 
+                originalFamily: 'citrus',
+                description: 'Bright, luminous, uplifting', 
+                icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v6m0 6v6m6-11h-6m-6 0h6m4.95 4.95l-4.24-4.24m-5.42 0L2.05 17.95m0-11.9l4.24 4.24m5.42 5.42l4.24 4.24"/></svg>, 
+                color: 'from-yellow-400/20 to-orange-400/20', 
+                borderColor: 'border-yellow-400/30',
+                products: 12 
+              },
+              { 
+                family: 'Botanical', 
+                originalFamily: 'floral',
+                description: 'Elegant, romantic, delicate', 
+                icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/><path d="M12 7v10m5-5H7"/><circle cx="12" cy="12" r="3"/></svg>, 
+                color: 'from-pink-400/20 to-rose-400/20', 
+                borderColor: 'border-pink-400/30',
+                products: 8 
+              },
+              { 
+                family: 'Amber', 
+                originalFamily: 'amber',
+                description: 'Warm, sensual, resinous', 
+                icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>, 
+                color: 'from-amber-400/20 to-orange-600/20', 
+                borderColor: 'border-amber-400/30',
+                products: 6 
+              },
+              { 
+                family: 'Woody', 
+                originalFamily: 'woody',
+                description: 'Grounding, sophisticated, deep', 
+                icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M12 2L4 7v10l8 5 8-5V7l-8-5z"/><path d="M12 22V12m0 0L4 7m8 5l8-5"/></svg>, 
+                color: 'from-amber-600/20 to-brown-600/20', 
+                borderColor: 'border-amber-600/30',
+                products: 10 
+              },
+              { 
+                family: 'Bright', 
+                originalFamily: 'green',
+                description: 'Crisp, natural, verdant', 
+                icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M5 3v18l7-3 7 3V3l-7 3-7-3z"/><path d="M12 6v12"/></svg>, 
+                color: 'from-green-400/20 to-emerald-500/20', 
+                borderColor: 'border-green-400/30',
+                products: 5 
+              }
             ].map((note, index) => (
               <Link
                 key={note.family}
-                to={`/products?family=${note.family.toLowerCase()}`}
-                className="group relative overflow-hidden rounded-[var(--radius-lg)] bg-gradient-to-br bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] hover:shadow-[var(--shadow-elevated)] transition-all duration-[var(--duration-normal)] transform hover:-translate-y-2 animate-slide-up"
+                to={`/products?family=${note.originalFamily}`}
+                className={`group relative overflow-hidden rounded-[var(--radius-lg)] bg-gradient-to-br ${note.color} bg-[var(--color-surface-primary)] border ${note.borderColor} hover:shadow-2xl transition-all duration-[var(--duration-normal)] transform hover:-translate-y-2 animate-slide-up`}
                 style={{ animationDelay: `${index * 100}ms` }}
                 onMouseEnter={() => setHoveredNote(note.family)}
                 onMouseLeave={() => setHoveredNote(null)}
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${note.color} opacity-10 group-hover:opacity-20 transition-opacity duration-[var(--duration-normal)]`} />
                 <div className="relative p-8 text-center">
-                  <div className={`text-4xl mb-4 transition-all duration-[var(--duration-normal)] ${
-                    hoveredNote === note.family ? 'scale-125 rotate-12' : 'group-hover:scale-110'
-                  }`}>
-                    {note.icon}
+                  {/* Circular SVG icon background */}
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--nocturne-onyx)]/40 border border-[var(--nocturne-champagne)]/30 flex items-center justify-center backdrop-blur-sm">
+                    <div className={`text-[var(--nocturne-champagne)] transition-all duration-[var(--duration-normal)] ${
+                      hoveredNote === note.family ? 'scale-110 rotate-6' : 'group-hover:scale-105'
+                    }`}>
+                      {note.icon}
+                    </div>
                   </div>
-                  <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-2">
+                  <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--nocturne-porcelain)] mb-2 tracking-wide">
                     {note.family}
                   </h3>
-                  <p className="text-caption text-[var(--color-fg-secondary)] leading-relaxed mb-2">
+                  <p className="text-caption text-[var(--nocturne-warm-taupe)] leading-relaxed mb-2 tracking-wider">
                     {note.description}
                   </p>
-                  <div className="text-xs text-[var(--color-fg-tertiary)] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="text-xs text-[var(--nocturne-champagne)]/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 tracking-wide">
                     {note.products} fragrances
                   </div>
                   
                   {/* Interactive pulse effect */}
                   {hoveredNote === note.family && (
-                    <div className="absolute inset-0 rounded-[var(--radius-lg)] border-2 border-[var(--color-interactive-primary)] animate-pulse" />
+                    <div className="absolute inset-0 rounded-[var(--radius-lg)] border-2 border-[var(--nocturne-champagne)] animate-pulse" />
                   )}
                 </div>
               </Link>
@@ -1018,9 +1073,9 @@ const UV_Homepage: React.FC = () => {
             </div>
             
             <h2 className="text-h2 font-[var(--font-heading)] font-[var(--text-h2-weight)] text-[var(--nocturne-porcelain)] mb-6 tracking-[var(--text-h2-spacing)]">
-              Join the Atelier
+              Join the Inner Circle
             </h2>
-            <p className="text-subtitle text-[var(--nocturne-champagne)] mb-12 leading-relaxed">
+            <p className="text-subtitle text-[var(--nocturne-warm-taupe)] mb-12 leading-relaxed tracking-wide">
               Be the first to discover new creations, receive exclusive offers, and unlock the secrets of fragrance artistry.
             </p>
             

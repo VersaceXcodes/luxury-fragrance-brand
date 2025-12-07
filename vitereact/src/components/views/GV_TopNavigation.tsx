@@ -19,6 +19,7 @@ const GV_TopNavigation: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
 
 
   // Individual Zustand selectors to prevent infinite loops
@@ -61,6 +62,15 @@ const GV_TopNavigation: React.FC = () => {
     }
   };
 
+  // Handle scroll for transparent-to-solid navigation
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = () => {
@@ -83,12 +93,16 @@ const GV_TopNavigation: React.FC = () => {
             <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
             <path d="M3 4a1 1 0 00-1 1v1a1 1 0 001 1h1l1.68 5.39A3 3 0 008.62 15h5.76a3 3 0 002.94-2.61L18 7H6.41l-.77-3H3z"/>
           </svg>
-          <span className="font-[var(--font-weight-medium)]">Free EU shipping on orders over €120 • 30-day returns on unopened items</span>
+          <span className="font-[var(--font-weight-medium)] tracking-wide">Free EU shipping on orders over €120 • 30-day returns on unopened items</span>
         </div>
       </div>
 
-      {/* Main Navigation */}
-      <nav className="bg-[var(--color-surface-primary)]/95 backdrop-blur-md shadow-[var(--shadow-subtle)] border-b border-[var(--color-border-primary)] sticky top-0 z-[var(--z-sticky)]">
+      {/* Main Navigation - Transparent to Solid on Scroll */}
+      <nav className={`sticky top-0 z-[var(--z-sticky)] transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-[var(--nocturne-slate)]/98 backdrop-blur-xl shadow-2xl border-b border-[var(--nocturne-champagne)]/20' 
+          : 'bg-transparent'
+      }`}>
         <div className="nocturne-container">
           <div className="flex items-center justify-between h-[var(--nav-height)]">
             

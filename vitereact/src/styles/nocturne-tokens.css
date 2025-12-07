@@ -1,57 +1,62 @@
-/* Nocturne Atelier Design System Tokens */
+/* Nocturne Atelier Design System Tokens - Midnight Velvet Theme */
 
 :root {
-  /* === BRAND COLORS === */
-  --nocturne-onyx: #0E0E0E;
-  --nocturne-porcelain: #F8F6F2;
-  --nocturne-champagne: #D4C5A9;
-  --nocturne-warm-taupe: #7A6A56;
+  /* === MIDNIGHT VELVET BRAND COLORS === */
+  --nocturne-onyx: #1A1A1A; /* Deep Charcoal - Primary Background */
+  --nocturne-midnight: #0F172A; /* Midnight Navy - Alternative Background */
+  --nocturne-slate: #2D2D2D; /* Soft Slate - Cards/Sections */
+  --nocturne-champagne: #D4AF37; /* Champagne Gold - Accent/Action */
+  --nocturne-bronze: #C5A059; /* Muted Bronze - Alternative Accent */
+  --nocturne-porcelain: #F5F5F0; /* Off-White/Cream - Text */
+  --nocturne-warm-taupe: #A89F91; /* Muted taupe for secondary elements */
+  --nocturne-emerald: #2D5A27; /* Deep Emerald - Success/Badges */
 
   /* === SEMANTIC COLOR ROLES === */
   /* Foreground */
-  --color-fg-primary: var(--nocturne-onyx);
-  --color-fg-secondary: var(--nocturne-warm-taupe);
-  --color-fg-muted: #A8A29E;
-  --color-fg-inverse: var(--nocturne-porcelain);
+  --color-fg-primary: var(--nocturne-porcelain); /* Cream text on dark */
+  --color-fg-secondary: var(--nocturne-warm-taupe); /* Muted secondary text */
+  --color-fg-muted: #78716C; /* Even more muted */
+  --color-fg-inverse: var(--nocturne-onyx); /* Dark text on light */
+  --color-fg-accent: var(--nocturne-champagne); /* Gold accent text */
   
   /* Background */
-  --color-bg-primary: var(--nocturne-porcelain);
-  --color-bg-secondary: #FFFFFF;
-  --color-bg-muted: #F5F5F4;
-  --color-bg-inverse: var(--nocturne-onyx);
+  --color-bg-primary: var(--nocturne-onyx); /* Deep charcoal */
+  --color-bg-secondary: var(--nocturne-midnight); /* Midnight navy alternative */
+  --color-bg-muted: var(--nocturne-slate); /* Soft slate for cards */
+  --color-bg-inverse: var(--nocturne-porcelain); /* Light backgrounds */
   
   /* Surface */
-  --color-surface-primary: #FFFFFF;
-  --color-surface-secondary: var(--nocturne-porcelain);
-  --color-surface-elevated: #FFFFFF;
-  --color-surface-overlay: rgba(14, 14, 14, 0.8);
+  --color-surface-primary: var(--nocturne-slate); /* Card backgrounds */
+  --color-surface-secondary: #252525; /* Slightly lighter than onyx */
+  --color-surface-elevated: #333333; /* Elevated cards */
+  --color-surface-overlay: rgba(26, 26, 26, 0.95); /* Dark overlay */
   
   /* Border */
-  --color-border-primary: #E7E5E4;
-  --color-border-secondary: var(--nocturne-champagne);
-  --color-border-muted: #F5F5F4;
-  --color-border-focus: var(--nocturne-warm-taupe);
+  --color-border-primary: #3A3A3A; /* Subtle borders on dark */
+  --color-border-secondary: var(--nocturne-champagne); /* Gold borders */
+  --color-border-muted: #2A2A2A; /* Very subtle */
+  --color-border-focus: var(--nocturne-champagne); /* Gold focus */
   
   /* Interactive */
-  --color-interactive-primary: var(--nocturne-onyx);
-  --color-interactive-primary-hover: var(--nocturne-warm-taupe);
-  --color-interactive-secondary: var(--nocturne-champagne);
-  --color-interactive-secondary-hover: #C4B59A;
+  --color-interactive-primary: var(--nocturne-champagne); /* Gold primary buttons */
+  --color-interactive-primary-hover: var(--nocturne-bronze); /* Bronze hover */
+  --color-interactive-secondary: transparent; /* Transparent secondary */
+  --color-interactive-secondary-hover: rgba(212, 175, 55, 0.1); /* Gold tint hover */
   
   /* Status */
-  --color-success: #16A34A;
-  --color-success-bg: #F0FDF4;
+  --color-success: var(--nocturne-emerald); /* Deep emerald for badges */
+  --color-success-bg: rgba(45, 90, 39, 0.2); /* Emerald tint */
   --color-warning: #D97706;
-  --color-warning-bg: #FFFBEB;
+  --color-warning-bg: rgba(217, 119, 6, 0.2);
   --color-error: #DC2626;
-  --color-error-bg: #FEF2F2;
-  --color-info: var(--nocturne-warm-taupe);
-  --color-info-bg: var(--nocturne-porcelain);
+  --color-error-bg: rgba(220, 38, 38, 0.2);
+  --color-info: var(--nocturne-champagne);
+  --color-info-bg: rgba(212, 175, 55, 0.2);
 
   /* === TYPOGRAPHY === */
   /* Font Families */
-  --font-heading: 'Playfair Display', serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'Playfair Display', 'Cinzel', serif;
+  --font-body: 'Montserrat', 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
   
   /* Font Weights */
   --font-weight-light: 300;
@@ -64,32 +69,32 @@
   --text-h1-size: 4rem; /* 64px */
   --text-h1-line: 4.5rem; /* 72px */
   --text-h1-weight: var(--font-weight-bold);
-  --text-h1-spacing: -0.02em;
+  --text-h1-spacing: 0.02em; /* Generous letter-spacing */
   
   --text-h2-size: 2.5rem; /* 40px */
   --text-h2-line: 3rem; /* 48px */
   --text-h2-weight: var(--font-weight-semibold);
-  --text-h2-spacing: -0.015em;
+  --text-h2-spacing: 0.01em; /* Generous letter-spacing */
   
   --text-h3-size: 1.75rem; /* 28px */
   --text-h3-line: 2.25rem; /* 36px */
   --text-h3-weight: var(--font-weight-semibold);
-  --text-h3-spacing: -0.01em;
+  --text-h3-spacing: 0.01em; /* Generous letter-spacing */
   
   --text-subtitle-size: 1.25rem; /* 20px */
   --text-subtitle-line: 1.75rem; /* 28px */
   --text-subtitle-weight: var(--font-weight-medium);
-  --text-subtitle-spacing: 0;
+  --text-subtitle-spacing: 0.02em; /* Generous letter-spacing for airy feel */
   
   --text-body-size: 1rem; /* 16px */
   --text-body-line: 1.5rem; /* 24px */
   --text-body-weight: var(--font-weight-regular);
-  --text-body-spacing: 0;
+  --text-body-spacing: 0.025em; /* Generous letter-spacing for modern feel */
   
   --text-caption-size: 0.75rem; /* 12px */
   --text-caption-line: 1rem; /* 16px */
   --text-caption-weight: var(--font-weight-regular);
-  --text-caption-spacing: 0.01em;
+  --text-caption-spacing: 0.05em; /* Very generous for uppercase labels */
 
   /* === SPACING === */
   /* 8pt Grid System */

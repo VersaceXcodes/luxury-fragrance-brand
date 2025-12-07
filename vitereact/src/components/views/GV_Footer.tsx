@@ -117,7 +117,7 @@ const GV_Footer: React.FC = () => {
 
   return (
     <>
-      <footer className="bg-gray-900 text-white">
+      <footer className="bg-[var(--nocturne-onyx)] text-[var(--nocturne-porcelain)] border-t border-[var(--nocturne-champagne)]/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {/* Main Footer Content */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
@@ -125,12 +125,12 @@ const GV_Footer: React.FC = () => {
             {/* Brand Section */}
             <div className="lg:col-span-1">
               <div className="mb-6">
-                <h2 className="text-2xl font-bold text-white mb-2">LuxeScent</h2>
-                <p className="text-sm text-gray-300 italic">Discover Your Signature Scent</p>
+                <h2 className="text-2xl font-bold text-[var(--nocturne-porcelain)] mb-2 font-[var(--font-heading)] tracking-wider">Nocturne Atelier</h2>
+                <p className="text-sm text-[var(--nocturne-warm-taupe)] italic tracking-widest uppercase">Scent After Dark</p>
               </div>
               
-              <p className="text-sm text-gray-300 mb-6 leading-relaxed">
-                Since 1985, LuxeScent has been curating the world's finest fragrances, bringing you authentic luxury perfumes from renowned houses and emerging niche brands. Our heritage of excellence ensures every bottle tells a story of craftsmanship and elegance.
+              <p className="text-sm text-[var(--nocturne-warm-taupe)] mb-6 leading-relaxed tracking-wide">
+                At Nocturne Atelier, we believe fragrance is an intimate art form. Each creation is meticulously crafted in small batches using only the finest raw materials. Our master perfumers work under the cover of night, when the senses are most acute.
               </p>
               
               {/* Contact Information */}
@@ -340,8 +340,8 @@ const GV_Footer: React.FC = () => {
 
               {/* Newsletter Signup */}
               <div>
-                <h4 className="text-md font-semibold text-white mb-3">Newsletter</h4>
-                <p className="text-sm text-gray-300 mb-4">
+                <h4 className="text-md font-semibold text-white mb-3 tracking-wider">Join the Inner Circle</h4>
+                <p className="text-sm text-gray-300 mb-4 tracking-wide">
                   Subscribe for exclusive offers and get <strong>10% off</strong> your first order!
                 </p>
                 
