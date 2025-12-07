@@ -70,3 +70,31 @@
 .animate-slide-in-right {
 	animation: slide-in-right 0.3s ease-out forwards;
 }
+
+/* Motion Design System - "Digital Weight" Animations */
+@keyframes pulse-glow {
+	0%, 100% {
+		box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+	}
+	50% {
+		box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+	}
+}
+
+@keyframes fadeUp {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes ripple {
+	to {
+		transform: scale(4);
+		opacity: 0;
+	}
+}

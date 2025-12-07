@@ -2,8 +2,11 @@ import React, { useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '@/store/main';
 import LuxuryRecommendations from '@/components/ui/LuxuryRecommendations';
+import { NocturneButton } from '@/components/ui/nocturne-button';
+import { CheckmarkIcon } from '@/components/ui/motion-components';
 
 // Type definitions based on backend schemas
 interface Product {
@@ -258,6 +261,9 @@ const UV_ProductDetail: React.FC = () => {
   });
 
   // Mutations
+  const [showCheckmark, setShowCheckmark] = useState(false);
+  const toggleCartDropdown = useAppStore(state => state.toggle_cart_dropdown);
+  
   const addToCartMutation = useMutation({
     mutationFn: async () => {
       if (!product || !selectedSize) throw new Error('Product or size not selected');
@@ -274,6 +280,15 @@ const UV_ProductDetail: React.FC = () => {
       });
     },
     onSuccess: () => {
+      // Show checkmark animation
+      setShowCheckmark(true);
+      setTimeout(() => setShowCheckmark(false), 2000);
+      
+      // Open cart drawer with delay
+      setTimeout(() => {
+        toggleCartDropdown();
+      }, 800);
+      
       showNotification({
         type: 'success',
         message: 'Added to cart successfully!',
@@ -701,16 +716,49 @@ const UV_ProductDetail: React.FC = () => {
 
               {/* Add to Cart & Wishlist */}
               <div className="flex space-x-4 mb-8">
-                <button
+                <NocturneButton
                   onClick={handleAddToCart}
                   disabled={addToCartMutation.isPending || !selectedSize}
-                  className="flex-1 bg-purple-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-3 px-8 flex items-center justify-center text-base font-medium"
+                  size="lg"
+                  variant="primary"
+                  magnetic={true}
                 >
-                  {addToCartMutation.isPending ? (
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                  ) : null}
-                  Add to Cart
-                </button>
+                  <AnimatePresence mode="wait">
+                    {addToCartMutation.isPending ? (
+                      <motion.div
+                        key="loading"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="flex items-center"
+                      >
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                        Adding...
+                      </motion.div>
+                    ) : showCheckmark ? (
+                      <motion.div
+                        key="success"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        exit={{ scale: 0 }}
+                        className="flex items-center text-[#D4AF37]"
+                      >
+                        <CheckmarkIcon size={20} className="mr-2" />
+                        Added!
+                      </motion.div>
+                    ) : (
+                      <motion.span
+                        key="default"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        Add to Cart
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </NocturneButton>
                 <button
                   onClick={handleAddToWishlist}
                   disabled={addToWishlistMutation.isPending}

@@ -119,23 +119,42 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
   return (
     <NocturneCard
       className={cn(
-        "group cursor-pointer transition-all duration-[var(--duration-normal)] hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1",
+        "group cursor-pointer relative overflow-hidden",
         className
       )}
-      style={style}
+      style={{
+        ...style,
+        transition: 'all 0.6s cubic-bezier(0.25, 0.1, 0.25, 1)',
+        transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
+        boxShadow: isHovered 
+          ? '0 20px 40px rgba(212, 175, 55, 0.15), 0 0 30px rgba(212, 175, 55, 0.1)' 
+          : '0 4px 6px rgba(0, 0, 0, 0.1)',
+      }}
       onClick={handleCardClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {/* Glow Effect */}
+      <div 
+        className="absolute inset-0 rounded-[var(--card-border-radius)] pointer-events-none"
+        style={{
+          opacity: isHovered ? 1 : 0,
+          boxShadow: isHovered ? '0 0 30px rgba(212, 175, 55, 0.4)' : '0 0 0px rgba(212, 175, 55, 0)',
+          transition: 'all 2s ease-in-out',
+          animation: isHovered ? 'pulse-glow 2s infinite' : 'none',
+        }}
+      />
+      
       {/* Image Container */}
       <div className="relative aspect-square overflow-hidden rounded-t-[var(--card-border-radius)]">
         <img
           src={image}
           alt={name}
-          className={cn(
-            "h-full w-full object-cover transition-transform duration-[var(--duration-slow)]",
-            isHovered && "scale-105"
-          )}
+          className="h-full w-full object-cover"
+          style={{
+            transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+            transition: 'transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)',
+          }}
         />
         
         {/* Badges */}
@@ -280,7 +299,13 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
         </NocturneBadge>
 
         {/* Product Name */}
-        <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-1 line-clamp-2">
+        <h3 
+          className="text-subtitle font-[var(--font-weight-semibold)] mb-1 line-clamp-2"
+          style={{
+            color: isHovered ? '#D4AF37' : 'var(--color-fg-primary)',
+            transition: 'color 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)',
+          }}
+        >
           {name}
         </h3>
 
