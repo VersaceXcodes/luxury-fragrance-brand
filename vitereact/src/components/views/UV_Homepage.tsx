@@ -188,7 +188,7 @@ const UV_Homepage: React.FC = () => {
             const productData = imagesResponse.data;
             const primaryImage = productData.images?.find((img: any) => img.is_primary)?.image_url || 
                                productData.images?.[0]?.image_url || 
-                               'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&h=400&fit=crop';
+                               '/images/fallback-perfume-bottle.png';
 
             return {
               product_id: product.product_id,
@@ -726,7 +726,7 @@ const UV_Homepage: React.FC = () => {
                 brand_id: 'brand_001',
                 name: 'Chanel', 
                 description: 'Iconic French luxury brand known for timeless elegance',
-                logo: 'https://picsum.photos/300/200?random=1',
+                logo: '/images/brands/chanel.jpg',
                 country: 'France',
                 founded: '1910',
                 productCount: 1
@@ -735,7 +735,7 @@ const UV_Homepage: React.FC = () => {
                 brand_id: 'brand_002',
                 name: 'Tom Ford', 
                 description: 'Modern luxury creating bold, sensual fragrances',
-                logo: 'https://picsum.photos/300/200?random=2',
+                logo: '/images/brands/tom-ford.jpg',
                 country: 'USA',
                 founded: '2006',
                 productCount: 1
@@ -744,7 +744,7 @@ const UV_Homepage: React.FC = () => {
                 brand_id: 'brand_003',
                 name: 'Dior', 
                 description: 'French luxury with rich heritage in perfumery',
-                logo: 'https://picsum.photos/300/200?random=3',
+                logo: '/images/brands/dior.jpg',
                 country: 'France',
                 founded: '1946',
                 productCount: 1
@@ -753,7 +753,7 @@ const UV_Homepage: React.FC = () => {
                 brand_id: 'brand_004',
                 name: 'Creed', 
                 description: 'Historic fragrance house creating bespoke scents',
-                logo: 'https://picsum.photos/300/200?random=4',
+                logo: '/images/brands/creed.jpg',
                 country: 'UK',
                 founded: '1760',
                 productCount: 1
@@ -762,7 +762,7 @@ const UV_Homepage: React.FC = () => {
                 brand_id: 'brand_005',
                 name: 'Maison Margiela', 
                 description: 'Avant-garde fashion house with innovative fragrances',
-                logo: 'https://picsum.photos/300/200?random=5',
+                logo: '/images/brands/maison-margiela.jpg',
                 country: 'France',
                 founded: '1988',
                 productCount: 1
@@ -771,7 +771,7 @@ const UV_Homepage: React.FC = () => {
                 brand_id: 'brand_006',
                 name: 'Byredo', 
                 description: 'Contemporary Swedish perfume house',
-                logo: 'https://picsum.photos/300/200?random=6',
+                logo: '/images/brands/byredo.jpg',
                 country: 'Sweden',
                 founded: '2006',
                 productCount: 1
@@ -788,6 +788,9 @@ const UV_Homepage: React.FC = () => {
                     src={brand.logo}
                     alt={`${brand.name} logo`}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[var(--duration-slow)]"
+                    onError={(e) => {
+                      e.currentTarget.src = '/images/fallback-brand.png';
+                    }}
                   />
                 </div>
                 <div className="p-6">

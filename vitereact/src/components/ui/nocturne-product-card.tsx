@@ -272,7 +272,11 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
 
         {/* Family Tag */}
         <NocturneBadge variant="family" className="mb-2 w-fit">
-          {family}
+          {typeof family === 'string' 
+            ? family.split(',').map(f => f.trim()).slice(0, 2).join(', ')
+            : Array.isArray(family) 
+            ? family.slice(0, 2).join(', ')
+            : family}
         </NocturneBadge>
 
         {/* Product Name */}

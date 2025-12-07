@@ -246,7 +246,7 @@ const UV_BrandDetail: React.FC = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {products.map((product: Product, index: number) => {
-                const primaryImage = product.images?.find(img => img)?.image_url || '/api/placeholder/400/400';
+                const primaryImage = product.images?.find(img => img)?.image_url || '/images/fallback-perfume-bottle.png';
                 const badges: Array<'new' | 'bestseller' | 'limited'> = [];
                 if (product.is_new_arrival) badges.push('new');
                 if (product.is_featured) badges.push('bestseller');

@@ -567,7 +567,11 @@ const UV_SearchResults: React.FC = () => {
                                 />
                               </h3>
                               <p className="text-xs text-gray-600 mb-1">{product.concentration}</p>
-                              <p className="text-xs text-gray-500">{product.fragrance_families}</p>
+                              <p className="text-xs text-gray-500">
+                                {typeof product.fragrance_families === 'string' 
+                                  ? product.fragrance_families.split(',').map(f => f.trim()).join(', ')
+                                  : product.fragrance_families}
+                              </p>
                             </div>
                             {product.is_new_arrival && (
                               <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded">
