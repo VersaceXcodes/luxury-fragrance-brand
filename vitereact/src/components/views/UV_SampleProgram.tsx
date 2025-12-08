@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useAppStore } from '@/store/main';
+import SmartImage from '@/components/ui/SmartImage';
 
 // Types based on Zod schemas and API responses
 interface SampleProduct {
@@ -610,11 +611,14 @@ const UV_SampleProgram: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {sampleProducts.map((product) => (
                         <div key={product.product_id} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-                          <div className="aspect-square bg-gray-100 relative">
-                            <img
+                          <div className="relative">
+                            <SmartImage
                               src={product.product_image_url}
                               alt={product.product_name}
-                              className="w-full h-full object-cover"
+                              productName={product.product_name}
+                              category={product.fragrance_families.join(', ')}
+                              aspectRatio="3:4"
+                              objectFit="cover"
                             />
                             {!product.is_available && (
                               <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -722,11 +726,15 @@ const UV_SampleProgram: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {discoverySets.map((set) => (
                         <div key={set.set_id} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-                          <div className="h-48 bg-gray-100 relative">
-                            <img
+                          <div className="relative">
+                            <SmartImage
                               src={set.image_url}
                               alt={set.set_name}
-                              className="w-full h-full object-cover"
+                              productName={set.set_name}
+                              category={set.set_type}
+                              aspectRatio="3:4"
+                              objectFit="cover"
+                              className="h-48"
                             />
                             {set.savings_amount > 0 && (
                               <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
@@ -829,10 +837,14 @@ const UV_SampleProgram: React.FC = () => {
                           {customSampleSet.selected_samples.map((sample) => (
                             <div key={sample.product_id} className="flex items-center justify-between bg-gray-50 rounded-lg p-3">
                               <div className="flex items-center space-x-3">
-                                <img
+                                <SmartImage
                                   src={sample.image_url}
                                   alt={sample.product_name}
-                                  className="w-12 h-12 object-cover rounded"
+                                  productName={sample.product_name}
+                                  category=""
+                                  aspectRatio="square"
+                                  objectFit="cover"
+                                  className="w-12 h-12 rounded"
                                 />
                                 <div>
                                   <div className="text-sm font-medium text-gray-900">{sample.product_name}</div>
@@ -887,22 +899,26 @@ const UV_SampleProgram: React.FC = () => {
                         const isSelected = customSampleSet.selected_samples.some(s => s.product_id === product.product_id);
                         const isLimitReached = customSampleSet.selected_samples.length >= customSampleSet.set_size_limit;
                         
-                        return (
-                          <div key={product.product_id} className={`border rounded-lg p-3 ${isSelected ? 'border-purple-500 bg-purple-50' : 'border-gray-200'}`}>
-                            <div className="aspect-square bg-gray-100 rounded mb-2 relative">
-                              <img
-                                src={product.product_image_url}
-                                alt={product.product_name}
-                                className="w-full h-full object-cover rounded"
-                              />
-                              {isSelected && (
-                                <div className="absolute top-1 right-1 bg-purple-600 text-white rounded-full w-6 h-6 flex items-center justify-center">
-                                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                  </svg>
-                                </div>
-                              )}
-                            </div>
+                          return (
+                            <div key={product.product_id} className={`border rounded-lg p-3 ${isSelected ? 'border-purple-500 bg-purple-50' : 'border-gray-200'}`}>
+                              <div className="rounded mb-2 relative">
+                                <SmartImage
+                                  src={product.product_image_url}
+                                  alt={product.product_name}
+                                  productName={product.product_name}
+                                  category={product.fragrance_families.join(', ')}
+                                  aspectRatio="square"
+                                  objectFit="cover"
+                                  className="rounded"
+                                />
+                                {isSelected && (
+                                  <div className="absolute top-1 right-1 bg-purple-600 text-white rounded-full w-6 h-6 flex items-center justify-center">
+                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                    </svg>
+                                  </div>
+                                )}
+                              </div>
                             <h4 className="text-sm font-medium text-gray-900 line-clamp-1">{product.product_name}</h4>
                             <p className="text-xs text-gray-600">{product.brand_name}</p>
                             <p className="text-sm font-medium text-gray-900 mt-1">${product.sample_sizes[0].price}</p>

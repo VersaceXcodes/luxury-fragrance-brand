@@ -9,6 +9,7 @@ import { NocturneButton } from '@/components/ui/nocturne-button';
 import { NocturneBadge } from '@/components/ui/nocturne-badge';
 import { ScrollReveal, MagneticButton, StaggeredContainer, StaggeredItem } from '@/components/ui/motion-components';
 import { MOTION_CONFIG } from '@/lib/motion-config';
+import SmartImage from '@/components/ui/SmartImage';
 
 // API Response Types
 interface Product {
@@ -603,15 +604,16 @@ const UV_Homepage: React.FC = () => {
                   to={`/brands/${brand.brand_id}`}
                   className="group bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] overflow-hidden hover:shadow-[var(--shadow-elevated)] transition-all duration-[var(--duration-normal)] transform hover:-translate-y-2"
                 >
-                <div className="aspect-[3/2] overflow-hidden bg-[var(--color-bg-muted)]">
-                  <img
-                    src={brand.logo}
-                    alt={`${brand.name} logo`}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[var(--duration-slow)]"
-                    onError={(e) => {
-                      e.currentTarget.src = '/images/fallback-brand.png';
-                    }}
-                  />
+                <div className="overflow-hidden bg-[var(--color-bg-muted)]">
+                  <div className="group-hover:scale-105 transition-transform duration-[var(--duration-slow)]">
+                    <SmartImage
+                      src={brand.logo}
+                      alt={`${brand.name} logo`}
+                      productName={brand.name}
+                      aspectRatio="3:4"
+                      objectFit="cover"
+                    />
+                  </div>
                 </div>
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-3">

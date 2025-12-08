@@ -4,6 +4,7 @@ import { NocturneCard, NocturneCardContent } from './nocturne-card';
 import { NocturneBadge } from './nocturne-badge';
 import { NocturneButton } from './nocturne-button';
 import { Heart, Plus, Star } from 'lucide-react';
+import SmartImage from './SmartImage';
 
 interface ProductSize {
   size_id: string;
@@ -146,16 +147,23 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
       />
       
       {/* Image Container */}
-      <div className="relative aspect-square overflow-hidden rounded-t-[var(--card-border-radius)]">
-        <img
-          src={image}
-          alt={name}
-          className="h-full w-full object-cover"
+      <div className="relative overflow-hidden rounded-t-[var(--card-border-radius)]">
+        <div
           style={{
             transform: isHovered ? 'scale(1.05)' : 'scale(1)',
             transition: 'transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)',
           }}
-        />
+        >
+          <SmartImage
+            src={image}
+            alt={name}
+            productName={name}
+            category={family}
+            aspectRatio="3:4"
+            objectFit="cover"
+            className="rounded-t-[var(--card-border-radius)]"
+          />
+        </div>
         
         {/* Badges */}
         {badges.length > 0 && (
@@ -275,10 +283,13 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
         {(brandName || brandLogo) && (
           <div className="flex items-center gap-2 mb-2">
             {brandLogo && (
-              <img
+              <SmartImage
                 src={brandLogo}
                 alt={brandName || 'Brand logo'}
-                className="h-6 w-auto object-contain"
+                productName={brandName}
+                aspectRatio="auto"
+                objectFit="contain"
+                className="h-6 w-auto"
               />
             )}
             {brandName && !brandLogo && (

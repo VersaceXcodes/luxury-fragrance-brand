@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useAppStore } from '@/store/main';
+import SmartImage from '@/components/ui/SmartImage';
 
 // Types and Interfaces
 interface QuizOption {
@@ -612,10 +613,13 @@ const UV_FragranceFinder: React.FC = () => {
                           : 'border-gray-200 hover:border-purple-300'
                       }`}
                     >
-                      <img
-                        src={option.image_url || 'https://picsum.photos/200/200'}
+                      <SmartImage
+                        src={option.image_url}
                         alt={option.option_text}
-                        className="w-full h-32 object-cover"
+                        productName={option.option_text}
+                        aspectRatio="auto"
+                        objectFit="cover"
+                        className="w-full h-32"
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-40 flex items-end">
                         <div className="p-3 text-white">
@@ -781,11 +785,17 @@ const UV_FragranceFinder: React.FC = () => {
                         className="group border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200"
                       >
                         <div className="relative">
-                          <img
-                            src={product.image_url || 'https://picsum.photos/300/200'}
-                            alt={product.product_name}
-                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-200"
-                          />
+                          <div className="group-hover:scale-105 transition-transform duration-200">
+                            <SmartImage
+                              src={product.image_url}
+                              alt={product.product_name}
+                              productName={product.product_name}
+                              category={product.fragrance_families}
+                              aspectRatio="3:4"
+                              objectFit="cover"
+                              className="h-48"
+                            />
+                          </div>
                           <div className="absolute top-2 right-2 bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-medium">
                             {product.match_percentage}% match
                           </div>

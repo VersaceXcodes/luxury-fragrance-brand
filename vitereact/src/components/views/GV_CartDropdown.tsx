@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '@/store/main';
 import { cartDrawerVariants, cartItemVariants, MOTION_CONFIG } from '@/lib/motion-config';
 import { CartItemAnimation } from '@/components/ui/motion-components';
+import SmartImage from '@/components/ui/SmartImage';
 
 // Types based on Zod schemas
 
@@ -195,11 +196,17 @@ const GV_CartDropdown: React.FC = () => {
                 {cartItems.map((item, index) => (
                   <CartItemAnimation key={item.cart_item_id} delay={index * 0.05}>
                     <div className="flex items-start space-x-4 pb-4 border-b border-[#C5A059]/20">
-                  {/* Product Image Placeholder */}
-                  <div className="w-20 h-20 bg-[#2D2D2D] rounded-md flex items-center justify-center flex-shrink-0">
-                    <svg className="w-8 h-8 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
+                  {/* Product Image */}
+                  <div className="flex-shrink-0">
+                    <SmartImage
+                      src={item.product_image_url}
+                      alt={item.product_name || 'Product'}
+                      productName={item.product_name}
+                      category={item.fragrance_family}
+                      aspectRatio="square"
+                      objectFit="cover"
+                      className="w-20 h-20 rounded-md"
+                    />
                   </div>
 
                   {/* Product Details */}

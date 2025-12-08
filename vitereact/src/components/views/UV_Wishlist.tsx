@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useAppStore } from '@/store/main';
+import SmartImage from '@/components/ui/SmartImage';
 
 // Types based on backend schemas
 interface Wishlist {
@@ -628,15 +629,17 @@ const UV_Wishlist: React.FC = () => {
                   )}
 
                   {/* Product Image */}
-                  <div className="aspect-square bg-gray-100 relative overflow-hidden">
-                    <img
-                      src={item.product_image_url}
-                      alt={item.product_name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://picsum.photos/300/300';
-                      }}
-                    />
+                  <div className="relative overflow-hidden">
+                    <div className="group-hover:scale-105 transition-transform duration-300">
+                      <SmartImage
+                        src={item.product_image_url}
+                        alt={item.product_name}
+                        productName={item.product_name}
+                        category={item.fragrance_family}
+                        aspectRatio="3:4"
+                        objectFit="cover"
+                      />
+                    </div>
                     
                     {/* Stock Status Badge */}
                     <div className="absolute top-3 left-3">

@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import SmartImage from './SmartImage';
 
 interface ProductSize {
   size_id: string;
@@ -261,16 +262,22 @@ const LuxuryRecommendations: React.FC<LuxuryRecommendationsProps> = ({
                     )}
                   >
                     {/* Image Container */}
-                    <div className="relative aspect-square overflow-hidden bg-[var(--nocturne-slate)]">
-                      <img
-                        src={getProductImage(product)}
-                        alt={product.product_name}
+                    <div className="relative overflow-hidden bg-[var(--nocturne-slate)]">
+                      <div
                         className={cn(
-                          "w-full h-full object-cover",
                           "transition-transform duration-[var(--duration-slow)]",
                           "group-hover:scale-105"
                         )}
-                      />
+                      >
+                        <SmartImage
+                          src={getProductImage(product)}
+                          alt={product.product_name}
+                          productName={product.product_name}
+                          category={product.fragrance_families}
+                          aspectRatio="3:4"
+                          objectFit="cover"
+                        />
+                      </div>
                       
                       {/* Quick Add Button - Appears on Hover */}
                       <div

@@ -7,6 +7,7 @@ import { useAppStore } from '@/store/main';
 import LuxuryRecommendations from '@/components/ui/LuxuryRecommendations';
 import { NocturneButton } from '@/components/ui/nocturne-button';
 import { CheckmarkIcon } from '@/components/ui/motion-components';
+import SmartImage from '@/components/ui/SmartImage';
 
 // Type definitions based on backend schemas
 interface Product {
@@ -555,10 +556,13 @@ const UV_ProductDetail: React.FC = () => {
                       >
                         <span className="sr-only">{image.alt_text}</span>
                         <span className="absolute inset-0 rounded-md overflow-hidden">
-                          <img
+                          <SmartImage
                             src={image.image_url}
                             alt={image.alt_text || ''}
-                            className="w-full h-full object-center object-cover"
+                            productName={product.product_name}
+                            category={product.fragrance_families}
+                            aspectRatio="square"
+                            objectFit="cover"
                           />
                         </span>
                       </button>
@@ -568,11 +572,15 @@ const UV_ProductDetail: React.FC = () => {
               )}
 
               {/* Main Image */}
-              <div className="w-full aspect-w-1 aspect-h-1">
-                <img
-                  src={images[selectedImageIndex]?.image_url || '/api/placeholder/600/600'}
+              <div className="w-full">
+                <SmartImage
+                  src={images[selectedImageIndex]?.image_url}
                   alt={images[selectedImageIndex]?.alt_text || product.product_name}
-                  className="w-full h-full object-center object-cover sm:rounded-lg"
+                  productName={product.product_name}
+                  category={product.fragrance_families}
+                  aspectRatio="3:4"
+                  objectFit="cover"
+                  className="sm:rounded-lg"
                 />
               </div>
             </div>
@@ -793,10 +801,13 @@ const UV_ProductDetail: React.FC = () => {
               <div className="grid md:grid-cols-3 gap-8">
                 {brand.logo_url && (
                   <div className="flex items-center justify-center">
-                    <img
+                    <SmartImage
                       src={brand.logo_url}
                       alt={`${brand.brand_name} logo`}
-                      className="w-full h-auto max-w-[250px] object-contain"
+                      productName={brand.brand_name}
+                      aspectRatio="auto"
+                      objectFit="contain"
+                      className="w-full h-auto max-w-[250px]"
                     />
                   </div>
                 )}

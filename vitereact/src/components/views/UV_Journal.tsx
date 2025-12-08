@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import SmartImage from '@/components/ui/SmartImage';
 
 const UV_Journal: React.FC = () => {
   // Sample journal articles
@@ -49,13 +50,15 @@ const UV_Journal: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {articles.map((article) => (
             <article key={article.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-              <div className="aspect-w-16 aspect-h-9">
-                <img
-                  src={article.image}
-                  alt={article.title}
-                  className="w-full h-48 object-cover"
-                />
-              </div>
+              <SmartImage
+                src={article.image}
+                alt={article.title}
+                productName={article.title}
+                category={article.category}
+                aspectRatio="3:4"
+                objectFit="cover"
+                className="h-48"
+              />
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-semibold text-purple-600 uppercase tracking-wider">

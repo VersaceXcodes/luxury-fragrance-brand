@@ -6,6 +6,7 @@ import { NocturneProductCard } from '@/components/ui/nocturne-product-card';
 import { NocturneButton } from '@/components/ui/nocturne-button';
 import { NocturneBadge } from '@/components/ui/nocturne-badge';
 import { useAppStore } from '@/store/main';
+import SmartImage from '@/components/ui/SmartImage';
 
 // Type definitions
 interface Brand {
@@ -139,10 +140,13 @@ const UV_BrandDetail: React.FC = () => {
             {/* Brand Logo */}
             {brand.logo_url && (
               <div className="flex items-center justify-center bg-white/10 backdrop-blur-sm rounded-[var(--radius-xl)] p-12">
-                <img
+                <SmartImage
                   src={brand.logo_url}
                   alt={`${brand.brand_name} logo`}
-                  className="w-full h-auto max-w-[400px] object-contain"
+                  productName={brand.brand_name}
+                  aspectRatio="auto"
+                  objectFit="contain"
+                  className="w-full h-auto max-w-[400px]"
                 />
               </div>
             )}
