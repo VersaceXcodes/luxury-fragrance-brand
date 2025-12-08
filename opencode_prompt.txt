@@ -1,93 +1,20 @@
-## BUILD FAILURE - Fix Required (Attempt 1/3)
+you still haven't added any images, please see screenshots
 
-The Vite build process failed. Analyze the error output below and fix the issue.
+When the user mentions generic pages, map them to concrete files/components by scanning for headings and routes. Examples you MUST follow:
+- If the user says "login" or "sign in", search for components containing the literal heading "Sign in to your account" and edit that file.
+- If the user says "sign up" or "register", search for "Create your account" or equivalent.
+- Always return an explicit list of changed file paths. If your first attempt doesn't change the UI, re-search by heading text and update the correct file.
 
-## Build Error Output:
-```
-on-&lsqb;var(--duration-normal)&rsqb;` to silence this warning.
+⚠️ PRIORITY INSTRUCTIONS:
+- The user's request above is the PRIMARY task. Complete it first.
+- Ignore any existing errors, warnings, or issues you detect in the project unless they directly prevent you from completing the user's requested task.
+- Do NOT automatically fix unrelated errors or refactor code unless explicitly requested.
+- Focus solely on implementing the user's request: "you still haven't added any images, please see screenshots"
+- Only address errors if they block the specific functionality requested by the user.
 
-warn - The class `duration-[var(--duration-slow)]` is ambiguous and matches multiple utilities.
-warn - If this is content and not a class, replace it with `duration-&lsqb;var(--duration-slow)&rsqb;` to silence this warning.
-x Build failed in 2.13s
-error during build:
-[vite:esbuild] Transform failed with 5 errors:
-/app/vitereact/src/components/views/UV_Homepage.tsx:521:20: ERROR: Unexpected closing "div" tag does not match opening "motion.div" tag
-/app/vitereact/src/components/views/UV_Homepage.tsx:522:18: ERROR: Unexpected closing "ScrollReveal" tag does not match opening "motion.section" tag
-/app/vitereact/src/components/views/UV_Homepage.tsx:528:13: ERROR: The character "}" is not valid inside a JSX element
-/app/vitereact/src/components/views/UV_Homepage.tsx:529:12: ERROR: Unexpected closing "div" tag does not match opening fragment tag
-/app/vitereact/src/components/views/UV_Homepage.tsx:531:15: ERROR: Expected ")" but found "className"
-file: /app/vitereact/src/components/views/UV_Homepage.tsx:521:20
+Additional context:
+User uploaded the following images. Place them exactly where requested; if no explicit location is provided, position them where they best fit within the layout without breaking responsiveness.
+- Asset 1: https://tgvswctfhlubctiodmvo.supabase.co/storage/v1/object/public/project_uploads/8833a50a-5293-4e99-9814-e2c654d742a5/luxury-fragrance-brand/1765212241359_0_Screenshot_2025-12-08_at_16.10.06.png (image/png)
+- Asset 2: https://tgvswctfhlubctiodmvo.supabase.co/storage/v1/object/public/project_uploads/8833a50a-5293-4e99-9814-e2c654d742a5/luxury-fragrance-brand/1765212243296_1_Screenshot_2025-12-08_at_16.10.13.png (image/png)
 
-Unexpected closing "div" tag does not match opening "motion.div" tag
-519|                      </div>
-520|                    )}
-521|                    </div>
-   |                      ^
-522|                  </ScrollReveal>
-523|                ))
-
-Unexpected closing "ScrollReveal" tag does not match opening "motion.section" tag
-520|                    )}
-521|                    </div>
-522|                  </ScrollReveal>
-   |                    ^
-523|                ))
-524|              ) : (
-
-The character "}" is not valid inside a JSX element
-526|                  <p className="text-body text-[var(--color-fg-secondary)]">Loading featured products...</p>
-527|                </div>
-528|              )}
-   |               ^
-529|            </div>
-530|  
-
-Unexpected closing "div" tag does not match opening fragment tag
-527|                </div>
-528|              )}
-529|            </div>
-   |              ^
-530|  
-531|            <div className="text-center mt-16">
-
-Expected ")" but found "className"
-529|            </div>
-530|  
-531|            <div className="text-center mt-16">
-   |                 ^
-532|              <NocturneButton size="lg" asChild>
-533|                <Link to="/products">
-
-    at failureErrorWithLog (/app/vitereact/node_modules/esbuild/lib/main.js:1472:15)
-    at /app/vitereact/node_modules/esbuild/lib/main.js:755:50
-    at responseCallbacks.<computed> (/app/vitereact/node_modules/esbuild/lib/main.js:622:9)
-    at handleIncomingPacket (/app/vitereact/node_modules/esbuild/lib/main.js:677:12)
-    at Socket.readFromStdout (/app/vitereact/node_modules/esbuild/lib/main.js:600:7)
-    at Socket.emit (node:events:517:28)
-    at addChunk (node:internal/streams/readable:368:12)
-    at readableAddChunk (node:internal/streams/readable:341:9)
-    at Readable.push (node:internal/streams/readable:278:10)
-    at Pipe.onStreamRead (node:internal/stream_base_commons:190:23)
-
-```
-
-## Build Directory: /app/vitereact
-
-## Your Task:
-1. **Analyze the Error**: Read the error output carefully to understand what went wrong
-2. **Locate the Problem**: Find the file(s) mentioned in the error
-3. **Apply the Fix**: 
-   - Missing file/component? CREATE it with correct exports
-   - Wrong import path? FIX the import statement  
-   - Syntax error? FIX the syntax in the affected file
-   - Type error? FIX the TypeScript types
-   - Missing dependency? Check if it needs to be installed or if it's a local import issue
-4. **Verify**: After fixing, ensure all imports resolve correctly
-
-## IMPORTANT:
-- The build CANNOT succeed until this error is fixed
-- If creating a missing component, ensure exports match what's being imported (default vs named)
-- If the error mentions a specific line number, check that line in the source file
-- Run `npx tsc --noEmit` after fixing to verify no TypeScript errors remain
-
-Fix this error so the build can succeed on retry.
+Use the given URLs directly or copy into the project under an appropriate assets/images folder and update imports/links.
