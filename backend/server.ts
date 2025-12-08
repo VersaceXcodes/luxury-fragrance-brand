@@ -779,7 +779,8 @@ app.get('/api/products', async (req, res) => {
     const mainQuery = `
       SELECT p.*, b.brand_name, b.logo_url as brand_logo, c.category_name,
              (SELECT json_agg(json_build_object('image_url', pi.image_url, 'is_primary', pi.is_primary, 'alt_text', pi.alt_text) ORDER BY pi.display_order)
-              FROM product_images pi WHERE pi.product_id = p.product_id) as images
+              FROM product_images pi WHERE pi.product_id = p.product_id) as images,
+             (SELECT image_url FROM product_images WHERE product_id = p.product_id AND is_primary = true LIMIT 1) as primary_image
       FROM products p
       LEFT JOIN brands b ON p.brand_id = b.brand_id
       LEFT JOIN categories c ON p.category_id = c.category_id

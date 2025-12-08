@@ -25,6 +25,7 @@ interface Product {
   is_new_arrival: boolean;
   is_limited_edition: boolean;
   created_at: string;
+  primary_image: string | null;
 }
 
 interface Brand {

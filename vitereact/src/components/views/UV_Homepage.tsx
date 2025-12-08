@@ -176,6 +176,17 @@ const UV_Homepage: React.FC = () => {
     retry: 1
   });
 
+  // Fetch brands from API
+  const { data: brandsData = [] } = useQuery({
+    queryKey: ['brands'],
+    queryFn: async () => {
+      const response = await axios.get(`${getApiUrl()}/api/brands?is_active=true&sort_by=display_order`);
+      return response.data;
+    },
+    staleTime: 10 * 60 * 1000,
+    retry: 1
+  });
+
   // Fetch sizes for all featured products
   useEffect(() => {
     const fetchProductSizes = async () => {
@@ -543,62 +554,7 @@ const UV_Homepage: React.FC = () => {
           </ScrollReveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {[
-              { 
-                brand_id: 'brand_001',
-                name: 'Chanel', 
-                description: 'Iconic French luxury brand known for timeless elegance',
-                logo: '/images/brands/chanel.jpg',
-                country: 'France',
-                founded: '1910',
-                productCount: 1
-              },
-              { 
-                brand_id: 'brand_002',
-                name: 'Tom Ford', 
-                description: 'Modern luxury creating bold, sensual fragrances',
-                logo: '/images/brands/tom-ford.jpg',
-                country: 'USA',
-                founded: '2006',
-                productCount: 1
-              },
-              { 
-                brand_id: 'brand_003',
-                name: 'Dior', 
-                description: 'French luxury with rich heritage in perfumery',
-                logo: '/images/brands/dior.jpg',
-                country: 'France',
-                founded: '1946',
-                productCount: 1
-              },
-              { 
-                brand_id: 'brand_004',
-                name: 'Creed', 
-                description: 'Historic fragrance house creating bespoke scents',
-                logo: '/images/brands/creed.jpg',
-                country: 'UK',
-                founded: '1760',
-                productCount: 1
-              },
-              { 
-                brand_id: 'brand_005',
-                name: 'Maison Margiela', 
-                description: 'Avant-garde fashion house with innovative fragrances',
-                logo: '/images/brands/maison-margiela.jpg',
-                country: 'France',
-                founded: '1988',
-                productCount: 1
-              },
-              { 
-                brand_id: 'brand_006',
-                name: 'Byredo', 
-                description: 'Contemporary Swedish perfume house',
-                logo: '/images/brands/byredo.jpg',
-                country: 'Sweden',
-                founded: '2006',
-                productCount: 1
-              }
-            ].map((brand, index) => (
+            {brandsData.slice(0, 6).map((brand: any, index: number) => (
               <ScrollReveal key={brand.brand_id} delay={index * 0.1}>
                 <Link
                   to={`/brands/${brand.brand_id}`}
@@ -607,9 +563,9 @@ const UV_Homepage: React.FC = () => {
                 <div className="overflow-hidden bg-[var(--color-bg-muted)]">
                   <div className="group-hover:scale-105 transition-transform duration-[var(--duration-slow)]">
                     <SmartImage
-                      src={brand.logo}
-                      alt={`${brand.name} logo`}
-                      productName={brand.name}
+                      src={brand.logo_url || 'https://picsum.photos/300/200?random=1'}
+                      alt={`${brand.brand_name} logo`}
+                      productName={brand.brand_name}
                       aspectRatio="3:4"
                       objectFit="cover"
                     />
@@ -618,16 +574,16 @@ const UV_Homepage: React.FC = () => {
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] group-hover:text-[var(--color-interactive-primary)] transition-colors duration-[var(--duration-normal)]">
-                      {brand.name}
+                      {brand.brand_name}
                     </h3>
-                    <span className="text-caption text-[var(--color-fg-muted)]">{brand.country}</span>
+                    <span className="text-caption text-[var(--color-fg-muted)]">{brand.country_origin}</span>
                   </div>
                   <p className="text-body text-[var(--color-fg-secondary)] mb-4 line-clamp-2">
                     {brand.description}
                   </p>
                   <div className="flex items-center justify-between text-caption text-[var(--color-fg-muted)]">
-                    <span>Est. {brand.founded}</span>
-                    <span>{brand.productCount} {brand.productCount === 1 ? 'product' : 'products'}</span>
+                    <span>{brand.is_niche_brand ? 'Niche Brand' : 'Designer Brand'}</span>
+                    <span>{brand.product_count} {brand.product_count === 1 ? 'product' : 'products'}</span>
                   </div>
                 </div>
                 </Link>
