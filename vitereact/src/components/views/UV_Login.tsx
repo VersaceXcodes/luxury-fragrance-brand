@@ -46,6 +46,11 @@ const UV_Login: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           <div>
+            <img 
+              src="https://tgvswctfhlubctiodmvo.supabase.co/storage/v1/object/public/project_uploads/8833a50a-5293-4e99-9814-e2c654d742a5/luxury-fragrance-brand/1765739909934_0_Screenshot_2025-12-13_at_01.04.22.png" 
+              alt="Nocturne Atelier" 
+              className="mx-auto h-24 w-auto object-contain mb-8"
+            />
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
               {isRegisterMode ? 'Create your account' : 'Sign in to your account'}
             </h2>
