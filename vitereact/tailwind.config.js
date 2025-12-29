@@ -87,6 +87,11 @@ export default {
 				'88': '22rem',
 				'128': '32rem',
 			},
+						transitionDuration: {
+				'fast': 'var(--duration-fast)',
+				'normal': 'var(--duration-normal)',
+				'slow': 'var(--duration-slow)',
+			},
 			zIndex: {
 				'60': '60',
 			},

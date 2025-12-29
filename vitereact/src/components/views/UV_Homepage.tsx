@@ -558,10 +558,10 @@ const UV_Homepage: React.FC = () => {
               <ScrollReveal key={brand.brand_id} delay={index * 0.1}>
                 <Link
                   to={`/brands/${brand.brand_id}`}
-                  className="group bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] overflow-hidden hover:shadow-[var(--shadow-elevated)] transition-all duration-[var(--duration-normal)] transform hover:-translate-y-2"
+                  className="group bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] overflow-hidden hover:shadow-[var(--shadow-elevated)] transition-all duration-normal transform hover:-translate-y-2"
                 >
                 <div className="overflow-hidden bg-[var(--color-bg-muted)]">
-                  <div className="group-hover:scale-105 transition-transform duration-[var(--duration-slow)]">
+                  <div className="group-hover:scale-105 transition-transform duration-slow">
                     <SmartImage
                       src={brand.logo_url || 'https://picsum.photos/300/200?random=1'}
                       alt={`${brand.brand_name} logo`}
@@ -573,7 +573,7 @@ const UV_Homepage: React.FC = () => {
                 </div>
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] group-hover:text-[var(--color-interactive-primary)] transition-colors duration-[var(--duration-normal)]">
+                    <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] group-hover:text-[var(--color-interactive-primary)] transition-colors duration-normal">
                       {brand.brand_name}
                     </h3>
                     <span className="text-caption text-[var(--color-fg-muted)]">{brand.country_origin}</span>
@@ -664,7 +664,7 @@ const UV_Homepage: React.FC = () => {
               <Link
                 key={note.family}
                 to={`/products?family=${note.originalFamily}`}
-                className={`group relative overflow-hidden rounded-[var(--radius-lg)] bg-gradient-to-br ${note.color} bg-[var(--color-surface-primary)] border ${note.borderColor} hover:shadow-2xl transition-all duration-[var(--duration-normal)] transform hover:-translate-y-2 animate-slide-up`}
+                className={`group relative overflow-hidden rounded-[var(--radius-lg)] bg-gradient-to-br ${note.color} bg-[var(--color-surface-primary)] border ${note.borderColor} hover:shadow-2xl transition-all duration-normal transform hover:-translate-y-2 animate-slide-up`}
                 style={{ animationDelay: `${index * 100}ms` }}
                 onMouseEnter={() => setHoveredNote(note.family)}
                 onMouseLeave={() => setHoveredNote(null)}
@@ -672,7 +672,7 @@ const UV_Homepage: React.FC = () => {
                 <div className="relative p-8 text-center">
                   {/* Circular SVG icon background */}
                   <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--nocturne-onyx)]/40 border border-[var(--nocturne-champagne)]/30 flex items-center justify-center backdrop-blur-sm">
-                    <div className={`text-[var(--nocturne-champagne)] transition-all duration-[var(--duration-normal)] ${
+                    <div className={`text-[var(--nocturne-champagne)] transition-all duration-normal ${
                       hoveredNote === note.family ? 'scale-110 rotate-6' : 'group-hover:scale-105'
                     }`}>
                       {note.icon}
@@ -792,22 +792,22 @@ const UV_Homepage: React.FC = () => {
               </NocturneButton>
             </div>
             <div className="grid grid-cols-2 gap-6">
-              <div className="bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] p-6 text-center hover:shadow-[var(--shadow-subtle)] transition-shadow duration-[var(--duration-normal)]">
+              <div className="bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] p-6 text-center hover:shadow-[var(--shadow-subtle)] transition-shadow duration-normal">
                 <div className="text-3xl mb-4">🌙</div>
                 <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-2">Nocturnal Craft</h3>
                 <p className="text-caption text-[var(--color-fg-secondary)]">Created when senses are most acute</p>
               </div>
-              <div className="bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] p-6 text-center hover:shadow-[var(--shadow-subtle)] transition-shadow duration-[var(--duration-normal)]">
+              <div className="bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] p-6 text-center hover:shadow-[var(--shadow-subtle)] transition-shadow duration-normal">
                 <div className="text-3xl mb-4">🧪</div>
                 <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-2">Small Batches</h3>
                 <p className="text-caption text-[var(--color-fg-secondary)]">Artisanal quality in every bottle</p>
               </div>
-              <div className="bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] p-6 text-center hover:shadow-[var(--shadow-subtle)] transition-shadow duration-[var(--duration-normal)]">
+              <div className="bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] p-6 text-center hover:shadow-[var(--shadow-subtle)] transition-shadow duration-normal">
                 <div className="text-3xl mb-4">🌿</div>
                 <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-2">Pure Ingredients</h3>
                 <p className="text-caption text-[var(--color-fg-secondary)]">Ethically sourced, naturally derived</p>
               </div>
-              <div className="bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] p-6 text-center hover:shadow-[var(--shadow-subtle)] transition-shadow duration-[var(--duration-normal)]">
+              <div className="bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--radius-lg)] p-6 text-center hover:shadow-[var(--shadow-subtle)] transition-shadow duration-normal">
                 <div className="text-3xl mb-4">♻️</div>
                 <h3 className="text-subtitle font-[var(--font-weight-semibold)] text-[var(--color-fg-primary)] mb-2">Sustainable</h3>
                 <p className="text-caption text-[var(--color-fg-secondary)]">Recyclable packaging, cruelty-free</p>

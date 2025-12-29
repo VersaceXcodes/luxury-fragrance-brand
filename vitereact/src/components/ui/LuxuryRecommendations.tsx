@@ -188,7 +188,7 @@ const LuxuryRecommendations: React.FC<LuxuryRecommendationsProps> = ({
                 "bg-[var(--nocturne-onyx)]/80 backdrop-blur-sm",
                 "border border-[var(--nocturne-champagne)]",
                 "rounded-full",
-                "transition-all duration-[var(--duration-normal)]",
+                "transition-all duration-normal",
                 "hover:bg-[var(--nocturne-champagne)] hover:border-[var(--nocturne-champagne)]",
                 "group",
                 "-ml-5"
@@ -211,7 +211,7 @@ const LuxuryRecommendations: React.FC<LuxuryRecommendationsProps> = ({
                 "bg-[var(--nocturne-onyx)]/80 backdrop-blur-sm",
                 "border border-[var(--nocturne-champagne)]",
                 "rounded-full",
-                "transition-all duration-[var(--duration-normal)]",
+                "transition-all duration-normal",
                 "hover:bg-[var(--nocturne-champagne)] hover:border-[var(--nocturne-champagne)]",
                 "group",
                 "-mr-5"
@@ -255,7 +255,7 @@ const LuxuryRecommendations: React.FC<LuxuryRecommendationsProps> = ({
                       "relative",
                       "bg-[var(--nocturne-slate)]", // Soft Slate #2D2D2D
                       "rounded-lg overflow-hidden",
-                      "transition-all duration-[var(--duration-normal)]",
+                      "transition-all duration-normal",
                       "hover:-translate-y-2",
                       "shadow-[0_4px_12px_rgba(0,0,0,0.3)]",
                       "hover:shadow-[0_8px_24px_rgba(0,0,0,0.5)]"
@@ -265,7 +265,7 @@ const LuxuryRecommendations: React.FC<LuxuryRecommendationsProps> = ({
                     <div className="relative overflow-hidden bg-[var(--nocturne-slate)]">
                       <div
                         className={cn(
-                          "transition-transform duration-[var(--duration-slow)]",
+                          "transition-transform duration-slow",
                           "group-hover:scale-105"
                         )}
                       >
@@ -283,7 +283,7 @@ const LuxuryRecommendations: React.FC<LuxuryRecommendationsProps> = ({
                       <div
                         className={cn(
                           "absolute inset-x-0 bottom-0 p-4",
-                          "transition-all duration-[var(--duration-normal)]",
+                          "transition-all duration-normal",
                           "opacity-0 translate-y-2",
                           "group-hover:opacity-100 group-hover:translate-y-0"
                         )}
@@ -299,7 +299,7 @@ const LuxuryRecommendations: React.FC<LuxuryRecommendationsProps> = ({
                               "font-[var(--font-body)]",
                               "text-sm font-medium",
                               "rounded-md",
-                              "transition-all duration-[var(--duration-fast)]",
+                              "transition-all duration-fast",
                               "hover:bg-[var(--nocturne-champagne)]",
                               "hover:text-[var(--nocturne-onyx)]",
                               "flex items-center justify-center gap-2"

@@ -8,7 +8,7 @@ const NocturneCard = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--card-border-radius)] shadow-[var(--shadow-subtle)] transition-shadow duration-[var(--duration-normal)]",
+      "bg-[var(--color-surface-primary)] border border-[var(--color-border-primary)] rounded-[var(--card-border-radius)] shadow-[var(--shadow-subtle)] transition-shadow duration-normal",
       className
     )}
     {...props}

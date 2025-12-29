@@ -184,14 +184,14 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
         <button
           onClick={handleWishlistClick}
           className={cn(
-            "absolute top-3 right-3 p-2 rounded-full bg-white/80 backdrop-blur-sm transition-all duration-[var(--duration-normal)] hover:bg-white hover:scale-110",
+            "absolute top-3 right-3 p-2 rounded-full bg-white/80 backdrop-blur-sm transition-all duration-normal hover:bg-white hover:scale-110",
             isWishlisted && "text-red-500"
           )}
         >
           <Heart
             size={16}
             className={cn(
-              "transition-all duration-[var(--duration-normal)]",
+              "transition-all duration-normal",
               isWishlisted && "fill-current"
             )}
           />
@@ -200,7 +200,7 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
         {/* Quick Add Overlay */}
         <div
           className={cn(
-            "absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-4 transition-all duration-[var(--duration-normal)]",
+            "absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-4 transition-all duration-normal",
             isHovered ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
           )}
         >
@@ -228,7 +228,7 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
                     }}
                     disabled={isOutOfStock}
                     className={cn(
-                      "px-2 py-1 rounded-full text-xs font-medium transition-all duration-[var(--duration-fast)]",
+                      "px-2 py-1 rounded-full text-xs font-medium transition-all duration-fast",
                       selectedSize === sizeKey
                         ? "bg-white text-black"
                         : isOutOfStock
@@ -253,7 +253,7 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
                     setSizeError(null);
                   }}
                   className={cn(
-                    "px-2 py-1 rounded-full text-xs font-medium transition-all duration-[var(--duration-fast)]",
+                    "px-2 py-1 rounded-full text-xs font-medium transition-all duration-fast",
                     selectedSize === size
                       ? "bg-white text-black"
                       : "bg-white/20 text-white hover:bg-white/30"
@@ -329,7 +329,7 @@ const NocturneProductCard: React.FC<ProductCardProps> = ({
                   key={star}
                   size={12}
                   className={cn(
-                    "transition-colors duration-[var(--duration-fast)]",
+                    "transition-colors duration-fast",
                     star <= rating
                       ? "fill-yellow-400 text-yellow-400"
                       : "text-gray-300"
