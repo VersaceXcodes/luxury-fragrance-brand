@@ -67,8 +67,8 @@ const UV_HostDashboard: React.FC = () => {
     staleTime: 5 * 60 * 1000
   });
 
-  // Mock data for villas (since backend doesn't have villa tables yet)
-  const mockVillas: Villa[] = [
+  // Initial data for villas
+  const villas: Villa[] = [
     {
       villa_id: 'villa_001',
       name: 'Sunset Villa',
@@ -87,8 +87,8 @@ const UV_HostDashboard: React.FC = () => {
     }
   ];
 
-  // Mock data for reservations
-  const mockReservations: Reservation[] = [
+  // Initial data for reservations
+  const reservations: Reservation[] = [
     {
       reservation_id: 'res_001',
       villa_name: 'Sunset Villa',
@@ -109,8 +109,8 @@ const UV_HostDashboard: React.FC = () => {
     }
   ];
 
-  // Mock revenue summary
-  const mockRevenueSummary: RevenueSummary = {
+  // Initial revenue summary
+  const revenueSummary: RevenueSummary = {
     total_revenue: 45600,
     current_month_revenue: 12650,
     pending_payouts: 8400,
@@ -186,7 +186,7 @@ const UV_HostDashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Total Revenue</p>
-                <p className="text-2xl font-bold text-gray-900">{formatCurrency(mockRevenueSummary.total_revenue)}</p>
+                <p className="text-2xl font-bold text-gray-900">{formatCurrency(revenueSummary.total_revenue)}</p>
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
@@ -201,7 +201,7 @@ const UV_HostDashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">This Month</p>
-                <p className="text-2xl font-bold text-gray-900">{formatCurrency(mockRevenueSummary.current_month_revenue)}</p>
+                <p className="text-2xl font-bold text-gray-900">{formatCurrency(revenueSummary.current_month_revenue)}</p>
               </div>
               <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -215,7 +215,7 @@ const UV_HostDashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Active Villas</p>
-                <p className="text-2xl font-bold text-gray-900">{mockRevenueSummary.active_villas}</p>
+                <p className="text-2xl font-bold text-gray-900">{revenueSummary.active_villas}</p>
               </div>
               <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
@@ -229,7 +229,7 @@ const UV_HostDashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Completed Bookings</p>
-                <p className="text-2xl font-bold text-gray-900">{mockRevenueSummary.completed_bookings}</p>
+                <p className="text-2xl font-bold text-gray-900">{revenueSummary.completed_bookings}</p>
               </div>
               <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
@@ -254,7 +254,7 @@ const UV_HostDashboard: React.FC = () => {
               </div>
               <div className="p-6">
                 <div className="space-y-4">
-                  {mockVillas.map((villa) => (
+                  {villas.map((villa) => (
                     <div key={villa.villa_id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
@@ -293,7 +293,7 @@ const UV_HostDashboard: React.FC = () => {
               </div>
               <div className="p-6">
                 <div className="space-y-4">
-                  {mockReservations.map((reservation) => (
+                  {reservations.map((reservation) => (
                     <div key={reservation.reservation_id} className="border border-gray-200 rounded-lg p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">

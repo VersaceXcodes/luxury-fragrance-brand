@@ -4,34 +4,13 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useAppStore } from '@/store/main';
-import { NocturneProductCard } from '@/components/ui/nocturne-product-card';
 import { NocturneButton } from '@/components/ui/nocturne-button';
 import { NocturneBadge } from '@/components/ui/nocturne-badge';
 import { ScrollReveal, MagneticButton, StaggeredContainer, StaggeredItem } from '@/components/ui/motion-components';
-import { MOTION_CONFIG } from '@/lib/motion-config';
 import SmartImage from '@/components/ui/SmartImage';
 
 // API Response Types
-interface Product {
-  product_id: string;
-  brand_id: string;
-  category_id: string;
-  product_name: string;
-  description: string | null;
-  short_description: string | null;
-  fragrance_families: string;
-  concentration: string;
-  gender_category: string;
-  base_price: number;
-  sale_price: number | null;
-  availability_status: string;
-  is_featured: boolean;
-  is_new_arrival: boolean;
-  is_limited_edition: boolean;
-  sku_prefix: string;
-  created_at: string;
-  updated_at: string;
-}
+// interface Product { ... }
 
 // Currently unused but kept for future implementation
 // interface Review {
@@ -57,7 +36,6 @@ const UV_Homepage: React.FC = () => {
   // Zustand store selectors (individual to avoid infinite loops)
   const isAuthenticated = useAppStore(state => state.authentication_state.authentication_status.is_authenticated);
   const currentUser = useAppStore(state => state.authentication_state.current_user);
-  const addToCart = useAppStore(state => state.add_to_cart);
   const showNotification = useAppStore(state => state.show_notification);
 
   // Newsletter form state
@@ -68,9 +46,7 @@ const UV_Homepage: React.FC = () => {
   // Interactive elements state
   const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
   const [hoveredNote, setHoveredNote] = useState<string | null>(null);
-  const [visitorCount, setVisitorCount] = useState(0);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  const [showQuickView, setShowQuickView] = useState<string | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   // API Base URL
@@ -134,10 +110,6 @@ const UV_Homepage: React.FC = () => {
 
   // Interactive effects
   useEffect(() => {
-    // Simulate visitor counter
-    const count = Math.floor(Math.random() * 50) + 150;
-    setVisitorCount(count);
-
     // Auto-rotate hero slides
     const heroInterval = setInterval(() => {
       setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
@@ -162,19 +134,8 @@ const UV_Homepage: React.FC = () => {
     };
   }, [heroSlides.length, testimonials.length]);
 
-  // State for featured products with sizes
-  const [featuredProductsWithSizes, setFeaturedProductsWithSizes] = useState<any[]>([]);
-
   // API Queries - Fetch featured products with their sizes
-  const { data: featuredProducts = [] } = useQuery({
-    queryKey: ['featured-products'],
-    queryFn: async () => {
-      const response = await axios.get(`${getApiUrl()}/api/products/featured?limit=12`);
-      return response.data as Product[];
-    },
-    staleTime: 5 * 60 * 1000,
-    retry: 1
-  });
+  // const { data: featuredProducts = [] } = useQuery({ ... });
 
   // Fetch brands from API
   const { data: brandsData = [] } = useQuery({
@@ -188,61 +149,7 @@ const UV_Homepage: React.FC = () => {
   });
 
   // Fetch sizes for all featured products
-  useEffect(() => {
-    const fetchProductSizes = async () => {
-      if (featuredProducts.length === 0) return;
-
-      const productsWithSizes = await Promise.all(
-        featuredProducts.slice(0, 5).map(async (product) => {
-          try {
-            const sizesResponse = await axios.get(`${getApiUrl()}/api/products/${product.product_id}/sizes`);
-            const sizes = sizesResponse.data;
-
-            // Build price object from sizes
-            const priceMap: { [key: string]: number } = {};
-            sizes.forEach((size: any) => {
-              priceMap[`${size.size_ml}ml`] = size.sale_price || size.price;
-            });
-
-            // Get primary image
-            const imagesResponse = await axios.get(`${getApiUrl()}/api/products/${product.product_id}`);
-            const productData = imagesResponse.data;
-            const primaryImage = productData.images?.find((img: any) => img.is_primary)?.image_url || 
-                               productData.images?.[0]?.image_url || 
-                               '/images/fallback-perfume-bottle.png';
-
-            return {
-              product_id: product.product_id,
-              product_name: product.product_name,
-              family: product.fragrance_families || 'Luxury Fragrance',
-              price: priceMap,
-              sizes: sizes, // Store actual size objects with stock info
-              image: primaryImage,
-              rating: 4.8,
-              reviewCount: 0,
-              badges: [
-                product.is_new_arrival ? 'new' : null,
-                product.is_featured ? 'bestseller' : null,
-                product.is_limited_edition ? 'limited' : null
-              ].filter(Boolean) as Array<'new' | 'bestseller' | 'limited'>,
-              notes: {
-                top: product.top_notes ? product.top_notes.split(',').slice(0, 2) : [],
-                heart: product.middle_notes ? product.middle_notes.split(',').slice(0, 2) : [],
-                base: product.base_notes ? product.base_notes.split(',').slice(0, 2) : []
-              }
-            };
-          } catch (error) {
-            console.error(`Failed to fetch sizes for product ${product.product_id}:`, error);
-            return null;
-          }
-        })
-      );
-
-      setFeaturedProductsWithSizes(productsWithSizes.filter(Boolean));
-    };
-
-    fetchProductSizes();
-  }, [featuredProducts]);
+  // useEffect(() => { ... });
 
   // Currently unused queries but kept for future implementation
   // const { data: newArrivals = [] } = useQuery({
@@ -374,10 +281,6 @@ const UV_Homepage: React.FC = () => {
 
   const prevHeroSlide = () => {
     setCurrentHeroSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
-  };
-
-  const goToSlide = (index: number) => {
-    setCurrentHeroSlide(index);
   };
 
   // Utility functions (currently unused but kept for future implementation)

@@ -554,7 +554,8 @@ export const useAppStore = create<AppState>()(
 
         try {
           const { auth_token } = get().authentication_state;
-          let { session_id, cart_id } = get().cart_state;
+          let { session_id } = get().cart_state;
+          const { cart_id } = get().cart_state;
 
           // Generate session_id for guest users if not exists
           if (!auth_token && !session_id) {
@@ -757,7 +758,8 @@ export const useAppStore = create<AppState>()(
       load_cart: async () => {
         try {
           const { auth_token } = get().authentication_state;
-          let { session_id, cart_id } = get().cart_state;
+          let { session_id } = get().cart_state;
+          const { cart_id } = get().cart_state;
 
           // Generate session_id for guest users if not exists
           if (!auth_token && !session_id) {
@@ -812,7 +814,7 @@ export const useAppStore = create<AppState>()(
               cart_id: cart.cart_id || state.cart_state.cart_id,
             },
           }));
-        } catch (error) {
+        } catch {
           // For guest users, if cart loading fails but we have persisted cart data,
           // keep the persisted data instead of clearing it
           const currentCartState = get().cart_state;
